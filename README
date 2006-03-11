@@ -1,9 +1,11 @@
 Copyright (c) 2001 Jonathan Eisenzopf and Rael Dornfest. All rights reserved.
+Maintained by brian d foy
+
 This package is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
 NAME
-XML::RSS Version 0.97
+XML::RSS Version 0.98_01
 
 DESCRIPTION
 This module was created to help those who need to manage

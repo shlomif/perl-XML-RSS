@@ -1,0 +1,10 @@
+version.t
+encoding.t
+0.9-parse.t
+0.91-parse.t
+1.0-parse.t
+1.0-parse-exotic.t
+2.0-parse.t
+2.0-generate.t
+encode-output.t
+auto_add_modules.t

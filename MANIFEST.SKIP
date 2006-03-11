@@ -1,0 +1,13 @@
+XML-RSS-*
+CVS
+blib
+.cvsignore
+.lwpcookies
+.releaserc
+MANIFEST.SKIP
+Makefile$
+Makefile.old
+MANIFEST.bak
+~$
+.rej$
+bak$

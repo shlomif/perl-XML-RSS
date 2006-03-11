@@ -1,4 +1,60 @@
+# $Id: Changes,v 1.9 2003/02/03 21:55:25 comdog Exp $
 Revision history for Perl extension XML::RSS.
+
+1.02 - Mon Feb 20 15:34:21 2003
+        * fixed bug in encode().  encode() did not respect CDATA
+        sections and would mangle them when encountered.  now behaves
+        properly (we hope) even when CDATA and #PCDATA are mixed
+        together liberally
+
+1.01 - Mon Feb  3 15:46:25 2003
+	* fixed bug with handle_char().  i (brian d foy) mis-diagnosed a
+	previous bug and broke handle_char() when what I should have done
+	was initialise the object for each call to parse*()
+
+	* if you have version 1.0, you should upgrade to this version, 1.01
+
+1.00 - Fri Jan 31 11:26:41 2003
+	* the as_string method now encodes special characters. valid output!
+	* a new "Auto Add" feature can add modules for namespaces found
+	while parsing (off by default)
+	* can output RSS 2.0, but not parse it yet
+	* this is the last major release in this track.  we are going to
+	completely rewrite XML::RSS as something more extendable.
+
+0.98_05 - Mon Jan 27 15:54:32 2003
+	* The auto add_feature is not controlled by the $AUTO_ADD variable
+	and is off by default
+	* removed the distribution tests now that it is ready to distribute
+
+0.98_04 - Fri Jan 17 20:00:29 2003
+	* the parse and parsefile routines now automatically add non-
+	standard namespace to the modules list
+
+0.98_03 - Fri Jan 17 19:22:20 2003
+       * changed the handle_char() routine to replace data rather than
+       append to existing data.  this takes care of the doubling problem
+       in the last issue.
+ 
+       * set the RSS 2.0 namespace in the _initializer routine
+ 
+       * all tests now pass.  if this works for people, it could turn into
+       a release candidate
+
+0.98_02 - Fri Jan 17 19:15:45 2003
+	* changed the handle_char() routine to replace data rather than
+	append to existing data.  this takes care of the doubling problem
+	in the last issue.
+
+	* set the RSS 2.0 namespace in the _initializer routine
+
+	* all tests now pass.  if this works for people, it could turn into
+	a release candidate
+
+0.98_02 - Fri Jan 17 15:47:29 2003
+	* added initial RSS 2.0 support
+	* first fix to properly encode special characters in output
+	* need to fix feature to add namespace (tests are TO DO)
 
 0.1  Wed Jul  7 16:22:25 1999
 	- original version; created by h2xs 1.19
@@ -40,3 +96,10 @@ Revision history for Perl extension XML::RSS.
          inside the channel or item elements and only supports one
          form of the module syntax. See the XML::RSS documentation
          for examples.
+
+0.98 Tue Nov 12 05:45:36 CST 2002
+	- module taken over by brian d foy <bdfoy@cpan.org>
+	- module now in SourceForge (http://www.sourceforge.net/projects/perl-rss)
+	- added support for arbitrary namespaces (with defaults to the
+	usual suspects)
+	- fixed ommission of encoding with version 0.9 output

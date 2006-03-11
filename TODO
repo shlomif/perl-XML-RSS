@@ -1,1 +1,6 @@
--fix skipHour and skipDay methods
+- fix skipHour and skipDay methods (bdf: what's wrong with them?)
+
+- rewrite for extendability (base class with a derived one for 
+each version)
+
+- auto encode text?
