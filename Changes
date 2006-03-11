@@ -35,3 +35,8 @@ Revision history for Perl extension XML::RSS.
 	-fixed RSS 0.91 output. When the source file that is parsed was
          1.0, it did not properly translate all of the dc elements to
          0.91 channel elements.
+0.97 Wed Mar 21 03:13:29 EST 2001
+	-added support for the Taxonomy module (taxo). It only works
+         inside the channel or item elements and only supports one
+         form of the module syntax. See the XML::RSS documentation
+         for examples.

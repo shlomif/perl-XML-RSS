@@ -1,5 +1,5 @@
-# Copyright (c) 2000 Jonathan Eisenzopf <eisen@pobox.com>
-#                and Rael Dornfest <rael@oreilly.com>
+# Copyright (c) 2001 Jonathan Eisenzopf <eisen@pobox.com>
+# and Rael Dornfest <rael@oreilly.com>
 # XML::RSS is free software. You can redistribute it and/or
 # modify it under the same terms as Perl itself.
 
@@ -10,7 +10,7 @@ use Carp;
 use XML::Parser;
 use vars qw($VERSION $AUTOLOAD @ISA $modules);
 
-$VERSION = '0.96';
+$VERSION = '0.97';
 @ISA = qw(XML::Parser);
 
 my %v0_9_ok_fields = (
@@ -272,6 +272,7 @@ my $_REQ_v0_9_1 = {
 my $modules = {
     'http://purl.org/rss/1.0/modules/syndication/' => 'syn',
     'http://purl.org/dc/elements/1.1/' => 'dc',
+    'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
 };
 
 my %syn_ok_fields = (
@@ -748,9 +749,18 @@ sub as_rss_1_0 {
 	$self->{channel}->{syn}->{$syn} and $output .= "<syn:$syn>".$self->{channel}->{syn}->{$syn}."</syn:$syn>\n";
     }
 
+    # Taxonomy module
+    if (exists($self->{'channel'}->{'taxo'}) && $self->{'channel'}->{'taxo'}) {
+	$output .= "<taxo:topics>\n  <rdf:Bag>\n";
+	foreach my $taxo (@{$self->{'channel'}->{'taxo'}}) {
+	    $output.= "    <rdf:li resource=\"$taxo\" />\n";
+	}
+	$output .= "  </rdf:Bag>\n</taxo:topics>\n";
+    }
+
     # Ad-hoc modules
     while ( my($url, $prefix) = each %{$self->{modules}} ) {
-      next if $prefix =~ /^(dc|syn)$/;
+      next if $prefix =~ /^(dc|syn|taxo)$/;
       while ( my($el, $value) = each %{$self->{channel}->{$prefix}} ) {
   		  $output .= "<$prefix:$el>".$value."</$prefix:$el>\n";
       }
@@ -807,7 +817,7 @@ sub as_rss_1_0 {
 
   # Ad-hoc modules
   while ( my($url, $prefix) = each %{$self->{modules}} ) {
-    next if $prefix =~ /^(dc|syn)$/;
+    next if $prefix =~ /^(dc|syn|taxo)$/;
     while ( my($el, $value) = each %{$self->{image}->{$prefix}} ) {
 		  $output .= "<$prefix:$el>".$value."</$prefix:$el>\n";
     }
@@ -828,19 +838,28 @@ sub as_rss_1_0 {
 	    $output .= '<link>'.$item->{'link'}.'</link>'."\n";
 	    $item->{description} and $output .= '<description>'.$item->{description}.'</description>'."\n";
 
-      # Dublin Core module	    
+	    # Dublin Core module	    
 	    foreach my $dc ( keys %dc_ok_fields ) {
 	    	$item->{dc}->{$dc} and $output .= "<dc:$dc>".$item->{dc}->{$dc}."</dc:$dc>\n";
 	    }
 
-      # Ad-hoc modules
-      while ( my($url, $prefix) = each %{$self->{modules}} ) {
-        next if $prefix =~ /^(dc|syn)$/;
-        while ( my($el, $value) = each %{$item->{$prefix}} ) {
-	    	  $output .= "<$prefix:$el>".$value."</$prefix:$el>\n";
-        }
+	    # Taxonomy module
+	    if (exists($item->{'taxo'})  && $item->{'taxo'}) {
+		$output .= "<taxo:topics>\n  <rdf:Bag>\n";
+		foreach my $taxo (@{$item->{'taxo'}}) {
+		    $output.= "    <rdf:li resource=\"$taxo\" />\n";
+		}
+		$output .= "  </rdf:Bag>\n</taxo:topics>\n";
 	    }
-
+	    
+	    # Ad-hoc modules
+	    while ( my($url, $prefix) = each %{$self->{modules}} ) {
+		next if $prefix =~ /^(dc|syn|taxo)$/;
+		while ( my($el, $value) = each %{$item->{$prefix}} ) {
+		    $output .= "<$prefix:$el>".$value."</$prefix:$el>\n";
+		}
+	    }
+	    
 	    # end item element
 	    $output .= '</item>'."\n\n";
 	}
@@ -863,7 +882,7 @@ sub as_rss_1_0 {
 
   # Ad-hoc modules
   while ( my($url, $prefix) = each %{$self->{modules}} ) {
-    next if $prefix =~ /^(dc|syn)$/;
+    next if $prefix =~ /^(dc|syn|taxo)$/;
     while ( my($el, $value) = each %{$self->{textinput}->{$prefix}} ) {
 		  $output .= "<$prefix:$el>".$value."</$prefix:$el>\n";
     }
@@ -933,6 +952,7 @@ sub handle_char {
 	     || $self->within_element($self->generate_ns_name("item",$self->{namespaces}->{'#default'}))
 	     ) 
     {
+	return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 	my $ns = $self->namespace($self->current_element);
 
 	# If it's in the default RSS 1.0 namespace
@@ -988,6 +1008,7 @@ sub handle_char {
 	     || $self->within_element($self->generate_ns_name("channel",$self->{namespaces}->{'#default'}))
 	     ) 
     {
+	return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 	my $ns = $self->namespace($self->current_element);
 	
 	# If it's in the default namespace
@@ -1028,6 +1049,7 @@ sub handle_start {
 	foreach my $prefix (@prefixes) {
 	    my $uri = $self->expand_ns_prefix($prefix);
 	    $self->{namespaces}->{$prefix} = $uri;
+	    #print "$prefix = $uri\n";
 	}
 
 	
@@ -1043,6 +1065,24 @@ sub handle_start {
     } elsif ($el eq 'item') {
         # increment item count
 	$self->{num_items}++;
+
+    # beginning of taxo li element in item element
+    #'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
+    } elsif ($self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/')) 
+	     && $self->within_element($self->generate_ns_name("item",$self->{namespaces}->{'#default'})) 
+	     && $self->current_element eq 'Bag' 
+	     && $el eq 'li') {
+	#print "taxo: ", $attribs{'resource'},"\n";
+	push(@{$self->{'items'}->[$self->{num_items}-1]->{'taxo'}},$attribs{'resource'});
+	$self->{'modules'}->{'http://purl.org/rss/1.0/modules/taxonomy/'} = 'taxo';
+
+    # beginning of taxo li in channel element
+    } elsif ($self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/')) 
+	     && $self->within_element($self->generate_ns_name("channel",$self->{namespaces}->{'#default'})) 
+	     && $self->current_element eq 'Bag' 
+	     && $el eq 'li') {
+	push(@{$self->{'channel'}->{'taxo'}},$attribs{'resource'});
+	$self->{'modules'}->{'http://purl.org/rss/1.0/modules/taxonomy/'} = 'taxo';
     }
 }
 
@@ -1178,6 +1218,10 @@ XML::RSS - creates and updates RSS files
      updateFrequency  => "1",
      updateBase       => "1901-01-01T00:00+00:00",
    },
+   taxo => [
+     'http://dmoz.org/Computers/Internet',
+     'http://dmoz.org/Computers/PC'
+   ]
  );
 
  $rss->image(
@@ -1197,6 +1241,10 @@ XML::RSS - creates and updates RSS files
      subject  => "X11/Utilities",
      creator  => "David Allen (s2mdalle at titan.vcu.edu)",
    },
+   taxo => [
+     'http://dmoz.org/Computers/Internet',
+     'http://dmoz.org/Computers/PC'
+   ]
  );
 
  $rss->textinput(
@@ -1437,7 +1485,7 @@ B<image()>.
 Adds a module namespace declaration to the XML::RSS object, allowing you
 to add modularity outside of the the standard RSS 1.0 modules.  At present,
 the standard modules Dublin Core (dc) and Syndication (syn) are predefined
-for your convenience.
+for your convenience. The Taxonomy (taxo) module is also internally supported.
 
 The modules are stored in the hash %{$obj->{'modules'}} where
 B<$obj> is a reference to an XML::RSS object.
@@ -1448,8 +1496,9 @@ For more information on RSS 1.0 Modules, read on.
 
 XML-Namespace-based modularization affords RSS 1.0 compartmentalized 
 extensibility.  The only modules that ship "in the box" with RSS 1.0 
-are Dublin Core (http://purl.org/rss/1.0/modules/dc/) and Syndication
-(http://purl.org/rss/1.0/modules/syndication/).  Consult the appropriate 
+are Dublin Core (http://purl.org/rss/1.0/modules/dc/), Syndication
+(http://purl.org/rss/1.0/modules/syndication/), and Taxonomy
+(http://purl.org/rss/1.0/modules/taxonomy/).  Consult the appropriate 
 module's documentation for further information. 
 
 Adding items from these modules in XML::RSS is as simple as adding other
@@ -1460,16 +1509,18 @@ hash.
   $rss->add_item (title=>$title, link=>$link, dc=>{ subject=>$subject, creator=>$creator });
 
 For elements of the Dublin Core module, use the key 'dc'.  For elements
-of the Syndication module, 'syn'.  These are the prefixes used in
-the RSS XML document itself.  They are associated with appropriate URI-based
-namespaces:
+of the Syndication module, 'syn'.  For elements of the Taxonomy module,
+'taxo'. These are the prefixes used in the RSS XML document itself.  
+They are associated with appropriate URI-based namespaces:
 
-  syn: http://purl.org/rss/1.0/modules/syndication/
-  dc:  http://purl.org/dc/elements/1.1/
+  syn:  http://purl.org/rss/1.0/modules/syndication/
+  dc:   http://purl.org/dc/elements/1.1/
+  taxo: http://purl.org/rss/1.0/modules/taxonomy/
 
 Dublin Core elements may occur in channel, image, item(s), and textinput 
 -- albeit uncomming to find them under image and textinput.  Syndication 
-elements are limited to the channel element.
+elements are limited to the channel element. Taxonomy elements can occur
+in the channel or item elements.
 
 Access to module elements after parsing an RSS 1.0 document using
 XML::RSS is via either the prefix or namespace URI for your convenience.
