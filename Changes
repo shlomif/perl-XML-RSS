@@ -1,6 +1,7 @@
 Revision history for Perl extension XML::RSS
 
 1.10 - 
+       - Fixed category output in RSS 2.0 (RT#17303, Yasuhiro Onishi)
        - Clean up distribution a little (tests, Makefile.PL, file locations, ...)
 
 

@@ -1,4 +1,3 @@
-# $Id: RSS.pm,v 1.32 2004/04/21 07:14:43 kellan Exp $
 package XML::RSS;
 
 use strict;
@@ -1139,7 +1138,7 @@ sub as_rss_2_0 {
     if ($self->{channel}->{'dc'}->{'category'}) {
         $output .= '<category>'.$self->encode($self->{channel}->{'dc'}->{'category'}).'</category>'."\n";
     } elsif ($self->{channel}->{category}) {
-        $output .= '<category>'.$self->encode($self->{channel}->{generator}).'</category>'."\n";
+        $output .= '<category>'.$self->encode($self->{channel}->{category}).'</category>'."\n";
     }
 
     # generator
