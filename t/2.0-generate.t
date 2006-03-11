@@ -1,11 +1,10 @@
-# $Id: 2.0-generate.t,v 1.8 2004/04/21 02:44:40 kellan Exp $
 use strict;
 
 use Test::More tests => 25;
 
 BEGIN {
-use_ok("XML::RSS");
-use_ok("POSIX");
+  use_ok("XML::RSS");
+  use_ok("POSIX");
 }
 
 use constant DATE_TEMPLATE_LONG  => "%Y-%m-%dT%H:%M:%S%z";
@@ -51,7 +50,7 @@ ok( $rss->channel(
 		 docs           => 'http://backend.userland.com/rss',
 		 managingEditor => 'editor\@example.com',
 		 webMaster      => 'webmaster\@example.com',
-		 category       => 'none',
+		 category       => 'MyCategory',
 		 ttl            => '60',
 		 'generator'    => 'XML::RSS Test',
 		), "Set RSS channel" );
@@ -77,7 +76,7 @@ ok($rss->add_item(
 		  'link'      => RSS_ITEM_LINK,
 		  description => RSS_ITEM_DESC,
 		  author      => RSS_CREATOR,
-		  category    => 'none',
+		  category    => 'MyCategory',
 		  comments    => "http://example.com/$short_date/comments.html",
 		  permaLink   => "http://example.com/$short_date",
 		  pubDate     => $pub_date,
@@ -89,16 +88,15 @@ ok($rss->add_item(
 my $len = length($rss->as_string());
 ok( $len, "RSS feed has '$len' characters" );
 
-
 ok( $rss->add_module( prefix => RSS_MOD_PREFIX, uri => RSS_MOD_URI ),
 	"Added module: " . RSS_MOD_PREFIX );
 
-# Dunno - some degree of weirdness
-# with the constant that I don't
-# feel like dealing with...
 my $uri = RSS_MOD_URI;
 
-is( $rss->{modules}->{$uri}, RSS_MOD_PREFIX, "Namespace URI is $uri" );
+use Data::Dumper;
+warn Data::Dumper->Dump([\$rss], [qw(rss)] );
+
+is( $rss->{modules}->{$uri}, RSS_MOD_PREFIX, "Namespace URI is " . RSS_MOD_URI);
 
 ok( $rss->save(RSS_SAVEAS), "Wrote to disk: " . RSS_SAVEAS );
 
@@ -110,6 +108,8 @@ is( $@, '', "Parsed " . RSS_SAVEAS );
 
 is( $rss->{channel}->{lastBuildDate}, $current_date,
        "Last built: " . $current_date );
+
+is( $rss->{channel}->{category}, 'MyCategory', 'channel->{category}');
 
 cmp_ok( keys %{ $rss->{namespaces} }, ">=", 1,
        "RSS feed has at least one namespace");

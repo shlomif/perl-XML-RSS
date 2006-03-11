@@ -1,5 +1,8 @@
-# $Id: Changes,v 1.12 2004/08/13 04:03:15 kellan Exp $
-Revision history for Perl extension XML::RSS.
+Revision history for Perl extension XML::RSS
+
+1.10 - 
+       - Clean up distribution a little (tests, Makefile.PL, file locations, ...)
+
 
 1.05 - Thu Aug 12 20:54:31 2004
     * fixed version number
