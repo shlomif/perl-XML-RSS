@@ -1,0 +1,37 @@
+Revision history for Perl extension XML::RSS.
+
+0.1  Wed Jul  7 16:22:25 1999
+	- original version; created by h2xs 1.19
+0.2  Sat Jul 24 21:12:22 EDT 1999
+	- added documentation
+0.3  Tue Aug 24 05:14:18 EDT 1999
+	- added support for RSS 0.91
+0.4 - removed extraneous print
+    - added stuff in examples/rss2html.pl
+0.5 - fixed handle_char method which croaked on cdata
+      that contained entities. Reported by 
+      Wojciech Zwiefka <wojtekz@cnt.pl>
+    - prettied up the output from rss2html.pl. It's
+      now more suitable for including news feeds on
+      a Web site. Also added ability to give local
+      filename or http URL.
+0.6 - numerous minor bug fixes
+    - it no longer checks for size as specified by Netscape's RSS spec
+      unless otherwise specified
+0.7 Wed Oct 20 22:41:05 EDT 1999
+    -parameters were not getting set unless the strict parameter was set 
+    -fixed spelling for managingEditor and webMaster
+0.8 Mon Dec 27 03:42:27 EST 1999
+    -fixed shallow copy problem when working with multiple instances
+0.9 Mon Aug 14 17:05:00 EDT 2000
+	-fixed DESTROY() error when using Perl 5.6
+	-added support for RSS 1.0 and rss091 namespace
+0.94 Sat Dec 16 12:42:21 EST 2000
+	-added support for RSS1.0 RC1 release
+	-added support for Syndication and Dublin Core modules
+0.95 Sat Dec 23 11:28:03 EST 2000
+	-added support for including external namespaces and elements
+0.96 Sat Mar 17 17:21:27 EST 2001
+	-fixed RSS 0.91 output. When the source file that is parsed was
+         1.0, it did not properly translate all of the dc elements to
+         0.91 channel elements.
