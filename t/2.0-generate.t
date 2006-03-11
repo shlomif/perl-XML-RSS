@@ -1,10 +1,12 @@
-# $Id: 2.0-generate.t,v 1.7 2003/01/18 01:13:42 comdog Exp $
+# $Id: 2.0-generate.t,v 1.8 2004/04/21 02:44:40 kellan Exp $
 use strict;
 
 use Test::More tests => 25;
 
+BEGIN {
 use_ok("XML::RSS");
 use_ok("POSIX");
+}
 
 use constant DATE_TEMPLATE_LONG  => "%Y-%m-%dT%H:%M:%S%z";
 use constant DATE_TEMPLATE_SHORT => "%Y/%m/%d";
@@ -26,7 +28,7 @@ use constant RSS_BLOGCHANNEL_URI    => "http://backend.userland.com/blogChannelM
 
 use constant RSS_CREATOR    => "joeuser\@example.com";
 use constant RSS_ITEM_TITLE => "This is an item";
-use constant RSS_ITEM_LINK  => "http://example.com/$short_date";
+use constant RSS_ITEM_LINK  => "http://example.com/" . &POSIX::strftime( DATE_TEMPLATE_SHORT, gmtime ); # "$short_date";
 use constant RSS_ITEM_DESC  => "Yadda yadda yadda";
 
 
@@ -81,6 +83,7 @@ ok($rss->add_item(
 		  pubDate     => $pub_date,
 		  source      => 'my brain',
 		  sourceUrl   => 'http://example.com',
+		  enclosure   => { type=>"application/x-bittorrent", url => 'http://127.0.0.1/torrents/The_Passion_of_Dave_Winer.torrent' },
 		 ), "Set one RSS item" );
 
 my $len = length($rss->as_string());
@@ -147,11 +150,11 @@ Tests for generating RSS 2.0 data with XML::RSS.pm
 
 =head1 VERSION
 
-$Revision: 1.7 $
+$Revision: 1.8 $
 
 =head1 DATE
 
-$Date: 2003/01/18 01:13:42 $
+$Date: 2004/04/21 02:44:40 $
 
 =head1 AUTHOR
 

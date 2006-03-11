@@ -1,4 +1,4 @@
-# $Id: RSS.pm,v 1.27 2003/11/23 06:59:24 kellan Exp $
+# $Id: RSS.pm,v 1.32 2004/04/21 07:14:43 kellan Exp $
 package XML::RSS;
 
 use strict;
@@ -6,7 +6,7 @@ use Carp;
 use XML::Parser;
 use vars qw($VERSION $AUTOLOAD @ISA $modules $AUTO_ADD);
 
-$VERSION = '1.03';
+$VERSION = '1.05';
 @ISA = qw(XML::Parser);
 
 $AUTO_ADD = 0;
@@ -677,7 +677,7 @@ sub as_rss_0_9_1 {
 
     # last build date
     if ($self->{channel}->{lastBuildDate}) {
-	$output .= '<lastBuildDate>'. $self->encode($self->{channel}->{pubDate}) .'</lastBuildDate>'."\n";
+	$output .= '<lastBuildDate>'. $self->encode($self->{channel}->{lastBuildDate}) .'</lastBuildDate>'."\n";
     } elsif ($self->{channel}->{'dc'}->{'date'}) {
 	$output .= '<lastBuildDate>'. $self->encode($self->{channel}->{'dc'}->{'date'}) .'</lastBuildDate>'."\n";
     }
@@ -1200,9 +1200,10 @@ sub as_rss_2_0 {
     foreach my $item (@{$self->{items}}) {
         if ($item->{title}) {
             $output .= '<item>'."\n";
-            $output .= '<title>'.$self->encode($item->{title}).'</title>'."\n";
-            $output .= '<link>'.$self->encode($item->{'link'}).'</link>'."\n";
-
+            $output .= '<title>'.$self->encode($item->{title}).'</title>'."\n"
+                if $item->{title};
+            $output .= '<link>'.$self->encode($item->{'link'}).'</link>'."\n"
+                if $item->{link};
             $output .= '<description>'.$self->encode($item->{description}).'</description>'."\n"
                 if $item->{description};
 
@@ -1215,22 +1216,30 @@ sub as_rss_2_0 {
             $output .= '<comments>'.$self->encode($item->{comments}).'</comments>'."\n"
                 if $item->{comments};
 
-            #TODO: Make this element work properly.
-            # $output .= '<enclosure>'.$self->encode($item->{enclosure}).'</enclosure>'."\n"
-            #     if $item->{enclosure};
-
-            # The unique identifier -- in this implementation we assume
-            # that it's a permalink to the item, so we always include the
-            # isPermaLink attribute.  Also, I call it permaLink in the
-            # hash for purposes of clarity.
-            $output .= '<guid isPermaLink="true">'.$self->encode($item->{permaLink}).'</guid>'."\n"
-                if $item->{permaLink};
+            # The unique identifier. Use 'permaLink' for an external
+            # identifier, or 'guid' for a internal string.
+            # (I call it permaLink in the hash for purposes of clarity.)
+            if ($item->{permaLink})
+            {
+                $output .= '<guid isPermaLink="true">'.$self->encode($item->{permaLink}).'</guid>'."\n";
+            }
+            elsif ($item->{guid})
+            {
+                $output .= '<guid isPermaLink="false">'.$self->encode($item->{guid}).'</guid>'."\n";
+            }
 
             $output .= '<pubDate>'.$self->encode($item->{pubDate}).'</pubDate>'."\n"
                 if $item->{pubDate};
 
             $output .= '<source url="'.$self->encode($item->{sourceUrl}).'">'.$item->{source}.'</source>'."\n"
                 if $item->{source} && $item->{sourceUrl};
+
+            if (my $e = $item->{enclosure})
+            {
+                $output .= "<enclosure "
+                    . join(' ', map {qq!$_="! . $self->encode($e->{$_}) . qq!"!} keys(%$e))
+                    . ' />' . "\n";
+            }
 
             # end image element
             $output .= '</item>'."\n\n";
@@ -1876,9 +1885,9 @@ XML::RSS - creates and updates RSS files
 
   $rss->add_item (title=>$title, link=>$link, slash=>{ topic=>$topic });
 
- # create an RSS 0.91 file
+ # create an RSS 2.0 file
  use XML::RSS;
- my $rss = new XML::RSS (version => '0.91');
+ my $rss = new XML::RSS (version => '2.0');
  $rss->channel(title          => 'freshmeat.net',
                link           => 'http://freshmeat.net',
                language       => 'en',
@@ -1901,13 +1910,14 @@ XML::RSS - creates and updates RSS files
              );
 
  $rss->add_item(title => "GTKeyboard 0.85",
-                link  => "http://freshmeat.net/news/1999/06/21/930003829.html",
-		description => 'blah blah'
-                );
-
- $rss->skipHours(hour => 2);
- $rss->skipDays(day => 1);
-
+        # creates a guid field with permaLink=true
+        permaLink  => "http://freshmeat.net/news/1999/06/21/930003829.html",
+		# alternately creates a guid field with permaLink=false
+        # guid     => "gtkeyboard-0.85
+        enclosure   => { url=>$url, type=>"application/x-bittorrent" },
+        description => 'blah blah'
+);
+ 
  $rss->textinput(title => "quick finder",
                  description => "Use the text input below to search freshmeat",
                  name  => "query",
@@ -2065,18 +2075,6 @@ modules as a string is parsed.
 
 Saves the RSS to a specified file.
 
-=item skipHours (hour=>$hour)
-
-Specifies the number of hours that a server should wait before retrieving
-the RSS file. The B<hour> parameter is required if the skipHours method
-is used. This method is currently broken.
-
-=item skipDays (day=>$day)
-
-Specified the number of days that a server should wait before retrieving
-the RSS file. The B<day> parameter is required if the skipDays method
-is used. This method is currently broken.
-
 =item strict ($boolean)
 
 If it's set to 1, it will adhere to the lengths as specified
@@ -2107,7 +2105,11 @@ B<$obj> is a reference to an XML::RSS object.
 
 If you want to automatically add modules that the parser finds in
 namespaces, set the $XML::RSS::AUTO_ADD variable to a true value.  By
-default the value is false.
+default the value is false. (N.B. AUTO_ADD only updates the
+%{$obj->{'modules'}} hash.  It does not provide the other benefits
+of using add_module.)
+
+
 
 =back
 
@@ -2212,6 +2214,7 @@ modify it under the same terms as Perl itself.
  Adam Trickett <adam.trickett@btinternet.com>
  Aaron Straup Cope <asc@vineyard.net>
  Ian Davis <iand@internetalchemy.org>
+ rayg@varchars.com
 
 =head1 SEE ALSO
 

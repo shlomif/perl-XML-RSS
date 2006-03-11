@@ -1,4 +1,4 @@
-# $Id: encoding.t,v 1.1 2002/11/12 11:41:17 comdog Exp $
+# $Id: encoding.t,v 1.2 2004/04/21 02:44:40 kellan Exp $
 
 use Test::More tests => 18;
 
@@ -18,7 +18,7 @@ foreach my $version ( @versions )
 		"Default encoding for version $version" );
 		
 	# UTF-8
-	my $rss = XML::RSS->new( version => $version,
+	$rss = XML::RSS->new( version => $version,
 		encoding => 'UTF-8' );
 	isa_ok( $rss, 'XML::RSS' );
 	make_rss( $rss );
@@ -26,7 +26,7 @@ foreach my $version ( @versions )
 		"Default encoding for version $version" );
 	
 	# home brew
-	my $rss = XML::RSS->new( version => $version,
+	$rss = XML::RSS->new( version => $version,
 		encoding => 'Fooey' );
 	isa_ok( $rss, 'XML::RSS' );
 	make_rss( $rss );
