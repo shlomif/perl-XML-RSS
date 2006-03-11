@@ -26,7 +26,7 @@ examples/freshmeat.rdf
 examples/rss2html.pl
 examples/rss_info.pl
 examples/update_rss.pl
-lib/RSS.pm
+lib/XML/RSS.pm
 t/0.9-generate.t
 t/0.9-parse.t
 t/0.91-parse.t

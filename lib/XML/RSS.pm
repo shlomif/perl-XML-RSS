@@ -5,7 +5,7 @@ use Carp;
 use XML::Parser;
 use vars qw($VERSION $AUTOLOAD @ISA $modules $AUTO_ADD);
 
-$VERSION = '1.05';
+$VERSION = '1.10';
 @ISA = qw(XML::Parser);
 
 $AUTO_ADD = 0;
@@ -2026,11 +2026,7 @@ B<$obj> is a reference to an XML::RSS object.
 Returns a string containing the RSS for the XML::RSS object.  This
 method will also encode special characters along the way.
 
-=item channel (title=>$title, link=>$link, description=>$desc,
-language=>$language, rating=>$rating, copyright=>$copyright,
-pubDate=>$pubDate, lastBuildDate=>$lastBuild, docs=>$docs,
-managingEditor=>$editor, webMaster=>$webMaster)
-
+=item channel (title=>$title, link=>$link, description=>$desc, language=>$language, rating=>$rating, copyright=>$copyright, pubDate=>$pubDate, lastBuildDate=>$lastBuild, docs=>$docs, managingEditor=>$editor, webMaster=>$webMaster)
 
 Channel information is required in RSS. The B<title> cannot
 be more the 40 characters, the B<link> 500, and the B<description>
@@ -2044,8 +2040,7 @@ like so:
 
 $title = channel('title');
 
-=item image (title=>$title, url=>$url, link=>$link, width=>$width,
-height=>$height, description=>$desc)
+=item image (title=>$title, url=>$url, link=>$link, width=>$width, height=>$height, description=>$desc)
 
 Adding an image is not required. B<url> is the URL of the
 image, B<link> is the URL the image is linked to. B<title>, B<url>,
@@ -2174,29 +2169,41 @@ prefix; access them via their namespace URL like so:
 XML::RSS will continue to provide built-in support for standard RSS 1.0
 modules as they appear.
 
+=head1 BUGS
+
+Please use rt.cpan.org for tracking bugs.  The list of current open
+bugs is at
+    L<http://rt.cpan.org/Dist/Display.html?Queue=XML-RSS>.
+
+To report a new bug, go to
+    L<http://rt.cpan.org/Ticket/Create.html?Queue=XML-RSS>
+
+Please include a failing test in your bug report.  I'd much rather
+have a well written test with the bug report than a patch.
+
+When you create diffs (for tests or patches), please use the C<-u>
+parameter to diff.
+
 =head1 SOURCE AVAILABILITY
 
-This source is part of a SourceForge project which always has the
-latest sources in CVS, as well as all of the previous releases.
+The source is available from the perl.org Subversion server:
 
-	https://sourceforge.net/projects/perl-rss/
-	http://perl-rss.sourceforge.net
+        http://svn.perl.org/modules/XML-RSS/
 
-If, for some reason, I disappear from the world, one of the other
-members of the project can shepherd this module appropriately.
 
 =head1 AUTHOR
 
 	Original code: Jonathan Eisenzopf <eisen@pobox.com>
 	Further changes: Rael Dornfest <rael@oreilly.com>
 	
-	Currently: perl-rss project (http://perl-rss.sourceforge.net)
+	Currently: Ask Bjoern Hansen <ask@develooper.com> 
 
 
 =head1 COPYRIGHT
 
-Copyright (c) 2001 Jonathan Eisenzopf <eisen@pobox.com>
-and Rael Dornfest <rael@oreilly.com>
+Copyright (c) 2001 Jonathan Eisenzopf <eisen@pobox.com> and Rael
+Dornfest <rael@oreilly.com>, Copyright (C) 2006 Ask Bjoern Hansen
+<ask@develooper.com>.
 
 XML::RSS is free software. You can redistribute it and/or
 modify it under the same terms as Perl itself.
@@ -2214,6 +2221,7 @@ modify it under the same terms as Perl itself.
  Aaron Straup Cope <asc@vineyard.net>
  Ian Davis <iand@internetalchemy.org>
  rayg@varchars.com
+ Kellan Elliott-McCrea <kellan@protest.net>
 
 =head1 SEE ALSO
 

@@ -1,6 +1,6 @@
 use strict;
 
-use Test::More tests => 25;
+use Test::More tests => 26;
 
 BEGIN {
   use_ok("XML::RSS");
@@ -29,7 +29,6 @@ use constant RSS_CREATOR    => "joeuser\@example.com";
 use constant RSS_ITEM_TITLE => "This is an item";
 use constant RSS_ITEM_LINK  => "http://example.com/" . &POSIX::strftime( DATE_TEMPLATE_SHORT, gmtime ); # "$short_date";
 use constant RSS_ITEM_DESC  => "Yadda yadda yadda";
-
 
 my $rss = XML::RSS->new( version => RSS_VERSION );
 isa_ok( $rss, "XML::RSS" );
@@ -93,8 +92,8 @@ ok( $rss->add_module( prefix => RSS_MOD_PREFIX, uri => RSS_MOD_URI ),
 
 my $uri = RSS_MOD_URI;
 
-use Data::Dumper;
-warn Data::Dumper->Dump([\$rss], [qw(rss)] );
+#use Data::Dumper;
+#warn Data::Dumper->Dump([\$rss], [qw(rss)] );
 
 is( $rss->{modules}->{$uri}, RSS_MOD_PREFIX, "Namespace URI is " . RSS_MOD_URI);
 

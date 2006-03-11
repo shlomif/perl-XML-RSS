@@ -1,50 +1,51 @@
 Revision history for Perl extension XML::RSS
 
-1.10 - 
+1.10 - March 11, 2006
+       - Module (for now) maintained by Ask Bjoern Hansen
        - Fixed category output in RSS 2.0 (RT#17303, Yasuhiro Onishi)
-       - Clean up distribution a little (tests, Makefile.PL, file locations, ...)
-
+       - Update documentation with new Subversion server and bug tracking
+       - Clean up distribution (tests, Makefile.PL, file locations, ...)
 
 1.05 - Thu Aug 12 20:54:31 2004
-    * fixed version number
-    * improved RSS 2.0 generation support
-    * typo and documentation fixes
+       - fixed version number
+       - improved RSS 2.0 generation support
+       - typo and documentation fixes
     
 1.04 - Web Mar 03 20:49:43 2004
-    * update Changes to include changes for 1.03
+       - update Changes to include changes for 1.03
        
 1.03 - Web Mar 03 00:24:07 2004
-    * quell warnings when parsing RSS 0.9x, RSS 2.0
+       - quell warnings when parsing RSS 0.9x, RSS 2.0
    
 1.02 - Mon Feb 20 15:34:21 2003
-    * fixed bug in encode().  encode() did not respect CDATA
-      sections and would mangle them when encountered.  now behaves
-      properly (we hope) even when CDATA and #PCDATA are mixed
-      together liberally
+       - fixed bug in encode().  encode() did not respect CDATA
+         sections and would mangle them when encountered.  now behaves
+         properly (we hope) even when CDATA and #PCDATA are mixed
+         together liberally
 
 1.01 - Mon Feb  3 15:46:25 2003
-	* fixed bug with handle_char().  i (brian d foy) mis-diagnosed a
-	previous bug and broke handle_char() when what I should have done
-	was initialise the object for each call to parse*()
+    * fixed bug with handle_char().  i (brian d foy) mis-diagnosed a
+    previous bug and broke handle_char() when what I should have done
+    was initialise the object for each call to parse*()
 
-	* if you have version 1.0, you should upgrade to this version, 1.01
+    * if you have version 1.0, you should upgrade to this version, 1.01
 
 1.00 - Fri Jan 31 11:26:41 2003
-	* the as_string method now encodes special characters. valid output!
-	* a new "Auto Add" feature can add modules for namespaces found
-	while parsing (off by default)
-	* can output RSS 2.0, but not parse it yet
-	* this is the last major release in this track.  we are going to
-	completely rewrite XML::RSS as something more extendable.
+    * the as_string method now encodes special characters. valid output!
+    * a new "Auto Add" feature can add modules for namespaces found
+    while parsing (off by default)
+    * can output RSS 2.0, but not parse it yet
+    * this is the last major release in this track.  we are going to
+    completely rewrite XML::RSS as something more extendable.
 
 0.98_05 - Mon Jan 27 15:54:32 2003
-	* The auto add_feature is not controlled by the $AUTO_ADD variable
-	and is off by default
-	* removed the distribution tests now that it is ready to distribute
+    * The auto add_feature is not controlled by the $AUTO_ADD variable
+    and is off by default
+    * removed the distribution tests now that it is ready to distribute
 
 0.98_04 - Fri Jan 17 20:00:29 2003
-	* the parse and parsefile routines now automatically add non-
-	standard namespace to the modules list
+    * the parse and parsefile routines now automatically add non-
+    standard namespace to the modules list
 
 0.98_03 - Fri Jan 17 19:22:20 2003
        * changed the handle_char() routine to replace data rather than
@@ -57,28 +58,61 @@ Revision history for Perl extension XML::RSS
        a release candidate
 
 0.98_02 - Fri Jan 17 19:15:45 2003
-	* changed the handle_char() routine to replace data rather than
-	append to existing data.  this takes care of the doubling problem
-	in the last issue.
+    * changed the handle_char() routine to replace data rather than
+    append to existing data.  this takes care of the doubling problem
+    in the last issue.
 
-	* set the RSS 2.0 namespace in the _initializer routine
+    * set the RSS 2.0 namespace in the _initializer routine
 
-	* all tests now pass.  if this works for people, it could turn into
-	a release candidate
+    * all tests now pass.  if this works for people, it could turn into
+    a release candidate
 
 0.98_02 - Fri Jan 17 15:47:29 2003
-	* added initial RSS 2.0 support
-	* first fix to properly encode special characters in output
-	* need to fix feature to add namespace (tests are TO DO)
+    * added initial RSS 2.0 support
+    * first fix to properly encode special characters in output
+    * need to fix feature to add namespace (tests are TO DO)
 
-0.1  Wed Jul  7 16:22:25 1999
-	- original version; created by h2xs 1.19
-0.2  Sat Jul 24 21:12:22 EDT 1999
-	- added documentation
-0.3  Tue Aug 24 05:14:18 EDT 1999
-	- added support for RSS 0.91
-0.4 - removed extraneous print
-    - added stuff in examples/rss2html.pl
+0.98 Tue Nov 12 05:45:36 CST 2002
+    - module taken over by brian d foy <bdfoy@cpan.org>
+    - module now in SourceForge (http://www.sourceforge.net/projects/perl-rss)
+    - added support for arbitrary namespaces (with defaults to the
+    usual suspects)
+    - fixed ommission of encoding with version 0.9 output
+
+0.97 Wed Mar 21 03:13:29 EST 2001
+    - added support for the Taxonomy module (taxo). It only works
+      inside the channel or item elements and only supports one
+      form of the module syntax. See the XML::RSS documentation
+      for examples.      
+
+0.96 Sat Mar 17 17:21:27 EST 2001
+     - fixed RSS 0.91 output. When the source file that is parsed was
+       1.0, it did not properly translate all of the dc elements to
+       0.91 channel elements.
+
+0.95 Sat Dec 23 11:28:03 EST 2000
+     - added support for including external namespaces and elements
+
+0.94 Sat Dec 16 12:42:21 EST 2000
+     - added support for RSS1.0 RC1 release
+     - added support for Syndication and Dublin Core modules
+
+
+0.9 Mon Aug 14 17:05:00 EDT 2000
+    - fixed DESTROY() error when using Perl 5.6
+    - added support for RSS 1.0 and rss091 namespace
+
+0.8 Mon Dec 27 03:42:27 EST 1999
+    - fixed shallow copy problem when working with multiple instances
+
+0.7 Wed Oct 20 22:41:05 EDT 1999
+    - parameters were not getting set unless the strict parameter was set 
+    - fixed spelling for managingEditor and webMaster
+
+0.6 - numerous minor bug fixes
+    - it no longer checks for size as specified by Netscape's RSS spec
+      unless otherwise specified
+
 0.5 - fixed handle_char method which croaked on cdata
       that contained entities. Reported by 
       Wojciech Zwiefka <wojtekz@cnt.pl>
@@ -86,35 +120,15 @@ Revision history for Perl extension XML::RSS
       now more suitable for including news feeds on
       a Web site. Also added ability to give local
       filename or http URL.
-0.6 - numerous minor bug fixes
-    - it no longer checks for size as specified by Netscape's RSS spec
-      unless otherwise specified
-0.7 Wed Oct 20 22:41:05 EDT 1999
-    -parameters were not getting set unless the strict parameter was set 
-    -fixed spelling for managingEditor and webMaster
-0.8 Mon Dec 27 03:42:27 EST 1999
-    -fixed shallow copy problem when working with multiple instances
-0.9 Mon Aug 14 17:05:00 EDT 2000
-	-fixed DESTROY() error when using Perl 5.6
-	-added support for RSS 1.0 and rss091 namespace
-0.94 Sat Dec 16 12:42:21 EST 2000
-	-added support for RSS1.0 RC1 release
-	-added support for Syndication and Dublin Core modules
-0.95 Sat Dec 23 11:28:03 EST 2000
-	-added support for including external namespaces and elements
-0.96 Sat Mar 17 17:21:27 EST 2001
-	-fixed RSS 0.91 output. When the source file that is parsed was
-         1.0, it did not properly translate all of the dc elements to
-         0.91 channel elements.
-0.97 Wed Mar 21 03:13:29 EST 2001
-	-added support for the Taxonomy module (taxo). It only works
-         inside the channel or item elements and only supports one
-         form of the module syntax. See the XML::RSS documentation
-         for examples.
 
-0.98 Tue Nov 12 05:45:36 CST 2002
-	- module taken over by brian d foy <bdfoy@cpan.org>
-	- module now in SourceForge (http://www.sourceforge.net/projects/perl-rss)
-	- added support for arbitrary namespaces (with defaults to the
-	usual suspects)
-	- fixed ommission of encoding with version 0.9 output
+0.4 - removed extraneous print
+    - added stuff in examples/rss2html.pl
+
+0.3  Tue Aug 24 05:14:18 EDT 1999
+     - added support for RSS 0.91
+
+0.2  Sat Jul 24 21:12:22 EDT 1999
+     - added documentation
+
+0.1  Wed Jul  7 16:22:25 1999
+    - original version; created by h2xs 1.19
