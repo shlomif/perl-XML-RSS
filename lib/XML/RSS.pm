@@ -1,5 +1,4 @@
 package XML::RSS;
-
 use strict;
 use Carp;
 use XML::Parser;
@@ -1782,7 +1781,7 @@ my $entities = join('|', keys %entity);
 sub encode {
 	my ($self, $text) = @_;
 	return $text unless $self->{'encode_output'};
-	
+
 	my $encoded_text = '';
 	
 	while ( $text =~ s/(.*?)(\<\!\[CDATA\[.*?\]\]\>)//s ) {
@@ -1912,7 +1911,7 @@ XML::RSS - creates and updates RSS files
         # creates a guid field with permaLink=true
         permaLink  => "http://freshmeat.net/news/1999/06/21/930003829.html",
 		# alternately creates a guid field with permaLink=false
-        # guid     => "gtkeyboard-0.85
+        # guid     => "gtkeyboard-0.85"
         enclosure   => { url=>$url, type=>"application/x-bittorrent" },
         description => 'blah blah'
 );
