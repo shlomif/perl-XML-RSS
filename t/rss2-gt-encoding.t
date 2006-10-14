@@ -1,10 +1,17 @@
 #!/usr/bin/perl -w
 
 use strict;
+use Test::More;
 
-use XML::RSS;
+if (eval "require Test::Differences") {
+    Test::Differences->import;
+    plan tests => 2;
+}
+else {
+    plan skip_all => 'Test::Differences required';
+}
 
-use Test::More tests => 1;
+use_ok('XML::RSS');
 
 my $rss = XML::RSS->new(version => '2.0');
 
@@ -32,11 +39,11 @@ $rss->add_item(
     description => '<a href="http://www.shlomifish.org/"><span style="color:#658912">Whoa</span></a>'
 );
 
-my $string = $rss->as_string();
+my ($string) = grep { m/shlomifish/ } split /\n/, $rss->as_string();
 
-my $is_encoded_html = ($string =~ m{\Q&lt;a href="http://www.shlomifish.org/"&gt;&lt;span style="color:#658912"&gt;Whoa&lt;/span&gt;&lt;/a&gt;\E});
-# TEST
-ok($is_encoded_html, "Testing for a correctly encoded HTML (&gt; and all)");
+my $expected_encoded_html = '<description>&lt;a href=&quot;http://www.shlomifish.org/&quot;&gt;&lt;span style=&quot;color:#658912&quot;&gt;Whoa&lt;/span&gt;&lt;/a&gt;</description>';
+
+eq_or_diff($string, $expected_encoded_html, "Testing for a correctly encoded HTML (&gt; and all)");
 
 1;
 

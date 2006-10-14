@@ -26,6 +26,7 @@ WriteMakefile(
                                  'Test::Manifest'   => '0.9',
                                  'Test::More'       => '0',
                                  'XML::Parser'      => '2.23', 
+                                 'HTML::Entities'   => 0, 
                                 },
               'clean'        => { FILES => 'XML-RSS-* t/*-generated.xml' },
               @extras

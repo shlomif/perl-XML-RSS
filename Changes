@@ -1,6 +1,7 @@
 Revision history for Perl extension XML::RSS
 
 1.11
+       - use HTML::Entities instead of the "homegrown" entity encoding code
        - Minor doc fix (David Steinbrunner)
        - Fix encoding of the > char, added tests (RT#19420, Shlomi Fish)
 
