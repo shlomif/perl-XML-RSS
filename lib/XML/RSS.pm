@@ -1798,6 +1798,7 @@ sub encode_text {
 	$text =~ s/&(?!(#[0-9]+|#x[0-9a-fA-F]+|\w+);)/&amp;/g;
     $text =~ s/&($entities);/$entity{$1}/g;
     $text =~ s/</&lt;/g;
+    $text =~ s/>/&gt;/g;
 
 	return $text;
 }

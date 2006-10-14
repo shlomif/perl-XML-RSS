@@ -2,6 +2,7 @@ Revision history for Perl extension XML::RSS
 
 1.11
        - Minor doc fix (David Steinbrunner)
+       - Fix encoding of the > char, added tests (RT#19420, Shlomi Fish)
 
 1.10 - March 11, 2006
        - Module (for now) maintained by Ask Bjoern Hansen

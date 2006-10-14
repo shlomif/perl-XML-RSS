@@ -8,3 +8,4 @@ encoding.t
 2.0-generate.t
 encode-output.t
 auto_add_modules.t
+rss2-gt-encoding.t
