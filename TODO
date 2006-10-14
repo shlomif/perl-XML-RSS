@@ -1,6 +1,16 @@
+--- before the next release
+
+- wrong handling enclosure subelement of item
+  http://rt.cpan.org/Ticket/Display.html?id=21740
+
+
+--- eventually
+
+- use a better / more liberal XML parser
+
 - fix skipHour and skipDay methods (bdf: what's wrong with them?)
 
 - rewrite for extendability (base class with a derived one for 
-each version)
+  each version)
 
 - auto encode text?
