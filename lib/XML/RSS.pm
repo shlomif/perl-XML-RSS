@@ -1610,7 +1610,8 @@ sub parsefile {
 
 sub save {
     my ($self,$file) = @_;
-    open(OUT,">$file") || croak "Cannot open file $file for write: $!";
+    open(OUT, ">:encoding($self->{encoding})", "$file") 
+      or croak "Cannot open file $file for write: $!";
     print OUT $self->as_string;
     close OUT;
 }
