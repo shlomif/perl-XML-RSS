@@ -3,10 +3,10 @@ use strict;
 use Carp;
 use XML::Parser;
 use HTML::Entities qw(encode_entities);
-use vars qw($VERSION $AUTOLOAD @ISA $modules $AUTO_ADD);
+use vars qw($VERSION $AUTOLOAD $modules $AUTO_ADD);
+use base qw(XML::Parser);
 
-$VERSION = '1.10';
-@ISA = qw(XML::Parser);
+$VERSION = '1.11';
 
 $AUTO_ADD = 0;
 

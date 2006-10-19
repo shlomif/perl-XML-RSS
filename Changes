@@ -1,12 +1,14 @@
-Revision history for Perl extension XML::RSS
+Revision history for Perl module XML::RSS
 
-1.11
+1.11 - October 19, 2006
        - use HTML::Entities instead of the "homegrown" entity encoding code
        - Minor doc fix (David Steinbrunner)
        - Fix encoding of the > char, added tests (RT#19420, Shlomi Fish)
        - XML::RSS ignores output encoding (RT#11124, RT#7343, test
          failures on win32, Vaclav Haisman, Steve Peters)
        - encoding of source element (RT#2285)
+       - use base instead of @ISA
+       - Thanks to Shlomi Fish for helping sorting through the RT queue!
 
 1.10 - March 11, 2006
        - Module (for now) maintained by Ask Bjoern Hansen
