@@ -6,6 +6,7 @@ Revision history for Perl extension XML::RSS
        - Fix encoding of the > char, added tests (RT#19420, Shlomi Fish)
        - XML::RSS ignores output encoding (RT#11124, RT#7343, test
          failures on win32, Vaclav Haisman, Steve Peters)
+       - encoding of source element (RT#2285)
 
 1.10 - March 11, 2006
        - Module (for now) maintained by Ask Bjoern Hansen

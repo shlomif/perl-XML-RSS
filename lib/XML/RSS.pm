@@ -1230,7 +1230,7 @@ sub as_rss_2_0 {
             $output .= '<pubDate>'.$self->encode($item->{pubDate}).'</pubDate>'."\n"
                 if $item->{pubDate};
 
-            $output .= '<source url="'.$self->encode($item->{sourceUrl}).'">'.$item->{source}.'</source>'."\n"
+            $output .= '<source url="'.$self->encode($item->{sourceUrl}).'">'.$self->encode($item->{source}).'</source>'."\n"
                 if $item->{source} && $item->{sourceUrl};
 
             if (my $e = $item->{enclosure})
