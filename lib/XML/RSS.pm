@@ -2,7 +2,7 @@ package XML::RSS;
 use strict;
 use Carp;
 use XML::Parser;
-use HTML::Entities qw(encode_entities);
+use HTML::Entities qw(encode_entities_numeric encode_entities);
 use vars qw($VERSION $AUTOLOAD $modules $AUTO_ADD);
 use base qw(XML::Parser);
 
@@ -1684,9 +1684,11 @@ sub encode {
 	my $encoded_text = '';
 	
 	while ( $text =~ s/(.*?)(\<\!\[CDATA\[.*?\]\]\>)//s ) {
+                # we use &named; entities here because it's HTML
 		$encoded_text .= encode_entities($1) . $2;
 	}
-	$encoded_text .= encode_entities($text);
+        # we use numeric entities here because it's XML
+	$encoded_text .= encode_entities_numeric($text);
 
 	return $encoded_text;
 }
