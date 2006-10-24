@@ -18,7 +18,22 @@ sub ExtUtils::MM_Any::test_via_harness {
       qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | .
         qq|'\$(INST_ARCHLIB)')"\n|;
 }
-     
+
+sub MY::postamble {
+    return <<'MAKE_FRAG';
+
+runtest: pure_all
+	perl -MFile::Spec -MTest::Run::CmdLine::Iface -MTest::Manifest -e \
+        "local @INC = @INC;	unshift @INC, map { File::Spec->rel2abs(\$$_) } ('$(INST_LIB)', '$(INST_ARCHLIB)'); Test::Run::CmdLine::Iface->new({test_files => [Test::Manifest::get_t_files()]})->run();"
+
+distruntest: distdir
+	cd $(DISTVNAME) && $(ABSPERLRUN) Makefile.PL
+	cd $(DISTVNAME) && $(MAKE) $(PASTHRU)
+	cd $(DISTVNAME) && $(MAKE) runtest $(PASTHRU)
+
+MAKE_FRAG
+}
+
 WriteMakefile(
               'NAME'         => 'XML::RSS',
               'VERSION_FROM' => 'lib/XML/RSS.pm', # finds $VERSION,
