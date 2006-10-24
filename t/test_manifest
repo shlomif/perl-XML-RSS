@@ -9,3 +9,5 @@ encoding.t
 encode-output.t
 auto_add_modules.t
 rss2-gt-encoding.t
+enclosures.t
+

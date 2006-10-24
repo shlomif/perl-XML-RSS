@@ -409,6 +409,10 @@ my %rdf_resource_fields = (
 	}
 );
 
+my %empty_ok_elements = (
+    enclosure => 1,
+);
+
 sub new {
     my $class = shift;
     
@@ -1555,6 +1559,9 @@ sub handle_start {
 			}
 		}
 	}
+    elsif ( $empty_ok_elements{$el} and $self->current_element eq 'item' ){
+        $self->{items}->[$self->{num_items}-1]->{$el} = \%attribs;
+    }
 }
 
 sub append {

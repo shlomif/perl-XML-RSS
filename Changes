@@ -1,5 +1,9 @@
 Revision history for Perl module XML::RSS
 
+1.12 -
+       - Fix enclosure parsing (RT#7920, Tatsuhiko Miyagawa)
+       - Incorrect entity encoding in XML output (RT#22467, reported by Stephen Hall)
+
 1.11 - October 19, 2006
        - use HTML::Entities instead of the "homegrown" entity encoding code
        - Minor doc fix (David Steinbrunner)
