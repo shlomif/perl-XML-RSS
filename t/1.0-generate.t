@@ -1,19 +1,23 @@
 use strict;
 
 use Test::More;
-plan tests => 23;
+plan tests => 22;
 
 # 1-2
 use_ok("XML::RSS");
-use_ok("POSIX");
+use POSIX;
 
 use constant DATE_TEMPLATE_LONG  => "%Y-%m-%dT%H:%M:%S%z";
 use constant DATE_TEMPLATE_SHORT => "%Y/%m/%d";
 use constant DATE_TEMPLATE_PUB   => "%c GMT";
 
-my $current_date = &POSIX::strftime(DATE_TEMPLATE_LONG, gmtime);
-my $short_date   = &POSIX::strftime(DATE_TEMPLATE_SHORT, gmtime);
-my $pub_date     = &POSIX::strftime(DATE_TEMPLATE_PUB,   gmtime);
+my ($current_date, $short_date, $pub_date); 
+
+BEGIN {
+  $current_date = &POSIX::strftime(DATE_TEMPLATE_LONG, gmtime);
+  $short_date   = &POSIX::strftime(DATE_TEMPLATE_SHORT, gmtime);
+  $pub_date     = &POSIX::strftime(DATE_TEMPLATE_PUB,   gmtime);
+}
 
 use constant RSS_VERSION    => "1.0";
 use constant RSS_SAVEAS     => "./".RSS_VERSION."-generated.xml";

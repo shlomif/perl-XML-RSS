@@ -2119,6 +2119,7 @@ modify it under the same terms as Perl itself.
  Ian Davis <iand@internetalchemy.org>
  rayg@varchars.com
  Kellan Elliott-McCrea <kellan@protest.net>
+ Shlomi Fish <shlomif@iglu.org.il>
 
 =head1 SEE ALSO
 
