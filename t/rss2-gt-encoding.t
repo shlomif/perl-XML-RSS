@@ -41,9 +41,9 @@ $rss->add_item(
 
 my ($string) = grep { m/shlomifish/ } split /\n/, $rss->as_string();
 
-my $expected_encoded_html = '<description>&lt;a href=&quot;http://www.shlomifish.org/&quot;&gt;&lt;span style=&quot;color:#658912&quot;&gt;Whoa&lt;/span&gt;&lt;/a&gt;</description>';
+my $expected_encoded_html = '<description>&#x3C;a href=&#x22;http://www.shlomifish.org/&#x22;&#x3E;&#x3C;span style=&#x22;color:#658912&#x22;&#x3E;Whoa&#x3C;/span&#x3E;&#x3C;/a&#x3E;</description>';
 
-eq_or_diff($string, $expected_encoded_html, "Testing for a correctly encoded HTML (&gt; and all)");
+eq_or_diff($string, $expected_encoded_html, "Testing for a correctly encoded HTML");
 
 1;
 
