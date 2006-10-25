@@ -20,7 +20,7 @@ BEGIN {
 }
 
 use constant RSS_VERSION    => "1.0";
-use constant RSS_SAVEAS     => "./".RSS_VERSION."-generated.xml";
+use constant RSS_SAVEAS     => "./t/".RSS_VERSION."-generated.xml";
 use constant RSS_MOD_PREFIX => "my";
 use constant RSS_MOD_URI    => 'http://purl.org/my/rss/module/';
 
