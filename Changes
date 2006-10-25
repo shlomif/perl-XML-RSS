@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+     - 
+       - Remove the executable bit from Makefile.PL
+
 1.12 - October 25, 2006
        - Add more tests
        - make sure META.yml is correctly generated
