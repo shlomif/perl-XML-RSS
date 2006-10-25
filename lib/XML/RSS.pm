@@ -6,7 +6,7 @@ use HTML::Entities qw(encode_entities_numeric encode_entities);
 use vars qw($VERSION $AUTOLOAD $modules $AUTO_ADD);
 use base qw(XML::Parser);
 
-$VERSION = '1.11';
+$VERSION = '1.12';
 
 $AUTO_ADD = 0;
 

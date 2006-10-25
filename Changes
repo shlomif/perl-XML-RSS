@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
-1.12 -
+1.12 - October 25, 2006
+       - Add more tests
+       - make sure META.yml is correctly generated
        - Fix enclosure parsing (RT#7920, Tatsuhiko Miyagawa)
        - Incorrect entity encoding in XML output (RT#22467, reported by Stephen Hall)
 
