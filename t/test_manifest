@@ -17,3 +17,4 @@ encode-output.t
 load.t
 pod.t
 rss2-gt-encoding.t
+charset1.t

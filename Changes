@@ -2,6 +2,7 @@ Revision history for Perl module XML::RSS
 
      - 
        - Remove the executable bit from Makefile.PL
+       - Add test to test regression of CPAN RT#5438 (Shlomi)
 
 1.12 - October 25, 2006
        - Add more tests

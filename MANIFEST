@@ -36,6 +36,7 @@ t/2.0-generate.t
 t/2.0-parse.t
 t/2.0-wo-title.t
 t/auto_add_modules.t
+t/charset1.t
 t/enclosures.t
 t/enclosures2.t
 t/encode-output.t
