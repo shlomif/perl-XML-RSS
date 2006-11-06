@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
      - 
+       - RSS 2.0 spec allows omission of title from entry (RT#18817,
+         test from Shlomi)
        - Remove the executable bit from Makefile.PL
        - Add test to test regression of CPAN RT#5438 (Shlomi)
 

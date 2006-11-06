@@ -1201,7 +1201,8 @@ sub as_rss_2_0 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-        if ($item->{title}) {
+            # According to the spec either title or description must be present.
+            next unless (exists $item->{title} or exists $item->{description});
             $output .= '<item>'."\n";
             $output .= '<title>'.$self->encode($item->{title}).'</title>'."\n"
                 if $item->{title};
@@ -1246,7 +1247,6 @@ sub as_rss_2_0 {
 
             # end image element
             $output .= '</item>'."\n\n";
-        }
     }
 
     #####################
