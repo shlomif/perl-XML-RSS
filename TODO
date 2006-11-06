@@ -1,8 +1,12 @@
---- before the next release
+--- before the next release-ish
 
 - wrong handling enclosure subelement of item
   http://rt.cpan.org/Ticket/Display.html?id=21740
 
+--- soon-ish
+
+- Make all the date/time interfaces accept and omit DateTime dates (maybe unix
+  timestamps too?) instead of strings
 
 --- eventually
 
