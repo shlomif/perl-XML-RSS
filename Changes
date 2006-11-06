@@ -1,12 +1,14 @@
 Revision history for Perl module XML::RSS
 
-1.20 - November 5th, 2006
+1.20 - November 7th, 2006
        - Value for $XML::RSS::modules gets destroyed (RT#18755, Shlomi)
          - Note that YOU CAN NO LONGER USE $XML::RSS::modules, you
            have to use the add_modules call as documented!
        - Missing last build date value in RSS 2.0 (RT#19417)
        - RSS 2.0 spec allows omission of title from entry (RT#18817,
          test from Shlomi)
+       - Can't create "0" values in optional items (RT#11415, based on
+         patch from Shlomi - thanks!)
        - Remove the executable bit from Makefile.PL
        - Add test to test regression of CPAN RT#5438 (Shlomi)
 

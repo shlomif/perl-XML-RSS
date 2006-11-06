@@ -14,7 +14,7 @@ auto_add_modules.t
 enclosures.t
 enclosures2.t
 encode-output.t
-#items-are-0.t
+items-are-0.t
 load.t
 pod.t
 rss2-gt-encoding.t
