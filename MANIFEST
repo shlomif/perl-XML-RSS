@@ -18,6 +18,7 @@ examples/1.0/update_rss_1.0.pl
 examples/convert.pl
 examples/create_rss_multiple.pl
 examples/freshmeat.rdf
+examples/merlyn1.rss
 examples/README
 examples/rss2html.pl
 examples/rss_info.pl
@@ -32,6 +33,7 @@ t/0.91-parse.t
 t/1.0-generate.t
 t/1.0-parse-exotic.t
 t/1.0-parse.t
+t/1.0-to-2.0.t
 t/2.0-generate.t
 t/2.0-parse.t
 t/2.0-wo-title.t

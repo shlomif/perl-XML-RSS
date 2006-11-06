@@ -3,10 +3,13 @@ use strict;
 use Carp;
 use XML::Parser;
 use HTML::Entities qw(encode_entities_numeric encode_entities);
-use vars qw($VERSION $AUTOLOAD $modules $AUTO_ADD);
 use base qw(XML::Parser);
+use DateTime::Format::Mail;
+use DateTime::Format::W3CDTF;
+  
+use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
-$VERSION = '1.12';
+$VERSION = '1.20';
 
 $AUTO_ADD = 0;
 
@@ -365,13 +368,6 @@ my $namespace_map = {
 	rss20   => 'http://backend.userland.com/blogChannelModule',
 };
 
-my $modules = {
-    'http://purl.org/rss/1.0/modules/syndication/' => 'syn',
-    'http://purl.org/dc/elements/1.1/' => 'dc',
-    'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo',
-	'http://webns.net/mvcb/' => 'admin'
-};
-
 my %syn_ok_fields = (
 	'updateBase' => '',
 	'updateFrequency' => '',
@@ -412,6 +408,17 @@ my %rdf_resource_fields = (
 my %empty_ok_elements = (
     enclosure => 1,
 );
+
+sub _get_default_modules
+{
+    return
+    {
+        'http://purl.org/rss/1.0/modules/syndication/' => 'syn',
+        'http://purl.org/dc/elements/1.1/' => 'dc',
+        'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo',
+    	'http://webns.net/mvcb/' => 'admin'
+    };
+}
 
 sub new {
     my $class = shift;
@@ -454,7 +461,7 @@ sub _initialize {
 	$self->{rss_namespace} = '';
 
     # modules
-    $self->{modules} = $modules;
+    $self->{modules} = $self->_get_default_modules();
 
 	# encode output from as_string?
 	(exists($hash{encode_output}))
@@ -557,6 +564,49 @@ sub add_item {
 
     # return reference to the list of items
     return $self->{items};
+}
+
+
+sub _date_from_dc_date
+{
+    my ($self, $string) = @_;
+    my $f = DateTime::Format::W3CDTF->new();
+    return $f->parse_datetime($string);
+}
+
+sub _date_to_rss2
+{
+    my ($self, $date) = @_;
+
+    my $pf = DateTime::Format::Mail->new();
+    return $pf->format_datetime($date); 
+}
+
+sub _calc_lastBuildDate
+{
+    my $self = shift;
+    return
+        exists($self->{channel}->{'dc'}->{'date'}) ?
+            $self->_date_to_rss2(
+                $self->_date_from_dc_date($self->{channel}->{'dc'}->{date})
+            ) :
+        exists($self->{channel}->{lastBuildDate}) ?
+            $self->{channel}->{lastBuildDate} :
+            undef
+        ;
+}
+
+sub _tag_if_valid
+{
+    my ($self, $tag, $value) = @_;
+    if (defined($value))
+    {
+        return "<$tag>$value</$tag>\n";
+    }
+    else
+    {
+        return "";
+    }
 }
 
 sub as_rss_0_9 {
@@ -1113,12 +1163,7 @@ sub as_rss_2_0 {
         $output .= '<pubDate>'.$self->encode($self->{channel}->{'dc'}->{'date'}).'</pubDate>'."\n";
     } 
 
-    # last build date
-    if ($self->{channel}->{'dc'}->{'date'}) {
-        $output .= '<lastBuildDate>'.$self->encode($self->{channel}->{'dc'}->{lastBuildDate}).'</lastBuildDate>'."\n";
-    } elsif ($self->{channel}->{lastBuildDate}) {
-        $output .= '<lastBuildDate>'.$self->encode($self->{channel}->{lastBuildDate}).'</lastBuildDate>'."\n";
-    }
+    $output .= $self->_tag_if_valid("lastBuildDate",$self->_calc_lastBuildDate());
 
     # external CDF URL
     $output .= '<docs>'.$self->encode($self->{channel}->{docs}).'</docs>'."\n"
@@ -1342,7 +1387,7 @@ sub handle_char {
 	    	$self->{'image'}->{$ns}->{$self->current_element} .= $cdata;
 
 	    	# If it's in a module namespace, provide a friendlier prefix duplicate
-	    	$modules->{$ns} and $self->{'image'}->{$modules->{$ns}}->{$self->current_element} .= $cdata;
+	    	$self->{modules}->{$ns} and $self->{'image'}->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
 		}
 
 	# item element
@@ -1367,8 +1412,8 @@ sub handle_char {
 	    	$self->{'items'}->[$self->{num_items}-1]->{$ns}->{$self->current_element} .= $cdata;
 
 	    	# If it's in a module namespace, provide a friendlier prefix duplicate
-	    	$modules->{$ns} and
-				$self->{'items'}->[$self->{num_items}-1]->{$modules->{$ns}}->{$self->current_element} .= $cdata;
+	    	$self->{modules}->{$ns} and
+				$self->{'items'}->[$self->{num_items}-1]->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
 		}
 
 	# textinput element
@@ -1390,7 +1435,7 @@ sub handle_char {
 	    	$self->{'textinput'}->{$ns}->{$self->current_element} .= $cdata;
 
 	    	# If it's in a module namespace, provide a friendlier prefix duplicate
-	    	$modules->{$ns} and $self->{'textinput'}->{$modules->{$ns}}->{$self->current_element} .= $cdata;
+	    	$self->{modules}->{$ns} and $self->{'textinput'}->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
 		}
 
 	# skipHours element
@@ -1427,7 +1472,7 @@ sub handle_char {
 	    	$self->{'channel'}->{$ns}->{$self->current_element} .= $cdata;
 
 	    	# If it's in a module namespace, provide a friendlier prefix duplicate
-	    	$modules->{$ns} and $self->{'channel'}->{$modules->{$ns}}->{$self->current_element} .= $cdata;
+	    	$self->{modules}->{$ns} and $self->{'channel'}->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
 		}
     }
 }
@@ -1532,8 +1577,8 @@ sub handle_start {
 			$self->{channel}->{$ns}->{$el} = $attribs{resource};
 			# add short cut
 			#
-			if ( exists( $modules->{ $ns } ) ) {
-				$ns = $modules->{ $ns };
+			if ( exists( $self->{modules}->{ $ns } ) ) {
+				$ns = $self->{modules}->{ $ns };
 				$self->{channel}->{$ns}->{$el} = $attribs{resource};
 			}
 		}
@@ -1553,8 +1598,8 @@ sub handle_start {
 
 			# add short cut
 			#
-			if ( exists( $modules->{ $ns } ) ) {
-				$ns = $modules->{ $ns };
+			if ( exists( $self->{modules}->{ $ns } ) ) {
+				$ns = $self->{modules}->{ $ns };
 				$self->{'items'}->[$self->{num_items}-1]->{$ns}->{ $el } = $attribs{resource};
 			}
 		}
@@ -1580,8 +1625,7 @@ sub append {
 	$inside->{$ns}->{$self->current_element} .= $cdata;
 
 	# If it's in a module namespace, provide a friendlier prefix duplicate
-	#$modules->{$ns} and $self->{'items'}->[$self->{num_items}-1]->{$modules->{$ns}}->{$self->current_element} .= $cdata;
-	$modules->{$ns} and $inside->{$modules->{$ns}}->{$self->current_element} .= $cdata;
+	$self->{modules}->{$ns} and $inside->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
 
 	return $inside;
 }
