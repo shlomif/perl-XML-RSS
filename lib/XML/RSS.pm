@@ -1833,7 +1833,7 @@ sub AUTOLOAD {
 
 sub encode {
 	my ($self, $text) = @_;
-	return $text unless $self->{'encode_output'};
+	return $text unless $self->{'encode_output'} and defined $text;
 
 	my $encoded_text = '';
 	

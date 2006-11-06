@@ -4,6 +4,7 @@ Revision history for Perl module XML::RSS
        - Value for $XML::RSS::modules gets destroyed (RT#18755, Shlomi)
          - Note that YOU CAN NO LONGER USE $XML::RSS::modules, you
            have to use the add_modules call as documented!
+       - encode generates warnings for undefined text (RT#13523, Mark Stosberg)
        - Missing last build date value in RSS 2.0 (RT#19417)
        - RSS 2.0 spec allows omission of title from entry (RT#18817,
          test from Shlomi)
