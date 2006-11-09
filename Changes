@@ -6,12 +6,14 @@ Revision history for Perl module XML::RSS
            have to use the add_modules call as documented!
        - encode generates warnings for undefined text (RT#13523, Mark Stosberg)
        - Missing last build date value in RSS 2.0 (RT#19417)
+       - renamed the internal encode method to _encode
        - RSS 2.0 spec allows omission of title from entry (RT#18817,
          test from Shlomi)
        - Can't create "0" values in optional items (RT#11415, based on
          patch from Shlomi - thanks!)
        - Remove the executable bit from Makefile.PL
        - Add test to test regression of CPAN RT#5438 (Shlomi)
+       - More tests...
 
 1.12 - October 25, 2006
        - Add more tests

@@ -540,7 +540,7 @@ sub _out_tag
     my ($self, $tag, $inner) = @_;
 
     return $self->_out(
-        "<$tag>" . $self->encode($inner) . "</$tag>\n"
+        "<$tag>" . $self->_encode($inner) . "</$tag>\n"
     );
 }
 
@@ -745,9 +745,9 @@ sub as_rss_0_9 {
     # Channel Element #
     ###################
     $output .= '<channel>'."\n";
-    $output .= '<title>'. $self->encode($self->{channel}->{title}) .'</title>'."\n";
-    $output .= '<link>'. $self->encode($self->{channel}->{'link'}) .'</link>'."\n";
-    $output .= '<description>'. $self->encode($self->{channel}->{description}) .'</description>'."\n";
+    $output .= '<title>'. $self->_encode($self->{channel}->{title}) .'</title>'."\n";
+    $output .= '<link>'. $self->_encode($self->{channel}->{'link'}) .'</link>'."\n";
+    $output .= '<description>'. $self->_encode($self->{channel}->{description}) .'</description>'."\n";
     $output .= '</channel>'."\n\n";
 
     #################
@@ -757,10 +757,10 @@ sub as_rss_0_9 {
 	$output .= '<image>'."\n";
 
 	# title
-	$output .= '<title>'. $self->encode($self->{image}->{title}) .'</title>'."\n";
+	$output .= '<title>'. $self->_encode($self->{image}->{title}) .'</title>'."\n";
 
 	# url
-	$output .= '<url>'. $self->encode($self->{image}->{url}) .'</url>'."\n";
+	$output .= '<url>'. $self->_encode($self->{image}->{url}) .'</url>'."\n";
 
 	# link
         $self->_output_def_image_tag("link");
@@ -775,8 +775,8 @@ sub as_rss_0_9 {
     foreach my $item (@{$self->{items}}) {
 	if (defined $item->{title}) {
 	    $output .= '<item>'."\n";
-	    $output .= '<title>'. $self->encode($item->{title}) .'</title>'."\n";
-	    $output .= '<link>'. $self->encode($item->{'link'}) .'</link>'."\n";
+	    $output .= '<title>'. $self->_encode($item->{title}) .'</title>'."\n";
+	    $output .= '<link>'. $self->_encode($item->{'link'}) .'</link>'."\n";
 
 	    # end image element
 	    $output .= '</item>'."\n\n";
@@ -843,7 +843,7 @@ sub _output_start_channel
 
     # language
     if (defined($self->{channel}->{'dc'}->{'language'})) {
-        $self->_out('<language>'. $self->encode($self->{channel}->{'dc'}->{'language'}) .'</language>'."\n");
+        $self->_out('<language>'. $self->_encode($self->{channel}->{'dc'}->{'language'}) .'</language>'."\n");
     } elsif (defined($self->{channel}->{language})) {
         $self->_output_channel_tag("language");
     }
@@ -876,23 +876,23 @@ sub as_rss_0_9_1 {
 
     # copyright
     if (defined($self->{channel}->{'dc'}->{'rights'})) {
-	$output .= '<copyright>'. $self->encode($self->{channel}->{'dc'}->{'rights'}) .'</copyright>'."\n";
+	$output .= '<copyright>'. $self->_encode($self->{channel}->{'dc'}->{'rights'}) .'</copyright>'."\n";
     } elsif (defined($self->{channel}->{copyright})) {
-	$output .= '<copyright>'. $self->encode($self->{channel}->{copyright}) .'</copyright>'."\n";
+	$output .= '<copyright>'. $self->_encode($self->{channel}->{copyright}) .'</copyright>'."\n";
     }
 
     # publication date
     if ($self->{channel}->{pubDate}) {
-	$output .= '<pubDate>'. $self->encode($self->{channel}->{pubDate}) .'</pubDate>'."\n";
+	$output .= '<pubDate>'. $self->_encode($self->{channel}->{pubDate}) .'</pubDate>'."\n";
     } elsif ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<pubDate>'. $self->encode($self->{channel}->{'dc'}->{'date'}) .'</pubDate>'."\n";
+	$output .= '<pubDate>'. $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</pubDate>'."\n";
     }
 
     # last build date
     if ($self->{channel}->{lastBuildDate}) {
-	$output .= '<lastBuildDate>'. $self->encode($self->{channel}->{lastBuildDate}) .'</lastBuildDate>'."\n";
+	$output .= '<lastBuildDate>'. $self->_encode($self->{channel}->{lastBuildDate}) .'</lastBuildDate>'."\n";
     } elsif ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<lastBuildDate>'. $self->encode($self->{channel}->{'dc'}->{'date'}) .'</lastBuildDate>'."\n";
+	$output .= '<lastBuildDate>'. $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</lastBuildDate>'."\n";
     }
 
     # external CDF URL
@@ -900,16 +900,16 @@ sub as_rss_0_9_1 {
 
     # managing editor
     if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-	$output .= '<managingEditor>'. $self->encode($self->{channel}->{'dc'}->{'publisher'}) .'</managingEditor>'."\n";
+	$output .= '<managingEditor>'. $self->_encode($self->{channel}->{'dc'}->{'publisher'}) .'</managingEditor>'."\n";
     } elsif (defined($self->{channel}->{managingEditor})) {
-	$output .= '<managingEditor>'. $self->encode($self->{channel}->{managingEditor}) .'</managingEditor>'."\n";
+	$output .= '<managingEditor>'. $self->_encode($self->{channel}->{managingEditor}) .'</managingEditor>'."\n";
     }
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
-	$output .= '<webMaster>'. $self->encode($self->{channel}->{'dc'}->{'creator'}) .'</webMaster>'."\n";
+	$output .= '<webMaster>'. $self->_encode($self->{channel}->{'dc'}->{'creator'}) .'</webMaster>'."\n";
     } elsif (defined($self->{channel}->{webMaster})) {
-	$output .= '<webMaster>'. $self->encode($self->{channel}->{webMaster}) .'</webMaster>'."\n";
+	$output .= '<webMaster>'. $self->_encode($self->{channel}->{webMaster}) .'</webMaster>'."\n";
     }
 
     $output .= "\n";
@@ -921,10 +921,10 @@ sub as_rss_0_9_1 {
 	$output .= '<image>'."\n";
 
 	# title
-	$output .= '<title>'. $self->encode($self->{image}->{title}) .'</title>'."\n";
+	$output .= '<title>'. $self->_encode($self->{image}->{title}) .'</title>'."\n";
 
 	# url
-	$output .= '<url>'. $self->encode($self->{image}->{url}) .'</url>'."\n";
+	$output .= '<url>'. $self->_encode($self->{image}->{url}) .'</url>'."\n";
 
     # link, image width, image height and description
     $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
@@ -957,7 +957,7 @@ sub as_rss_0_9_1 {
     #####################
     if (defined($self->{skipHours}->{hour})) {
 	$output .= '<skipHours>'."\n";
-	$output .= '<hour>'. $self->encode($self->{skipHours}->{hour}) .'</hour>'."\n";
+	$output .= '<hour>'. $self->_encode($self->{skipHours}->{hour}) .'</hour>'."\n";
 	$output .= '</skipHours>'."\n\n";
     }
 
@@ -966,7 +966,7 @@ sub as_rss_0_9_1 {
     ####################
     if (defined($self->{skipDays}->{day})) {
 	$output .= '<skipDays>'."\n";
-	$output .= '<day>'. $self->encode($self->{skipDays}->{day}) .'</day>'."\n";
+	$output .= '<day>'. $self->_encode($self->{skipDays}->{day}) .'</day>'."\n";
 	$output .= '</skipDays>'."\n\n";
     }
 
@@ -1002,9 +1002,9 @@ sub as_rss_1_0 {
     # Channel Element #
     ###################
 	unless ( defined($self->{channel}->{'about'}) ) {
-		$output .= '<channel rdf:about="'. $self->encode($self->{channel}->{'link'}) .'">'."\n";
+		$output .= '<channel rdf:about="'. $self->_encode($self->{channel}->{'link'}) .'">'."\n";
 	} else {
-		$output .= '<channel rdf:about="'. $self->encode($self->{channel}->{'about'}) .'">'."\n";
+		$output .= '<channel rdf:about="'. $self->_encode($self->{channel}->{'about'}) .'">'."\n";
 	}
 
     # title, link and description
@@ -1013,9 +1013,9 @@ sub as_rss_1_0 {
     # additional elements for RSS 0.91
     # language
     if (defined($self->{channel}->{'dc'}->{'language'})) {
-	$output .= '<dc:language>'. $self->encode($self->{channel}->{'dc'}->{'language'}) .'</dc:language>'."\n";
+	$output .= '<dc:language>'. $self->_encode($self->{channel}->{'dc'}->{'language'}) .'</dc:language>'."\n";
     } elsif (defined($self->{channel}->{language})) {
-	$output .= '<dc:language>'.  $self->encode($self->{channel}->{language}) .'</dc:language>'."\n";
+	$output .= '<dc:language>'.  $self->_encode($self->{channel}->{language}) .'</dc:language>'."\n";
     }
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
@@ -1024,18 +1024,18 @@ sub as_rss_1_0 {
 
     # copyright
     if (defined($self->{channel}->{'dc'}->{'rights'})) {
-	$output .= '<dc:rights>'.  $self->encode($self->{channel}->{'dc'}->{'rights'}) .'</dc:rights>'."\n";
+	$output .= '<dc:rights>'.  $self->_encode($self->{channel}->{'dc'}->{'rights'}) .'</dc:rights>'."\n";
     } elsif (defined($self->{channel}->{copyright})) {
-	$output .= '<dc:rights>'.  $self->encode($self->{channel}->{copyright}) .'</dc:rights>'."\n";
+	$output .= '<dc:rights>'.  $self->_encode($self->{channel}->{copyright}) .'</dc:rights>'."\n";
     }
 
     # publication date
     if ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<dc:date>'.  $self->encode($self->{channel}->{'dc'}->{'date'}) .'</dc:date>'."\n";
+	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</dc:date>'."\n";
     } elsif ($self->{channel}->{pubDate}) {
-	$output .= '<dc:date>'.  $self->encode($self->{channel}->{pubDate}) .'</dc:date>'."\n";
+	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{pubDate}) .'</dc:date>'."\n";
     } elsif ($self->{channel}->{lastBuildDate}) {
-	$output .= '<dc:date>'.  $self->encode($self->{channel}->{lastBuildDate}) .'</dc:date>'."\n";
+	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{lastBuildDate}) .'</dc:date>'."\n";
     }
 
     # external CDF URL
@@ -1044,16 +1044,16 @@ sub as_rss_1_0 {
 
     # managing editor
     if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-	$output .= '<dc:publisher>'.  $self->encode($self->{channel}->{'dc'}->{'publisher'}) .'</dc:publisher>'."\n";
+	$output .= '<dc:publisher>'.  $self->_encode($self->{channel}->{'dc'}->{'publisher'}) .'</dc:publisher>'."\n";
     } elsif (defined($self->{channel}->{managingEditor})) {
-	$output .= '<dc:publisher>'.  $self->encode($self->{channel}->{managingEditor}) .'</dc:publisher>'."\n";
+	$output .= '<dc:publisher>'.  $self->_encode($self->{channel}->{managingEditor}) .'</dc:publisher>'."\n";
     }
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
-	$output .= '<dc:creator>'.  $self->encode($self->{channel}->{'dc'}->{'creator'}) .'</dc:creator>'."\n";
+	$output .= '<dc:creator>'.  $self->_encode($self->{channel}->{'dc'}->{'creator'}) .'</dc:creator>'."\n";
     } elsif (defined($self->{channel}->{webMaster})) {
-	$output .= '<dc:creator>'.  $self->encode($self->{channel}->{webMaster})  .'</dc:creator>'."\n";
+	$output .= '<dc:creator>'.  $self->_encode($self->{channel}->{webMaster})  .'</dc:creator>'."\n";
     }
 
     # Dublin Core module
@@ -1065,7 +1065,7 @@ sub as_rss_1_0 {
 		 || $dc eq 'date');
 	if (defined($self->{channel}->{dc}->{$dc}))
 	{
-	    $output .= "<dc:$dc>".  $self->encode($self->{channel}->{dc}->{$dc}) ."</dc:$dc>\n";
+	    $output .= "<dc:$dc>".  $self->_encode($self->{channel}->{dc}->{$dc}) ."</dc:$dc>\n";
 	}
     }
 
@@ -1073,7 +1073,7 @@ sub as_rss_1_0 {
     foreach my $syn ( keys %syn_ok_fields ) {
         if (defined($self->{channel}->{syn}->{$syn}))
         {
-            $output .= "<syn:$syn>".  $self->encode($self->{channel}->{syn}->{$syn}) ."</syn:$syn>\n";
+            $output .= "<syn:$syn>".  $self->_encode($self->{channel}->{syn}->{$syn}) ."</syn:$syn>\n";
         }
     }
 
@@ -1081,7 +1081,7 @@ sub as_rss_1_0 {
     if (exists($self->{'channel'}->{'taxo'}) && $self->{'channel'}->{'taxo'}) {
 	$output .= "<taxo:topics>\n  <rdf:Bag>\n";
 	foreach my $taxo (@{$self->{'channel'}->{'taxo'}}) {
-	    $output.= "    <rdf:li resource=\"" . $self->encode($taxo) . "\" />\n";
+	    $output.= "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n";
 	}
 	$output .= "  </rdf:Bag>\n</taxo:topics>\n";
     }
@@ -1094,11 +1094,11 @@ sub as_rss_1_0 {
 				 exists( $rdf_resource_fields{ $url }{ $el }) )
 			{
 				$output .= qq{<$prefix:$el rdf:resource="} .
-						   $self->encode($value) .
+						   $self->_encode($value) .
 						   qq{" />\n};
 			}
 			else {
-				$output .= "<$prefix:$el>".  $self->encode($value) ."</$prefix:$el>\n";
+				$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
 			}
 		}
   	}
@@ -1108,19 +1108,19 @@ sub as_rss_1_0 {
 
     foreach my $item (@{$self->{items}}) {
 		my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
-		$output .= '  <rdf:li rdf:resource="'. $self->encode($about) .'" />'."\n";
+		$output .= '  <rdf:li rdf:resource="'. $self->_encode($about) .'" />'."\n";
     }
 
     $output .= " </rdf:Seq>\n</items>\n";
 
     if (defined($self->{image}->{url}))
     {
-		$output .= '<image rdf:resource="'. $self->encode($self->{image}->{url}) .'" />'."\n";
+		$output .= '<image rdf:resource="'. $self->_encode($self->{image}->{url}) .'" />'."\n";
     }
 
     if (defined($self->{textinput}->{'link'}))
     {
-		$output .= '<textinput rdf:resource="'. $self->encode($self->{textinput}->{'link'}) .'" />'."\n";
+		$output .= '<textinput rdf:resource="'. $self->_encode($self->{textinput}->{'link'}) .'" />'."\n";
     }
 
     # end channel element
@@ -1130,13 +1130,13 @@ sub as_rss_1_0 {
     # image element #
     #################
     if (defined($self->{image}->{url})) {
-		$output .= '<image rdf:about="'. $self->encode($self->{image}->{url}) .'">'."\n";
+		$output .= '<image rdf:about="'. $self->_encode($self->{image}->{url}) .'">'."\n";
 
 		# title
-		$output .= '<title>'.  $self->encode($self->{image}->{title}) .'</title>'."\n";
+		$output .= '<title>'.  $self->_encode($self->{image}->{title}) .'</title>'."\n";
 
 		# url
-		$output .= '<url>'.  $self->encode($self->{image}->{url}) .'</url>'."\n";
+		$output .= '<url>'.  $self->_encode($self->{image}->{url}) .'</url>'."\n";
 
 		# link
         $self->_output_def_image_tag("link");
@@ -1157,7 +1157,7 @@ sub as_rss_1_0 {
 		foreach my $dc ( keys %dc_ok_fields ) {
 			if (defined($self->{image}->{dc}->{$dc}))
 			{
-				$output .= "<dc:$dc>".  $self->encode($self->{image}->{dc}->{$dc}) ."</dc:$dc>\n";
+				$output .= "<dc:$dc>".  $self->_encode($self->{image}->{dc}->{$dc}) ."</dc:$dc>\n";
 			}
 		}
 
@@ -1169,11 +1169,11 @@ sub as_rss_1_0 {
 					 exists( $rdf_resource_fields{ $url }{ $el }) )
 				{
 					$output .= qq{<$prefix:$el rdf:resource="} .
-							   $self->encode($value) .
+							   $self->_encode($value) .
 							   qq{" />\n};
 				}
 				else {
-					$output .= "<$prefix:$el>".  $self->encode($value) ."</$prefix:$el>\n";
+					$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
 				}
 			}
 	  	}
@@ -1187,14 +1187,14 @@ sub as_rss_1_0 {
     foreach my $item (@{$self->{items}}) {
 	if (defined($item->{title})) {
 	    my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
-	    $output .= '<item rdf:about="'. $self->encode($about) .qq{">\n};
+	    $output .= '<item rdf:about="'. $self->_encode($about) .qq{">\n};
 	    $self->_output_common_item_tags($item);
 
 	    # Dublin Core module
 	    foreach my $dc ( keys %dc_ok_fields ) {
 		if (defined($item->{dc}->{$dc}))
 		{
-		     $output .= "<dc:$dc>".  $self->encode($item->{dc}->{$dc}) ."</dc:$dc>\n";
+		     $output .= "<dc:$dc>".  $self->_encode($item->{dc}->{$dc}) ."</dc:$dc>\n";
 		}
 	    }
 
@@ -1215,11 +1215,11 @@ sub as_rss_1_0 {
 					 exists( $rdf_resource_fields{ $url }{ $el }) )
 				{
 					$output .= qq!<$prefix:$el rdf:resource="! .
-							   $self->encode($value) .
+							   $self->_encode($value) .
 							   qq!" />\n!;
 				}
 				else {
-					$output .= "<$prefix:$el>".  $self->encode($value) ."</$prefix:$el>\n";
+					$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
 				}
 			}
   		}
@@ -1232,7 +1232,7 @@ sub as_rss_1_0 {
     # textinput element #
     #####################
     if (defined($self->{textinput}->{'link'})) {
-        $output .= '<textinput rdf:about="'. $self->encode($self->{textinput}->{'link'}) .'">'."\n";
+        $output .= '<textinput rdf:about="'. $self->_encode($self->{textinput}->{'link'}) .'">'."\n";
         $self->_output_common_textinput_sub_elements();
 
         # Dublin Core module
@@ -1240,7 +1240,7 @@ sub as_rss_1_0 {
         {
             if (defined($self->{textinput}->{dc}->{$dc}))
             {
-                $output .= "<dc:$dc>".  $self->encode($self->{textinput}->{dc}->{$dc}) ."</dc:$dc>\n";
+                $output .= "<dc:$dc>".  $self->_encode($self->{textinput}->{dc}->{$dc}) ."</dc:$dc>\n";
             }
         }
 
@@ -1248,7 +1248,7 @@ sub as_rss_1_0 {
   while ( my($url, $prefix) = each %{$self->{modules}} ) {
     next if $prefix =~ /^(dc|syn|taxo)$/;
     while ( my($el, $value) = each %{$self->{textinput}->{$prefix}} ) {
-		  $output .= "<$prefix:$el>".  $self->encode($value) ."</$prefix:$el>\n";
+		  $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
     }
 	}
 
@@ -1288,16 +1288,16 @@ sub as_rss_2_0 {
 
     # copyright
     if (defined($self->{channel}->{'dc'}->{'rights'})) {
-        $output .= '<copyright>'.$self->encode($self->{channel}->{'dc'}->{'rights'}).'</copyright>'."\n";
+        $output .= '<copyright>'.$self->_encode($self->{channel}->{'dc'}->{'rights'}).'</copyright>'."\n";
     } elsif (defined($self->{channel}->{copyright})) {
-        $output .= '<copyright>'.$self->encode($self->{channel}->{copyright}).'</copyright>'."\n";
+        $output .= '<copyright>'.$self->_encode($self->{channel}->{copyright}).'</copyright>'."\n";
     }
 
     # publication date
     if ($self->{channel}->{pubDate}) {
-      $output .= '<pubDate>'.$self->encode($self->{channel}->{pubDate}).'</pubDate>'."\n";
+      $output .= '<pubDate>'.$self->_encode($self->{channel}->{pubDate}).'</pubDate>'."\n";
     } elsif ($self->{channel}->{'dc'}->{'date'}) {
-        $output .= '<pubDate>'.$self->encode($self->{channel}->{'dc'}->{'date'}).'</pubDate>'."\n";
+        $output .= '<pubDate>'.$self->_encode($self->{channel}->{'dc'}->{'date'}).'</pubDate>'."\n";
     } 
 
     $output .= $self->_tag_if_valid("lastBuildDate",$self->_calc_lastBuildDate());
@@ -1307,39 +1307,39 @@ sub as_rss_2_0 {
 
     # managing editor
     if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-        $output .= '<managingEditor>'.$self->encode($self->{channel}->{'dc'}->{'publisher'}).'</managingEditor>'."\n";
+        $output .= '<managingEditor>'.$self->_encode($self->{channel}->{'dc'}->{'publisher'}).'</managingEditor>'."\n";
     } elsif (defined($self->{channel}->{managingEditor})) {
-        $output .= '<managingEditor>'.$self->encode($self->{channel}->{managingEditor}).'</managingEditor>'."\n";
+        $output .= '<managingEditor>'.$self->_encode($self->{channel}->{managingEditor}).'</managingEditor>'."\n";
     }
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
-        $output .= '<webMaster>'.$self->encode($self->{channel}->{'dc'}->{'creator'}).'</webMaster>'."\n";
+        $output .= '<webMaster>'.$self->_encode($self->{channel}->{'dc'}->{'creator'}).'</webMaster>'."\n";
     } elsif (defined($self->{channel}->{webMaster})) {
-        $output .= '<webMaster>'.$self->encode($self->{channel}->{webMaster}).'</webMaster>'."\n";
+        $output .= '<webMaster>'.$self->_encode($self->{channel}->{webMaster}).'</webMaster>'."\n";
     }
 
     # category
     if (defined($self->{channel}->{'dc'}->{'category'})) {
-        $output .= '<category>'.$self->encode($self->{channel}->{'dc'}->{'category'}).'</category>'."\n";
+        $output .= '<category>'.$self->_encode($self->{channel}->{'dc'}->{'category'}).'</category>'."\n";
     } elsif (defined($self->{channel}->{category})) {
-        $output .= '<category>'.$self->encode($self->{channel}->{category}).'</category>'."\n";
+        $output .= '<category>'.$self->_encode($self->{channel}->{category}).'</category>'."\n";
     }
 
     # generator
     if (defined($self->{channel}->{'dc'}->{'generator'})) {
-        $output .= '<generator>'.$self->encode($self->{channel}->{'dc'}->{'generator'}).'</generator>'."\n";
+        $output .= '<generator>'.$self->_encode($self->{channel}->{'dc'}->{'generator'}).'</generator>'."\n";
     } elsif (defined($self->{channel}->{generator})) {
-        $output .= '<generator>'.$self->encode($self->{channel}->{generator}).'</generator>'."\n";
+        $output .= '<generator>'.$self->_encode($self->{channel}->{generator}).'</generator>'."\n";
     }
 
     # Insert cloud support here
 
     # ttl
     if (defined($self->{channel}->{'dc'}->{'ttl'})) {
-        $output .= '<ttl>'.$self->encode($self->{channel}->{'dc'}->{'ttl'}).'</ttl>'."\n";
+        $output .= '<ttl>'.$self->_encode($self->{channel}->{'dc'}->{'ttl'}).'</ttl>'."\n";
     } elsif (defined($self->{channel}->{ttl})) {
-        $output .= '<ttl>'.$self->encode($self->{channel}->{ttl}).'</ttl>'."\n";
+        $output .= '<ttl>'.$self->_encode($self->{channel}->{ttl}).'</ttl>'."\n";
     }
 
 
@@ -1353,10 +1353,10 @@ sub as_rss_2_0 {
         $output .= '<image>'."\n";
 
         # title
-        $output .= '<title>'.$self->encode($self->{image}->{title}).'</title>'."\n";
+        $output .= '<title>'.$self->_encode($self->{image}->{title}).'</title>'."\n";
 
         # url
-        $output .= '<url>'.$self->encode($self->{image}->{url}).'</url>'."\n";
+        $output .= '<url>'.$self->_encode($self->{image}->{url}).'</url>'."\n";
         # link, image width, image height and description
         $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
             [qw(link width height description)]
@@ -1386,7 +1386,7 @@ sub as_rss_2_0 {
                 if (defined $item->{$guid}) {
                     $output .= '<guid isPermaLink="'
                       . ($guid eq 'permaLink' ? 'true' : 'false')
-                      . '">'.$self->encode($item->{$guid}).'</guid>'."\n";
+                      . '">'.$self->_encode($item->{$guid}).'</guid>'."\n";
                     last;
                 }
             }
@@ -1394,12 +1394,12 @@ sub as_rss_2_0 {
             $self->_output_def_item_tag($item, "pubDate");
 
             if (defined $item->{source} && defined $item->{sourceUrl}) {
-                $output .= '<source url="'.$self->encode($item->{sourceUrl}).'">'.$self->encode($item->{source}).'</source>'."\n";
+                $output .= '<source url="'.$self->_encode($item->{sourceUrl}).'">'.$self->_encode($item->{source}).'</source>'."\n";
             }
 
             if (my $e = $item->{enclosure}) {
                 $output .= "<enclosure "
-                    . join(' ', map {qq!$_="! . $self->encode($e->{$_}) . qq!"!} keys(%$e))
+                    . join(' ', map {qq!$_="! . $self->_encode($e->{$_}) . qq!"!} keys(%$e))
                     . ' />' . "\n";
             }
 
@@ -1417,7 +1417,7 @@ sub as_rss_2_0 {
     #####################
     if (defined($self->{skipHours}->{hour})) {
         $output .= '<skipHours>'."\n";
-        $output .= '<hour>'.$self->encode($self->{skipHours}->{hour}).'</hour>'."\n";
+        $output .= '<hour>'.$self->_encode($self->{skipHours}->{hour}).'</hour>'."\n";
         $output .= '</skipHours>'."\n\n";
     }
 
@@ -1426,7 +1426,7 @@ sub as_rss_2_0 {
     ####################
     if (defined($self->{skipDays}->{day})) {
         $output .= '<skipDays>'."\n";
-        $output .= '<day>'.$self->encode($self->{skipDays}->{day}).'</day>'."\n";
+        $output .= '<day>'.$self->_encode($self->{skipDays}->{day}).'</day>'."\n";
         $output .= '</skipDays>'."\n\n";
     }
 
@@ -1840,7 +1840,7 @@ sub AUTOLOAD {
 }
 
 
-sub encode {
+sub _encode {
 	my ($self, $text) = @_;
 	return $text unless $self->{'encode_output'} and defined $text;
 
