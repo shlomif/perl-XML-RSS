@@ -18,7 +18,7 @@ sub contains
     );
     if (! $ok)
     {
-        diag("Could not find the substring in:{{{{\n$rss_output\n}}}}\n");
+        diag("Could not find the substring [$sub_string] in:{{{{\n$rss_output\n}}}}\n");
     }
 }
 
@@ -482,7 +482,7 @@ sub create_skipDays_rss
     contains(
         $rss,
         ("<item>\n" .
-         "<title>Foo&amp;Bar</title>\n" .
+         "<title>Foo&#x26;Bar</title>\n" .
          "<link>http://www.mytld/</link>\n" .
          "<guid isPermaLink=\"true\">0</guid>\n" .
          "</item>"
@@ -506,7 +506,7 @@ sub create_skipDays_rss
     contains(
         $rss,
         ("<item>\n" .
-         "<title>Foo&amp;Bar</title>\n" .
+         "<title>Foo&#x26;Bar</title>\n" .
          "<link>http://www.mytld/</link>\n" .
          "<guid isPermaLink=\"false\">0</guid>\n" .
          "</item>"
@@ -539,7 +539,7 @@ sub create_skipDays_rss
         contains(
             $rss,
             ("<item>\n" .
-             "<title>Foo&amp;Bar</title>\n" .
+             "<title>Foo&#x26;Bar</title>\n" .
              "<link>http://www.mytld/</link>\n" .
              "<source url=\"$s->[1]\">$s->[0]</source>\n" .
              "</item>"

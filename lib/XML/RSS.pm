@@ -1381,9 +1381,12 @@ sub as_rss_2_0 {
             # The unique identifier. Use 'permaLink' for an external
             # identifier, or 'guid' for a internal string.
             # (I call it permaLink in the hash for purposes of clarity.)
+
             for my $guid (qw(permaLink guid)) {
                 if (defined $item->{$guid}) {
-                    $output .= '<guid isPermaLink="true">'.$self->encode($item->{$guid}).'</guid>'."\n";
+                    $output .= '<guid isPermaLink="'
+                      . ($guid eq 'permaLink' ? 'true' : 'false')
+                      . '">'.$self->encode($item->{$guid}).'</guid>'."\n";
                     last;
                 }
             }
@@ -1647,6 +1650,12 @@ sub handle_start {
 			# increment item count
 			$self->{num_items}++;
 		}
+	# guid element is a permanent link unless isPermaLink attribute is set to false
+	} elsif ( $el eq 'guid' ) {
+        $self->{'items'}->[$self->{num_items} - 1]->{'permaLink'} =
+            !(exists($attribs{'isPermaLink'}) && 
+               ($attribs{'isPermaLink'} eq 'false')
+             );
     # beginning of taxo li element in item element
     #'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
     } elsif ($self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'))

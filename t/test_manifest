@@ -8,8 +8,10 @@ encoding.t
 1.0-parse.t
 1.0-parse-exotic.t
 2.0-generate.t
+2.0-permalink.t
 2.0-parse.t
 2.0-wo-title.t
+1.0-to-2.0.t
 auto_add_modules.t
 enclosures.t
 enclosures2.t
@@ -17,5 +19,6 @@ encode-output.t
 items-are-0.t
 load.t
 pod.t
+#pod-coverage.t
 rss2-gt-encoding.t
 charset1.t
