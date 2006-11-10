@@ -22,6 +22,7 @@ examples/merlyn1.rss
 examples/README
 examples/rss2html.pl
 examples/rss_info.pl
+examples/rss-permalink.xml
 examples/update_rss.pl
 lib/XML/RSS.pm
 Makefile.PL
