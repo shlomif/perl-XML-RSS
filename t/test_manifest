@@ -1,3 +1,6 @@
+load.t
+pod.t
+
 version.t
 encoding.t
 
@@ -17,8 +20,6 @@ enclosures.t
 enclosures2.t
 encode-output.t
 items-are-0.t
-load.t
-pod.t
 #pod-coverage.t
 rss2-gt-encoding.t
 charset1.t

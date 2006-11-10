@@ -28,7 +28,7 @@ use constant RSS_BLOGCHANNEL_URI    => "http://backend.userland.com/blogChannelM
 use constant RSS_CREATOR    => "joeuser\@example.com";
 use constant RSS_ITEM_TITLE => "This is an item";
 use constant RSS_ITEM_LINK  => "http://example.com/" . &POSIX::strftime( DATE_TEMPLATE_SHORT, gmtime ); # "$short_date";
-use constant RSS_ITEM_DESC  => "Yadda yadda yadda";
+use constant RSS_ITEM_DESC  => "Yadda yadda yadda - R&D;";
 
 my $rss = XML::RSS->new( version => RSS_VERSION );
 isa_ok( $rss, "XML::RSS" );
