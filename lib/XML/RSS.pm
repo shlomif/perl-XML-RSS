@@ -43,10 +43,10 @@ my %v0_9_1_ok_fields = (
 		description    => '',
 		docs           => undef,
 		language       => undef,
-		lastBuildDate  => '',
+		lastBuildDate  => undef,
 		'link'         => '',
 		managingEditor => undef,
-		pubDate        => '',
+		pubDate        => undef,
 		rating         => undef,
 		webMaster      => undef,
 		},
@@ -116,8 +116,8 @@ my %v2_0_ok_fields = (
         copyright      => undef,
         managingEditor => undef,
         webMaster      => undef,
-        pubDate        => '',
-        lastBuildDate  => '',
+        pubDate        => undef,
+        lastBuildDate  => undef,
         category       => undef,
         generator      => undef,
         docs           => undef,
@@ -544,6 +544,18 @@ sub _out_tag
     );
 }
 
+sub _out_defined_tag
+{
+    my ($self, $tag, $inner) = @_;
+
+    if (defined($inner))
+    {
+        $self->_out_tag($tag, $inner);
+    }
+
+    return;
+}
+
 sub _out_inner_tag
 {
     my ($self, $params, $tag) = @_;
@@ -692,6 +704,13 @@ sub _date_from_dc_date
     return $f->parse_datetime($string);
 }
 
+sub _date_from_rss2
+{
+    my ($self, $string) = @_;
+    my $f = DateTime::Format::Mail->new();
+    return $f->parse_datetime($string);
+}
+
 sub _date_to_rss2
 {
     my ($self, $date) = @_;
@@ -700,30 +719,117 @@ sub _date_to_rss2
     return $pf->format_datetime($date); 
 }
 
-sub _calc_lastBuildDate
+sub _date_to_dc_date
 {
-    my $self = shift;
-    return
-        exists($self->{channel}->{'dc'}->{'date'}) ?
-            $self->_date_to_rss2(
-                $self->_date_from_dc_date($self->{channel}->{'dc'}->{date})
-            ) :
-        exists($self->{channel}->{lastBuildDate}) ?
-            $self->{channel}->{lastBuildDate} :
-            undef
-        ;
+    my ($self, $date) = @_;
+
+    my $pf = DateTime::Format::W3CDTF->new();
+    return $pf->format_datetime($date); 
 }
 
-sub _tag_if_valid
+sub _calc_lastBuildDate_2_0
 {
-    my ($self, $tag, $value) = @_;
-    if (defined($value))
+    my $self = shift;
+    if (defined($self->{channel}->{'dc'}->{'date'}))
     {
-        return "<$tag>$value</$tag>\n";
+        return
+            $self->_date_to_rss2(
+                $self->_date_from_dc_date($self->{channel}->{'dc'}->{date})
+            );
+    }
+    elsif (defined($self->{channel}->{lastBuildDate}))
+    {
+        return $self->{channel}->{lastBuildDate};
     }
     else
     {
-        return "";
+        return undef;
+    }
+}
+
+sub _calc_lastBuildDate_0_9_1
+{
+    my $self = shift;
+    if (defined($self->{channel}->{lastBuildDate}))
+    {
+        return $self->{channel}->{lastBuildDate};
+    }
+    elsif (defined($self->{channel}->{'dc'}->{'date'}))
+    {
+        return
+            $self->_date_to_rss2(
+                $self->_date_from_dc_date($self->{channel}->{'dc'}->{date})
+            );
+    }
+    else
+    {
+        return undef;
+    }
+}
+
+sub _calc_pubDate
+{
+    my $self = shift;
+
+    if (defined($self->{channel}->{pubDate}))
+    {
+        return $self->{channel}->{pubDate};
+    }
+    elsif (defined($self->{channel}->{'dc'}->{'date'}))
+    {
+        return
+            $self->_date_to_rss2(
+                $self->_date_from_dc_date($self->{channel}->{'dc'}->{date})
+            );
+    }
+    else
+    {
+        return undef;
+    }
+}
+
+sub _get_other_dc_date
+{
+    my $self = shift;
+
+    if (defined($self->{channel}->{pubDate}))
+    {
+        return $self->{channel}->{pubDate};
+    }
+    elsif (defined($self->{channel}->{lastBuildDate}))
+    {
+        return $self->{channel}->{lastBuildDate};
+    }
+    else
+    {
+        return undef;
+    }
+}
+
+sub _calc_dc_date
+{
+    my $self = shift;
+
+    if (defined($self->{channel}->{'dc'}->{'date'}))
+    {
+        return $self->{channel}->{'dc'}->{'date'};
+    }
+    else
+    {
+        my $date = $self->_get_other_dc_date();
+
+        if (!defined($date))
+        {
+            return undef;
+        }
+        else
+        {
+            return $self->_date_to_dc_date(
+                $self->_date_from_rss2(
+                    $date
+                )
+            );
+        }
     }
 }
 
@@ -882,18 +988,10 @@ sub as_rss_0_9_1 {
     }
 
     # publication date
-    if ($self->{channel}->{pubDate}) {
-	$output .= '<pubDate>'. $self->_encode($self->{channel}->{pubDate}) .'</pubDate>'."\n";
-    } elsif ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<pubDate>'. $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</pubDate>'."\n";
-    }
+    $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
 
     # last build date
-    if ($self->{channel}->{lastBuildDate}) {
-	$output .= '<lastBuildDate>'. $self->_encode($self->{channel}->{lastBuildDate}) .'</lastBuildDate>'."\n";
-    } elsif ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<lastBuildDate>'. $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</lastBuildDate>'."\n";
-    }
+    $self->_out_defined_tag("lastBuildDate",$self->_calc_lastBuildDate_0_9_1());
 
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
@@ -1030,13 +1128,7 @@ sub as_rss_1_0 {
     }
 
     # publication date
-    if ($self->{channel}->{'dc'}->{'date'}) {
-	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{'dc'}->{'date'}) .'</dc:date>'."\n";
-    } elsif ($self->{channel}->{pubDate}) {
-	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{pubDate}) .'</dc:date>'."\n";
-    } elsif ($self->{channel}->{lastBuildDate}) {
-	$output .= '<dc:date>'.  $self->_encode($self->{channel}->{lastBuildDate}) .'</dc:date>'."\n";
-    }
+    $self->_out_defined_tag("dc:date",$self->_calc_dc_date());
 
     # external CDF URL
     #$output .= '<rss091:docs>'.$self->{channel}->{docs}.'</rss091:docs>'."\n"
@@ -1214,9 +1306,9 @@ sub as_rss_1_0 {
 				if ( exists( $rdf_resource_fields{ $url } ) and
 					 exists( $rdf_resource_fields{ $url }{ $el }) )
 				{
-					$output .= qq!<$prefix:$el rdf:resource="! .
+					$output .= qq{<$prefix:$el rdf:resource="} .
 							   $self->_encode($value) .
-							   qq!" />\n!;
+							   qq{" />\n};
 				}
 				else {
 					$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
@@ -1294,13 +1386,9 @@ sub as_rss_2_0 {
     }
 
     # publication date
-    if ($self->{channel}->{pubDate}) {
-      $output .= '<pubDate>'.$self->_encode($self->{channel}->{pubDate}).'</pubDate>'."\n";
-    } elsif ($self->{channel}->{'dc'}->{'date'}) {
-        $output .= '<pubDate>'.$self->_encode($self->{channel}->{'dc'}->{'date'}).'</pubDate>'."\n";
-    } 
+    $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
 
-    $output .= $self->_tag_if_valid("lastBuildDate",$self->_calc_lastBuildDate());
+    $self->_out_defined_tag("lastBuildDate",$self->_calc_lastBuildDate_2_0());
 
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 88;
+use Test::More tests => 93;
 
 use XML::RSS;
 
@@ -1387,4 +1387,94 @@ sub create_skipDays_rss
             );
         }
     }
+}
+
+{
+    my $rss = create_channel_rss({
+            version => "0.91", 
+            channel_params => [pubDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
+        });
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<pubDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</pubDate>\n" .
+        "\n" .
+        "<item>\n",
+        "0.9.1 - channel/pubDate Markup Injection"
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+            version => "0.91", 
+            channel_params => [lastBuildDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
+        });
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<lastBuildDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</lastBuildDate>\n" .
+        "\n" .
+        "<item>\n",
+        "0.9.1 - channel/lastBuildDate Markup Injection"
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+        channel_params => 
+        [
+            dc => 
+            {
+                date => "</pubDate><hello>There&amp;Everywhere</hello>"
+            },
+        ],
+    });
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<dc:date>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</dc:date>\n" .
+        "<items>\n",
+        "1.0 - dc/date Markup Injection"
+    );
+}
+
+{
+    my $rss = create_channel_rss({version => "2.0", 
+            channel_params => [pubDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
+            omit_date => 1,
+        });
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<pubDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</pubDate>\n" .
+        "\n" .
+        "<item>\n",
+        "2.0 - channel/pubDate Markup Injection"
+    );
+}
+
+{
+    my $rss = create_channel_rss({version => "2.0", 
+            channel_params => [lastBuildDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
+            omit_date => 1,
+        });
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<lastBuildDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</lastBuildDate>\n" .
+        "\n" .
+        "<item>\n",
+        "2.0 - channel/lastBuildDate Markup Injection"
+    );
 }

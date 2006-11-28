@@ -5,6 +5,8 @@ Revision history for Perl module XML::RSS
          Test::Manifest doesn't do the right thing with
          those. (RT#23678, Hugo van der Sanden)
        - Add Pod::Coverage tests
+       - More Date Conversion (Shlomi) 
+       - Fix for a Markup Injection Vulnerability (RT#23435, Shlomi)
 
 1.20 - November 10th, 2006
        - Value for $XML::RSS::modules gets destroyed (RT#18755, Shlomi)
