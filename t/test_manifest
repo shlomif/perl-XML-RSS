@@ -1,9 +1,7 @@
 load.t
 pod.t
-
 version.t
 encoding.t
-
 0.9-generate.t
 0.9-parse.t
 0.91-parse.t
