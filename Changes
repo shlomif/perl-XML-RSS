@@ -4,6 +4,7 @@ Revision history for Perl module XML::RSS
        - Remove empty lines in the test_manifest - some versions of
          Test::Manifest doesn't do the right thing with
          those. (RT#23678, Hugo van der Sanden)
+       - Add Pod::Coverage tests
 
 1.20 - November 10th, 2006
        - Value for $XML::RSS::modules gets destroyed (RT#18755, Shlomi)

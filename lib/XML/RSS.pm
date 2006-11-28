@@ -1471,9 +1471,7 @@ sub as_string {
 }
 
 sub handle_char {
-	# removed assumption that RSS is the default namespace - kellan, 11/5/02
-
-	my ($self,$cdata) = (@_);
+    my ($self,$cdata) = (@_);
 	
     # image element
     if (
@@ -2156,7 +2154,10 @@ default the value is false. (N.B. AUTO_ADD only updates the
 %{$obj->{'modules'}} hash.  It does not provide the other benefits
 of using add_module.)
 
+=item append
 
+This has never been documented - do you use this?  Please email the
+maintainer a note (Documentation patches welcome too ;-) )
 
 =back
 

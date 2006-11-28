@@ -18,6 +18,6 @@ enclosures.t
 enclosures2.t
 encode-output.t
 items-are-0.t
-#pod-coverage.t
+pod-coverage.t
 rss2-gt-encoding.t
 charset1.t
