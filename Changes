@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
 1.21 - 
+       - Support inserting a XSL stylesheet URL into the XML output
+         (RT#11569, Jason A. Smith, Shlomi Fish)
        - Remove empty lines in the test_manifest - some versions of
          Test::Manifest doesn't do the right thing with
          those. (RT#23678, Hugo van der Sanden)

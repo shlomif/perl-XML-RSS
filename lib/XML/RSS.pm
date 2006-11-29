@@ -483,6 +483,12 @@ sub _initialize {
 	? ($self->{encoding} = $hash{encoding})
 	    : ($self->{encoding} = 'UTF-8');
 
+    # stylesheet
+    if (exists($hash{stylesheet}))
+    {
+        $self->{stylesheet} = $hash{stylesheet};
+    }
+
     # initialize RSS data structure
     # RSS version 0.9
     if ($self->{version} eq '0.9') {
@@ -833,15 +839,29 @@ sub _calc_dc_date
     }
 }
 
+sub _output_xml_declaration
+{
+    my $self = shift;
+
+    $self->_out('<?xml version="1.0" encoding="'.$self->{encoding}.'"?>'."\n");
+    if (defined($self->{stylesheet}))
+    {
+        my $style_url = $self->_encode($self->{stylesheet});
+        $self->_out(qq{<?xml-stylesheet type="text/xsl" href="$style_url"?>\n});
+    }
+
+    $self->_out("\n");
+
+    return undef;
+}
+
 sub as_rss_0_9 {
     my $self = shift;
     my $output;
 
     $self->_set_output_var(\$output);
 
-    # XML declaration
-    my $encoding = exists $$self{encoding} ? qq| encoding="$$self{encoding}"| : '';
-    $output .= qq|<?xml version="1.0"$encoding?>\n\n|;
+    $self->_output_xml_declaration();
 
     # RDF root element
     $output .= '<rdf:RDF'."\n".'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
@@ -962,8 +982,8 @@ sub as_rss_0_9_1 {
     my $output;
 
     $self->_set_output_var(\$output);
-    # XML declaration
-    $output .= '<?xml version="1.0" encoding="'.$self->{encoding}.'"?>'."\n\n";
+
+    $self->_output_xml_declaration();
 
     # DOCTYPE
     $output .= '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"'."\n";
@@ -1081,8 +1101,7 @@ sub as_rss_1_0 {
 
     $self->_set_output_var(\$output);
 
-    # XML declaration
-    $output .= '<?xml version="1.0" encoding="'.$self->{encoding}.'"?>'."\n\n";
+    $self->_output_xml_declaration();
 
     # RDF namespaces declaration
     $output .="<rdf:RDF"."\n";
@@ -1357,8 +1376,8 @@ sub as_rss_2_0 {
     my $output;
 
     $self->_set_output_var(\$output);
-    # XML declaration
-    $output .= '<?xml version="1.0" encoding="'.$self->{encoding}.'"?>'."\n\n";
+
+    $self->_output_xml_declaration();
 
     # DOCTYPE
     # $output .= '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"'."\n";
@@ -2140,7 +2159,7 @@ including news headlines, threaded measages, products catalogs, etc.
 =over 4
 
 =item new XML::RSS (version=>$version, encoding=>$encoding,
-output=>$output)
+output=>$output, stylesheet=>$stylesheet_url)
 
 Constructor for XML::RSS. It returns a reference to an XML::RSS object.
 You may also pass the RSS version and the XML encoding to use. The default
@@ -2148,7 +2167,12 @@ B<version> is 1.0. The default B<encoding> is UTF-8. You may also specify
 the B<output> format regarless of the input version. This comes in handy
 when you want to convert RSS between versions. The XML::RSS modules
 will convert between any of the formats.  If you set <encode_output> XML::RSS
-will make sure to encode any entities in generated RSS.  This is now on by default.
+will make sure to encode any entities in generated RSS.  This is now on by
+default.
+
+You can also pass an optional URL to an XSL stylesheet that can be used to
+output an C<<< <?xsl-stylesheet ... ?> >>> meta-tag in the header that will
+allow some browsers to render the RSS file as HTML.
 
 =item add_item (title=>$title, link=>$link, description=>$desc, mode=>$mode)
 

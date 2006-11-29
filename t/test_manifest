@@ -21,3 +21,4 @@ items-are-0.t
 pod-coverage.t
 rss2-gt-encoding.t
 charset1.t
+xml-header.t

@@ -54,5 +54,6 @@ t/pod-coverage.t
 t/rss2-gt-encoding.t
 t/test_manifest
 t/version.t
+t/xml-header.t
 TODO
 
