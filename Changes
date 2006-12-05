@@ -1,6 +1,6 @@
 Revision history for Perl module XML::RSS
 
-1.21 - 
+1.21 - December 5th, 2006
        - Support inserting a XSL stylesheet URL into the XML output
          (RT#11569, Jason A. Smith, Shlomi Fish)
        - Remove empty lines in the test_manifest - some versions of

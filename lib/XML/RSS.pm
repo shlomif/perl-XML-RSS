@@ -9,7 +9,7 @@ use DateTime::Format::W3CDTF;
   
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
-$VERSION = '1.20';
+$VERSION = '1.21';
 
 $AUTO_ADD = 0;
 
