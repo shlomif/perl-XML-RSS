@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
 1.22 - 
+       - Channel->{link | textInput} (sic) property mapping in RSS 2.0
+         (RT#9862, Shlomi / chatiman)
        - Don't fail the tests if Test::Pod::Coverage is missing
          (reported by Andreas J. Koenig)
 

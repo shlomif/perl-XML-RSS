@@ -1631,6 +1631,10 @@ sub handle_char {
     } elsif (
 	     $self->within_element("textinput")
 	     || $self->within_element($self->generate_ns_name("textinput",$self->{rss_namespace}))
+	     # textinput is spelled textInput (with a capital "I") in RSS 2.0
+	     || $self->within_element("textInput")
+	     || $self->within_element($self->generate_ns_name("textInput",$self->{rss_namespace}))
+         
 	) {
 		my $ns = $self->namespace($self->current_element);
 
