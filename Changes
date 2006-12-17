@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
 1.22 - 
+       - make add_module work for both RSS 1.0 and 2.0 (RT#16191,
+         RT#18907, RT#13209, Ben Trott, Ivan Willis)
        - Channel->{link | textInput} (sic) property mapping in RSS 2.0
          (RT#9862, Shlomi / chatiman)
        - Don't fail the tests if Test::Pod::Coverage is missing

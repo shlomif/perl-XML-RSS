@@ -9,6 +9,7 @@ encoding.t
 1.0-parse.t
 1.0-parse-exotic.t
 2.0-generate.t
+2.0-modules.t
 2.0-permalink.t
 2.0-parse.t
 2.0-parse-2.t

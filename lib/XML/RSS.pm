@@ -420,6 +420,14 @@ sub _get_default_modules
     };
 }
 
+sub _get_default_rss_2_0_modules
+{
+    return
+    {
+        'http://backend.userland.com/blogChannelModule' => 'blogChannel',
+    };
+}
+
 sub new {
     my $class = shift;
     
@@ -460,18 +468,23 @@ sub _initialize {
     $self->{namespaces} = {};
 	$self->{rss_namespace} = '';
 
+    #get version info
+    (exists($hash{version}))
+	? ($self->{version} = $hash{version})
+	    : ($self->{version} = '1.0');
+
     # modules
-    $self->{modules} = $self->_get_default_modules();
+    $self->{modules} =
+        (($self->{version} eq "2.0") ?
+            $self->_get_default_rss_2_0_modules() :
+            $self->_get_default_modules()
+        );
 
 	# encode output from as_string?
 	(exists($hash{encode_output}))
 	? ($self->{encode_output} = $hash{encode_output})
 		: ($self->{encode_output} = 1);
 
-    #get version info
-    (exists($hash{version}))
-	? ($self->{version} = $hash{version})
-	    : ($self->{version} = '1.0');
 
     # set default output
     (exists($hash{output}))
@@ -1385,7 +1398,16 @@ sub as_rss_2_0 {
 
     # RSS root element
     # $output .= '<rss version="0.91">'."\n\n";
-    $output .= '<rss version="2.0" xmlns:blogChannel="http://backend.userland.com/blogChannelModule">' . "\n\n";
+    
+    # RSS namespaces declaration
+    $output .= q[<rss version="2.0"] . "\n";
+ 
+     # print all imported namespaces
+    while (my($k, $v) = each %{$self->{modules}}) {
+        $output.=" xmlns:$v=\"$k\"\n";
+    }
+ 
+    $output .=">"."\n\n";
 
     ###################
     # Channel Element #
@@ -1449,7 +1471,22 @@ sub as_rss_2_0 {
         $output .= '<ttl>'.$self->_encode($self->{channel}->{ttl}).'</ttl>'."\n";
     }
 
-
+    # Ad-hoc modules
+    while ( my($url, $prefix) = each %{$self->{modules}} ) {
+        next if $prefix =~ /^(dc|syn|taxo)$/;
+        while ( my($el, $value) = each %{$self->{channel}->{$prefix}} ) {
+            if ( exists( $rdf_resource_fields{ $url } ) and
+                 exists( $rdf_resource_fields{ $url }{ $el }) )
+            {
+                $output .= "<$prefix:$el rdf:resource=\"" .
+                           $self->_encode($value) .
+                           "\" />\n";
+            }
+            else {
+                $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
+            }
+        }
+    }
 
     $output .= "\n";
 
@@ -1468,6 +1505,23 @@ sub as_rss_2_0 {
         $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
             [qw(link width height description)]
         );
+
+        # Ad-hoc modules for images
+        while ( my($url, $prefix) = each %{$self->{modules}} ) {
+            next if $prefix =~ /^(dc|syn|taxo)$/;
+            while ( my($el, $value) = each %{$self->{image}->{$prefix}} ) {
+                if ( exists( $rdf_resource_fields{ $url } ) and
+                     exists( $rdf_resource_fields{ $url }{ $el }) )
+                {
+                    $output .= qq{<$prefix:$el rdf:resource="} .
+                               $self->_encode($value) .
+                               qq{" />\n};
+                }
+                else {
+                    $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
+                }
+            }
+        }
 
         # end image element
         $output .= '</image>'."\n\n";
@@ -1508,6 +1562,23 @@ sub as_rss_2_0 {
                 $output .= "<enclosure "
                     . join(' ', map {qq!$_="! . $self->_encode($e->{$_}) . qq!"!} keys(%$e))
                     . ' />' . "\n";
+            }
+
+            # Ad-hoc modules
+            while ( my($url, $prefix) = each %{$self->{modules}} ) {
+                next if $prefix =~ /^(dc|syn|taxo)$/;
+                while ( my($el, $value) = each %{$item->{$prefix}} ) {
+                    if ( exists( $rdf_resource_fields{ $url } ) and
+                         exists( $rdf_resource_fields{ $url }{ $el }) )
+                    {
+                        $output .= "<$prefix:$el rdf:resource=\"" .
+                                   $self->_encode($value) .
+                                   "\" />\n";
+                    }
+                    else {
+                        $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
+                    }
+                }
             }
 
             # end image element

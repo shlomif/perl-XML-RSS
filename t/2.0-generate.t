@@ -84,9 +84,6 @@ ok($rss->add_item(
 		  enclosure   => { type=>"application/x-bittorrent", url => 'http://127.0.0.1/torrents/The_Passion_of_Dave_Winer.torrent' },
 		 ), "Set one RSS item" );
 
-my $len = length($rss->as_string());
-ok( $len, "RSS feed has '$len' characters" );
-
 ok( $rss->add_module( prefix => RSS_MOD_PREFIX, uri => RSS_MOD_URI ),
 	"Added module: " . RSS_MOD_PREFIX );
 
@@ -96,6 +93,9 @@ my $uri = RSS_MOD_URI;
 #warn Data::Dumper->Dump([\$rss], [qw(rss)] );
 
 is( $rss->{modules}->{$uri}, RSS_MOD_PREFIX, "Namespace URI is " . RSS_MOD_URI);
+
+my $len = length($rss->as_string());
+ok( $len, "RSS feed has '$len' characters" );
 
 ok( $rss->save(RSS_SAVEAS), "Wrote to disk: " . RSS_SAVEAS );
 
