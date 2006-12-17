@@ -15,6 +15,7 @@ examples/1.0/rss1.0.exotic.rdf
 examples/1.0/rss1.0.rdf
 examples/1.0/slash.rdf
 examples/1.0/update_rss_1.0.pl
+examples/1.0/with_content.rdf
 examples/2.0/sf-hs-with-lastBuildDate.rss
 examples/2.0/sf-hs-with-pubDate.rss
 examples/convert.pl

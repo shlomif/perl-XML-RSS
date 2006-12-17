@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 7;
 
 use XML::RSS;
 
@@ -54,5 +54,20 @@ use XML::RSS;
         is ($item->{dc}->{subject}, "journal",
             "item[0]/dc/subject in RSS 1.0"
         );
+    }
+}
+
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(File::Spec->catfile("examples","1.0","with_content.rdf"));
+
+    {
+        my $item = $rss->{items}->[0];
+
+        # TEST
+        is ($item->{content}->{encoded}, "<p>Hello!</p>",
+            "Testing the \"content\" namespace");
     }
 }

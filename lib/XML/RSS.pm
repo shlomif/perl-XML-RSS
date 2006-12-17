@@ -9,7 +9,7 @@ use DateTime::Format::W3CDTF;
   
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
-$VERSION = '1.21';
+$VERSION = '1.22';
 
 $AUTO_ADD = 0;
 
@@ -416,7 +416,8 @@ sub _get_default_modules
         'http://purl.org/rss/1.0/modules/syndication/' => 'syn',
         'http://purl.org/dc/elements/1.1/' => 'dc',
         'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo',
-    	'http://webns.net/mvcb/' => 'admin'
+    	'http://webns.net/mvcb/' => 'admin',
+        'http://purl.org/rss/1.0/modules/content/' => 'content',
     };
 }
 
