@@ -90,14 +90,22 @@ cmp_ok($rss->{modules}->{$uri},
        RSS_MOD_PREFIX,
        "Namespace URI is ".RSS_MOD_URI);
 
-my $len = length($rss->as_string());
+my $as_string = $rss->as_string();
+my $len = length($as_string);
 ok($len,"RSS feed has '$len' characters");
 
 ok($rss->save(RSS_SAVEAS),
    "Wrote to disk: ".RSS_SAVEAS);
 
-my $size = (stat(RSS_SAVEAS))[7];
-cmp_ok($size,"==",$len,RSS_SAVEAS." has '$size' characters.");
+my $file_contents;
+{
+    local $/;
+    open I, "<", RSS_SAVEAS();
+    $file_contents = <I>;
+    close(I);
+}
+
+cmp_ok($file_contents,"eq",$as_string,RSS_SAVEAS." contains the as_string() result");
 
 eval { $rss->parsefile(RSS_SAVEAS)};
 is($@,'',"Parsed ".RSS_SAVEAS);
