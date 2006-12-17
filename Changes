@@ -4,6 +4,8 @@ Revision history for Perl module XML::RSS
        - Fix the tests to work on Win32 (RT#23752, Shlomi, Kenichi Ishigaki)
        - make add_module work for both RSS 1.0 and 2.0 (RT#16191,
          RT#18907, RT#13209, Ben Trott, Ivan Willis)
+       - Fixed the problem with a version => "2.0" RSS not parsing correctly
+         the namespaced elements in a RSS 1.0 feed (in RT#23822, Shlomi)
        - Channel->{link | textInput} (sic) property mapping in RSS 2.0
          (RT#9862, Shlomi / chatiman)
        - Don't fail the tests if Test::Pod::Coverage is missing

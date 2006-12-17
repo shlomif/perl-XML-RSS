@@ -7,6 +7,7 @@ encoding.t
 0.91-parse.t
 1.0-generate.t
 1.0-parse.t
+1.0-parse-2.t
 1.0-parse-exotic.t
 2.0-generate.t
 2.0-modules.t

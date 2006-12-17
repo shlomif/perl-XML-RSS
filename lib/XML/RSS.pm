@@ -1938,6 +1938,15 @@ sub _auto_add_modules {
 sub parse {
     my $self = shift;
     $self->_initialize((%$self));
+
+    # Workaround to make sure that if we were defined with version => "2.0"
+    # then we can still parse 1.0 and 0.9.x feeds correctly. 
+    if ($self->{version} eq "2.0")
+    {
+        $self->{modules} =
+           +{%{$self->_get_default_modules()}, %{$self->{modules}}};
+    }
+    
 	$self->SUPER::parse(shift);
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
@@ -1946,6 +1955,15 @@ sub parse {
 sub parsefile {
     my $self = shift;
 	$self->_initialize((%$self));
+
+    # Workaround to make sure that if we were defined with version => "2.0"
+    # then we can still parse 1.0 and 0.9.x feeds correctly. 
+    if ($self->{version} eq "2.0")
+    {
+        $self->{modules} =
+           +{%{$self->_get_default_modules()}, %{$self->{modules}}};
+    }
+    
     $self->SUPER::parsefile(shift);
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
