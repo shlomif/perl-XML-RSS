@@ -1689,7 +1689,20 @@ sub handle_char {
 			(!$ns && !$self->{rss_namespace}) ||
 			($ns eq $self->{rss_namespace})
 		) {
-	    	$self->{'items'}->[$self->{num_items}-1]->{$self->current_element} .= $cdata;
+            my $elem = $self->current_element;
+            if (@{$self->{'items'}} < $self->{num_items})
+            {
+                push @{$self->{items}}, {};
+            }
+            my $item = $self->{'items'}->[$self->{num_items}-1];
+            if ($elem eq "guid")
+            {
+                $item->{$item->{isPermaLink} ? "permaLink" : "guid"} .= $cdata;
+            }
+            else
+            {
+                $item->{$elem} .= $cdata;
+            }
 		} else {
 	    	# If it's in another namespace
 	    	$self->{'items'}->[$self->{num_items}-1]->{$ns}->{$self->current_element} .= $cdata;
@@ -1833,7 +1846,7 @@ sub handle_start {
 		}
 	# guid element is a permanent link unless isPermaLink attribute is set to false
 	} elsif ( $el eq 'guid' ) {
-        $self->{'items'}->[$self->{num_items} - 1]->{'permaLink'} =
+        $self->{'items'}->[$self->{num_items} - 1]->{'isPermaLink'} =
             !(exists($attribs{'isPermaLink'}) && 
                ($attribs{'isPermaLink'} eq 'false')
              );
