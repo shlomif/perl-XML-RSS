@@ -21,7 +21,7 @@ else {
 }
 
 {
-    my $rss_file = File::Spec->catfile("t", "charset1-generated.xml");
+    my $rss_file = File::Spec->catfile("t", "generated", "charset1-generated.xml");
 
     my %rss_new = (version => '1.0', encoding => 'iso-8859-1', output => '1.0');
     my $rss = XML::RSS->new(%rss_new);

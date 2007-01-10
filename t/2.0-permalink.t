@@ -9,7 +9,7 @@ use File::Spec;
 use XML::RSS;
 
 my $rss = new XML::RSS;
-$rss->parsefile(File::Spec->catfile("examples", 'rss-permalink.xml') );
+$rss->parsefile(File::Spec->catfile('t', 'data', 'rss-permalink.xml') );
 my $item_with_guid_true = $rss->{'items'}->[0];
 my $item_with_guid_missing = $rss->{'items'}->[1];
 my $item_with_guid_false = $rss->{'items'}->[2];

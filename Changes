@@ -1,6 +1,7 @@
 Revision history for Perl module XML::RSS
 
 1.23 -
+       - Clean up examples/ directory and move generated files out of t/
        - isPermaLink / guid fixes (RT#23983, Shlomi)
 
 1.22 - December 17th, 2006 
