@@ -2,6 +2,7 @@
 
 use Test::More tests => 3;
 use XML::RSS;
+use File::Spec;
 
 $XML::RSS::AUTO_ADD = 1;
 
@@ -11,7 +12,11 @@ my $TAG = 'fm';
 my $rss = XML::RSS->new();
 isa_ok( $rss, 'XML::RSS' );
 
-$rss->parsefile( 'examples/freshmeat.rdf' );
+$rss->parsefile(
+    File::Spec->catfile(
+        File::Spec->curdir(), 't', 'data', 'freshmeat.rdf' 
+    )
+);
 
 #use Data::Dumper;
 #print Data::Dumper::Dumper( $rss );
