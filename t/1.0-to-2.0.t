@@ -43,7 +43,7 @@ use XML::RSS;
 
 {
     my $rss = XML::RSS->new;
-    $rss->parsefile(File::Spec->catfile("examples", "2.0","sf-hs-with-pubDate.rss"));
+    $rss->parsefile(File::Spec->catfile(File::Spec->curdir(), "t", "data", "2.0","sf-hs-with-pubDate.rss"));
 
     $rss->{output} = "1.0";
     my $string = $rss->as_string;
@@ -64,7 +64,7 @@ use XML::RSS;
 
 {
     my $rss = XML::RSS->new;
-    $rss->parsefile(File::Spec->catfile("examples", "2.0","sf-hs-with-lastBuildDate.rss"));
+    $rss->parsefile(File::Spec->catfile(File::Spec->curdir(), "t", "data", "2.0","sf-hs-with-lastBuildDate.rss"));
 
     $rss->{output} = "1.0";
     my $string = $rss->as_string;

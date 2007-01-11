@@ -16,8 +16,6 @@ examples/1.0/rss1.0.rdf
 examples/1.0/slash.rdf
 examples/1.0/update_rss_1.0.pl
 examples/1.0/with_content.rdf
-examples/2.0/sf-hs-with-lastBuildDate.rss
-examples/2.0/sf-hs-with-pubDate.rss
 examples/convert.pl
 examples/create_rss_multiple.pl
 examples/freshmeat.rdf
@@ -47,6 +45,8 @@ t/2.0-wo-title.t
 t/auto_add_modules.t
 t/charset1.t
 t/data/merlyn1.rss
+t/data/2.0/sf-hs-with-lastBuildDate.rss
+t/data/2.0/sf-hs-with-pubDate.rss
 t/enclosures.t
 t/enclosures2.t
 t/encode-output.t
