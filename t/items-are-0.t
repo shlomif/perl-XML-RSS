@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 95;
+use Test::More tests => 96;
 
 use XML::RSS;
 
@@ -1526,3 +1526,17 @@ sub create_rss_with_image_w_undef_link
     );
 }
 
+{
+    my $rss = create_channel_rss({
+            version => "1.0", 
+            channel_params => [about => "http://xml-rss-hackers.tld/"],
+        });
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://xml-rss-hackers.tld/\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<items>\n",
+        "1.0 - channel/about overrides the rdf:about attribute."
+    );
+}
