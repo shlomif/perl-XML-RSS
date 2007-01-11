@@ -51,6 +51,7 @@ t/enclosures.t
 t/enclosures2.t
 t/encode-output.t
 t/encoding.t
+t/generated/placeholder.txt
 t/items-are-0.t
 t/load.t
 t/pod.t
