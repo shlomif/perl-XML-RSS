@@ -1,6 +1,8 @@
 Revision history for Perl module XML::RSS
 
 1.23 -
+       - Many files were left in the distribution or Subversion repository 
+         that were executable but need not be. Made them non-executable.
        - Clean up examples/ directory and move generated files out of t/
        - isPermaLink / guid fixes (RT#23983, Shlomi)
 
