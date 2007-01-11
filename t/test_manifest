@@ -4,6 +4,7 @@ version.t
 encoding.t
 0.9-generate.t
 0.9-parse.t
+0.9-strict.t
 0.91-parse.t
 1.0-generate.t
 1.0-parse.t

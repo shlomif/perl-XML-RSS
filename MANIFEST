@@ -27,6 +27,7 @@ MANIFEST
 README
 t/0.9-generate.t
 t/0.9-parse.t
+t/0.9-strict.t
 t/0.91-parse.t
 t/1.0-generate.t
 t/1.0-parse-exotic.t
