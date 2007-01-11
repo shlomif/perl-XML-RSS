@@ -614,13 +614,6 @@ sub _output_def_image_tag
     return;
 }
 
-sub _output_textinput_tag
-{
-    my ($self, $tag) = @_;
-
-    return $self->_out_inner_tag("textinput", $tag);
-}
-
 sub _output_multiple_tags
 {
     my ($self, $ext_tag, $tags_ref) = @_;
