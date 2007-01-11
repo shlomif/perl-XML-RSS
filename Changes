@@ -1,6 +1,11 @@
 Revision history for Perl module XML::RSS
 
 1.23 -
+       - Removed some methods that were not used.
+       - Added more tests to increase the test coverage.
+       - Fixed a bug where prefixes could be specified with invalid characters
+         because there was a range (.-_) instead of three individual
+         characters (.\-_).
        - Many files were left in the distribution or Subversion repository 
          that were executable but need not be. Made them non-executable.
        - Clean up examples/ directory and move generated files out of t/
