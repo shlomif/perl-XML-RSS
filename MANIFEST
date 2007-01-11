@@ -40,6 +40,7 @@ t/2.0-parse.t
 t/2.0-parse-2.t
 t/2.0-permalink.t
 t/2.0-wo-title.t
+t/add-item-insert-vs-append.t
 t/auto_add_modules.t
 t/charset1.t
 t/data/freshmeat.rdf
