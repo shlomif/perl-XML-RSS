@@ -1062,12 +1062,10 @@ sub as_rss_0_9_1 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-        if (defined($item->{title})) {
-            $output .= '<item>'."\n";
-            $self->_output_common_item_tags($item);
-            # end image element
-            $output .= '</item>'."\n\n";
-        }
+        $output .= '<item>'."\n";
+        $self->_output_common_item_tags($item);
+        # end image element
+        $output .= '</item>'."\n\n";
     }
 
     #####################
@@ -1301,47 +1299,45 @@ sub as_rss_1_0 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-	if (defined($item->{title})) {
-	    my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
-	    $output .= '<item rdf:about="'. $self->_encode($about) .qq{">\n};
-	    $self->_output_common_item_tags($item);
+        my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
+        $output .= '<item rdf:about="'. $self->_encode($about) .qq{">\n};
+        $self->_output_common_item_tags($item);
 
-	    # Dublin Core module
-	    foreach my $dc ( keys %dc_ok_fields ) {
-		if (defined($item->{dc}->{$dc}))
-		{
-		     $output .= "<dc:$dc>".  $self->_encode($item->{dc}->{$dc}) ."</dc:$dc>\n";
-		}
-	    }
+        # Dublin Core module
+        foreach my $dc ( keys %dc_ok_fields ) {
+            if (defined($item->{dc}->{$dc}))
+            {
+                $output .= "<dc:$dc>".  $self->_encode($item->{dc}->{$dc}) ."</dc:$dc>\n";
+            }
+        }
 
-	    # Taxonomy module
-	    if (exists($item->{'taxo'})  && $item->{'taxo'}) {
-		$output .= "<taxo:topics>\n  <rdf:Bag>\n";
-		foreach my $taxo (@{$item->{'taxo'}}) {
-		    $output.= "    <rdf:li resource=\"$taxo\" />\n";
-		}
-		$output .= "  </rdf:Bag>\n</taxo:topics>\n";
-	    }
+        # Taxonomy module
+        if (exists($item->{'taxo'})  && $item->{'taxo'}) {
+            $output .= "<taxo:topics>\n  <rdf:Bag>\n";
+            foreach my $taxo (@{$item->{'taxo'}}) {
+                $output.= "    <rdf:li resource=\"$taxo\" />\n";
+            }
+            $output .= "  </rdf:Bag>\n</taxo:topics>\n";
+        }
 
-		# Ad-hoc modules
-		while ( my($url, $prefix) = each %{$self->{modules}} ) {
-			next if $prefix =~ /^(dc|syn|taxo)$/;
-			while ( my($el, $value) = each %{$item->{$prefix}} ) {
-				if ( exists( $rdf_resource_fields{ $url } ) and
-					 exists( $rdf_resource_fields{ $url }{ $el }) )
-				{
-					$output .= qq{<$prefix:$el rdf:resource="} .
-							   $self->_encode($value) .
-							   qq{" />\n};
-				}
-				else {
-					$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-				}
-			}
-  		}
-	    # end item element
-	    $output .= '</item>'."\n\n";
-	}
+        # Ad-hoc modules
+        while ( my($url, $prefix) = each %{$self->{modules}} ) {
+            next if $prefix =~ /^(dc|syn|taxo)$/;
+            while ( my($el, $value) = each %{$item->{$prefix}} ) {
+                if ( exists( $rdf_resource_fields{ $url } ) and
+                     exists( $rdf_resource_fields{ $url }{ $el }) )
+                {
+                    $output .= qq{<$prefix:$el rdf:resource="} .
+                                           $self->_encode($value) .
+                                           qq{" />\n};
+                }
+                else {
+                    $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
+                }
+            }
+        }
+        # end item element
+        $output .= '</item>'."\n\n";
     } # end foreach my $item (@{$self->{items}})
 
     #####################
