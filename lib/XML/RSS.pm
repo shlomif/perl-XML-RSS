@@ -906,14 +906,12 @@ sub as_rss_0_9 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-	if (defined $item->{title}) {
-	    $output .= '<item>'."\n";
-	    $output .= '<title>'. $self->_encode($item->{title}) .'</title>'."\n";
-	    $output .= '<link>'. $self->_encode($item->{'link'}) .'</link>'."\n";
+	$output .= '<item>'."\n";
 
-	    # end image element
-	    $output .= '</item>'."\n\n";
-	}
+	$output .= '<title>'. $self->_encode($item->{title}) .'</title>'."\n";
+	$output .= '<link>'. $self->_encode($item->{'link'}) .'</link>'."\n";
+
+	$output .= '</item>'."\n\n";
     }
 
     #####################
