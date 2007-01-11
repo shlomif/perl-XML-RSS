@@ -1,9 +1,10 @@
 use Test::More tests => 4;
 use XML::RSS;
+use File::Spec;
 
 $|++;
 
-my $file = 'examples/1.0/rss1.0.exotic.rdf';
+my $file = File::Spec->catfile(File::Spec->curdir(), "t", "data", "1.0", "rss1.0.exotic.rdf");
 my $rss = new XML::RSS(encode_output => 1);
 
 eval {
