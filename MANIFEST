@@ -21,7 +21,6 @@ examples/2.0/sf-hs-with-pubDate.rss
 examples/convert.pl
 examples/create_rss_multiple.pl
 examples/freshmeat.rdf
-examples/merlyn1.rss
 examples/README
 examples/rss2html.pl
 examples/rss_info.pl
@@ -47,6 +46,7 @@ t/2.0-permalink.t
 t/2.0-wo-title.t
 t/auto_add_modules.t
 t/charset1.t
+t/data/merlyn1.rss
 t/enclosures.t
 t/enclosures2.t
 t/encode-output.t

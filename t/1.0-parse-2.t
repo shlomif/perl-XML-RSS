@@ -10,8 +10,7 @@ use XML::RSS;
 {
     my $rss = XML::RSS->new();
 
-    $rss->parsefile(File::Spec->catfile("examples","merlyn1.rss"));
-
+    $rss->parsefile(File::Spec->catfile(File::Spec->curdir(), "t", "data", "merlyn1.rss"));
     {
         my $item = $rss->{items}->[0];
 
@@ -35,7 +34,7 @@ use XML::RSS;
 {
     my $rss = XML::RSS->new(version => "2.0");
 
-    $rss->parsefile(File::Spec->catfile("examples","merlyn1.rss"));
+    $rss->parsefile(File::Spec->catfile(File::Spec->curdir(), "t", "data", "merlyn1.rss"));
 
     {
         my $item = $rss->{items}->[0];
