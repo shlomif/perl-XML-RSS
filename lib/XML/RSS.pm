@@ -1200,7 +1200,7 @@ sub as_rss_1_0 {
     }
 
     # Taxonomy module
-    if (exists($self->{'channel'}->{'taxo'}) && $self->{'channel'}->{'taxo'}) {
+    if ($self->{'channel'}->{'taxo'}) {
 	$output .= "<taxo:topics>\n  <rdf:Bag>\n";
 	foreach my $taxo (@{$self->{'channel'}->{'taxo'}}) {
 	    $output.= "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n";

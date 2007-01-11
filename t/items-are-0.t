@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 96;
+use Test::More tests => 97;
 
 use XML::RSS;
 
@@ -1538,5 +1538,29 @@ sub create_rss_with_image_w_undef_link
         "<description>Linux software</description>\n" .
         "<items>\n",
         "1.0 - channel/about overrides the rdf:about attribute."
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+        channel_params => 
+        [
+            taxo => ["Foo", "Bar", "QuGof", "Lambda&Delta"],
+        ],
+    });
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        qq{<taxo:topics>\n  <rdf:Bag>\n} .
+        qq{    <rdf:li resource="Foo" />\n} .
+        qq{    <rdf:li resource="Bar" />\n} .
+        qq{    <rdf:li resource="QuGof" />\n} .
+        qq{    <rdf:li resource="Lambda&#x26;Delta" />\n} .
+        qq{  </rdf:Bag>\n</taxo:topics>\n} .
+        "<items>\n",
+        "1.0 - taxo topics"
     );
 }
