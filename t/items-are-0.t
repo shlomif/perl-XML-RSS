@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 93;
+use Test::More tests => 95;
 
 use XML::RSS;
 
@@ -242,6 +242,34 @@ sub create_skipDays_rss
         );
 
     $rss->skipDays(@{$extra_skipDays_params});
+
+    return $rss;
+}
+
+sub create_rss_with_image_w_undef_link
+{
+    my $args = shift;
+    # my $rss = new XML::RSS (version => '0.9');
+    my $rss = new XML::RSS (version => $args->{version});
+
+    my $extra_image_params = $args->{image_params} || [];
+
+    $rss->channel(
+        title => "freshmeat.net",
+        link  => "http://freshmeat.net",
+        description => "the one-stop-shop for all your Linux software needs",
+        );
+
+    $rss->image(
+        title => "freshmeat.net",
+        url   => "0",
+        @{$extra_image_params},
+        );
+
+    $rss->add_item(
+        title => "GTKeyboard 0.85",
+        link  => "http://freshmeat.net/news/1999/06/21/930003829.html"
+        );
 
     return $rss;
 }
@@ -1478,3 +1506,23 @@ sub create_skipDays_rss
         "2.0 - channel/lastBuildDate Markup Injection"
     );
 }
+
+{
+    my $rss = create_rss_with_image_w_undef_link({version => "0.9"});
+    # TEST
+    contains ($rss, qq{<image>\n<title>freshmeat.net</title>\n<url>0</url>\n</image>\n\n},
+        "Image with undefined link does not render the Image - RSS version 0.9"
+    );
+}
+
+
+{
+    my $rss = create_rss_with_image_w_undef_link({version => "1.0"});
+    # TEST
+    contains ($rss, 
+        qq{<image rdf:about="0">\n<title>freshmeat.net</title>\n} . 
+        qq{<url>0</url>\n</image>\n\n},
+        "Image with undefined link does not render the Image - RSS version 1.0"
+    );
+}
+
