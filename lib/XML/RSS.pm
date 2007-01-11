@@ -1098,6 +1098,15 @@ sub as_rss_0_9_1 {
     return $self->_flush_output();
 }
 
+sub _get_channel_rdf_about
+{
+    my $self = shift;
+
+    return $self->{channel}->{
+        defined($self->{channel}->{'about'}) ? "about" : "link"
+    };
+}
+
 sub as_rss_1_0 {
     my $self = shift;
     my $output;
@@ -1121,11 +1130,10 @@ sub as_rss_1_0 {
     ###################
     # Channel Element #
     ###################
-	unless ( defined($self->{channel}->{'about'}) ) {
-		$output .= '<channel rdf:about="'. $self->_encode($self->{channel}->{'link'}) .'">'."\n";
-	} else {
-		$output .= '<channel rdf:about="'. $self->_encode($self->{channel}->{'about'}) .'">'."\n";
-	}
+    $self->_out('<channel rdf:about="' . 
+        $self->_encode($self->_get_channel_rdf_about()) .
+        '">'."\n"
+        );
 
     # title, link and description
     $self->_output_common_channel_elements();
