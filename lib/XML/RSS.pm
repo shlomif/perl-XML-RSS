@@ -666,8 +666,8 @@ sub add_module {
     my $self = shift;
     my $hash = {@_};
 
-    $hash->{prefix} =~ /^[a-z_][a-z0-9.-_]*$/ or
-    croak "a namespace prefix should look like [a-z_][a-z0-9.-_]*";
+    $hash->{prefix} =~ /^[a-z_][a-z0-9.\-_]*$/ or
+    croak "a namespace prefix should look like [a-z_][a-z0-9.\\-_]*";
 
     $hash->{uri} or
     croak "a URI must be provided in a namespace declaration";
