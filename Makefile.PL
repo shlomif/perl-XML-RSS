@@ -46,6 +46,6 @@ WriteMakefile(
                                  'DateTime::Format::Mail' => 0,
                                  'DateTime::Format::W3CDTF' => 0,
                                 },
-              'clean'        => { FILES => 'XML-RSS-* t/generated/*' },
+              'clean'        => { FILES => 'XML-RSS-* t/generated/*.xml' },
               @extras
 );
