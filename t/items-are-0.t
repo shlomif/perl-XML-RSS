@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 101;
+use Test::More tests => 102;
 
 use XML::RSS;
 
@@ -1601,7 +1601,7 @@ sub create_rss_with_image_w_undef_link
         "<description>Linux software</description>\n" .
         "<eloq:grow>There</eloq:grow>\n" .
         "<items>\n",
-        '1.0 - channel/[module] with unknown key'
+        '1.0 - channel/[module] with new module'
     );
 }
 
@@ -1641,6 +1641,25 @@ sub create_rss_with_image_w_undef_link
         "<link>http://freshmeat.net/</link>\n" .
         "<eloq:grow>There</eloq:grow>\n" .
         "</image>",
-        '1.0 - image/[module] with unknown key'
+        '1.0 - image/[module] with new module'
+    );
+}
+
+{
+    my $rss = create_rss_1({
+        version => "1.0",
+        image_params => 
+        [
+            admin => { 'generatorAgent' => "Spozilla 5.5", },
+        ],
+    });
+    # TEST
+    contains($rss, "<image rdf:about=\"0\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<url>0</url>\n" .
+        "<link>http://freshmeat.net/</link>\n" .
+        "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
+        "</image>",
+        '1.0 - image/[module] with known module'
     );
 }
