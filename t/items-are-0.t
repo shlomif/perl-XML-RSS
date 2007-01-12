@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 117;
+use Test::More tests => 120;
 
 use XML::RSS;
 
@@ -2020,3 +2020,35 @@ sub create_rss_without_item
     );
 }
 
+## Test the RSS 2.0 <source url= condition.
+{
+    # TEST:$num_iters=3;
+    foreach my $s (
+        [undef, "http://www.hercules.tld/",],
+        ["Hercules", undef,],
+        [undef, undef],
+        )
+    {
+        my $rss = create_item_with_0_rss({version => "2.0",
+                item_params => 
+                [
+                    title => "Foo&Bar",
+                    link => "http://www.mylongtldyeahbaby/",
+                    source => $s->[0],
+                    sourceUrl => $s->[1],
+                ],
+            }
+        );
+
+        # TEST*$num_iters
+        contains(
+            $rss,
+            ("<item>\n" .
+             "<title>Foo&#x26;Bar</title>\n" .
+             "<link>http://www.mylongtldyeahbaby/</link>\n" .
+             "</item>"
+             ),
+            "2.0 - item - Source and/or Source URL are not defined",
+        );
+    }
+}
