@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 103;
+use Test::More tests => 106;
 
 use XML::RSS;
 
@@ -269,6 +269,29 @@ sub create_rss_with_image_w_undef_link
     $rss->add_item(
         title => "GTKeyboard 0.85",
         link  => "http://freshmeat.net/news/1999/06/21/930003829.html"
+        );
+
+    return $rss;
+}
+
+sub create_item_rss
+{
+    my $args = shift;
+    # my $rss = new XML::RSS (version => '0.9');
+    my $rss = new XML::RSS (version => $args->{version});
+
+    my $extra_item_params = $args->{item_params} || [];
+
+    $rss->channel(
+        title => "freshmeat.net",
+        link  => "http://freshmeat.net",
+        description => "the one-stop-shop for all your Linux software needs",
+        );
+
+    $rss->add_item(
+        title => "Freecell Solver",
+        link  => "http://fc-solve.berlios.de/",
+        @$extra_item_params,
         );
 
     return $rss;
@@ -1689,5 +1712,66 @@ sub create_rss_with_image_w_undef_link
         qq{</taxo:topics>\n} .
         "</item>\n",
         "1.0 - item/taxo:topics (with escaping)"
+    );
+}
+
+## Test the RSS 1.0 items' ad-hoc modules support.
+
+{
+    my $rss = create_item_rss({
+        version => "1.0",
+        item_params => 
+        [
+            admin => { 'foobar' => "Quod", },
+        ],
+    });
+
+    # TEST
+    contains($rss, "<item rdf:about=\"http://fc-solve.berlios.de/\">\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<admin:foobar>Quod</admin:foobar>\n" .
+        "</item>",
+        '1.0 - item/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_item_rss({
+        version => "1.0",
+        item_params => 
+        [
+            eloq => { 'grow' => "There", },
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+
+    # TEST
+    contains($rss, "<item rdf:about=\"http://fc-solve.berlios.de/\">\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .        
+        "</item>",
+        '1.0 - item/[module] with new module'
+    );
+}
+
+{
+    my $rss = create_item_rss({
+        version => "1.0",
+        item_params => 
+        [
+            admin => { 'generatorAgent' => "Spozilla 5.5", },
+        ],
+    });
+
+    # TEST
+    contains($rss, "<item rdf:about=\"http://fc-solve.berlios.de/\">\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
+        "</item>",
+        '1.0 - item/[module] with known module'
     );
 }
