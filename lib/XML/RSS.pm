@@ -1371,6 +1371,8 @@ sub as_rss_1_0 {
         }
 
   # Ad-hoc modules
+  # TODO : Should this follow the %rdf_resources conventions of the items'
+  # and channel's modules' support ?
   while ( my($url, $prefix) = each %{$self->{modules}} ) {
     next if $prefix =~ /^(dc|syn|taxo)$/;
     while ( my($el, $value) = each %{$self->{textinput}->{$prefix}} ) {
