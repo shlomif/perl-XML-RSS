@@ -1320,10 +1320,10 @@ sub as_rss_1_0 {
         }
 
         # Taxonomy module
-        if (exists($item->{'taxo'})  && $item->{'taxo'}) {
+        if ($item->{'taxo'}) {
             $output .= "<taxo:topics>\n  <rdf:Bag>\n";
             foreach my $taxo (@{$item->{'taxo'}}) {
-                $output.= "    <rdf:li resource=\"$taxo\" />\n";
+                $output .= "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n";
             }
             $output .= "  </rdf:Bag>\n</taxo:topics>\n";
         }

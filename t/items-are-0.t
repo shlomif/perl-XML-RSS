@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 102;
+use Test::More tests => 103;
 
 use XML::RSS;
 
@@ -1661,5 +1661,33 @@ sub create_rss_with_image_w_undef_link
         "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
         "</image>",
         '1.0 - image/[module] with known module'
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+    });
+
+    $rss->add_item(
+        title => "In the Jungle",
+        link => "http://jungle.tld/Enter/",
+        taxo => ["Foo","Loom", "<Ard>", "Yok&Dol"],
+    );
+
+    # TEST
+    contains($rss, "<item rdf:about=\"http://jungle.tld/Enter/\">\n" .
+        "<title>In the Jungle</title>\n" .
+        "<link>http://jungle.tld/Enter/</link>\n" .
+        qq{<taxo:topics>\n} . 
+        qq{  <rdf:Bag>\n} .
+        qq{    <rdf:li resource="Foo" />\n} .
+        qq{    <rdf:li resource="Loom" />\n} .
+        qq{    <rdf:li resource="&#x3C;Ard&#x3E;" />\n} .
+        qq{    <rdf:li resource="Yok&#x26;Dol" />\n} .
+        qq{  </rdf:Bag>\n} . 
+        qq{</taxo:topics>\n} .
+        "</item>\n",
+        "1.0 - item/taxo:topics (with escaping)"
     );
 }
