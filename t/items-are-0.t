@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 113;
+use Test::More tests => 116;
 
 use XML::RSS;
 
@@ -1923,5 +1923,68 @@ sub create_item_rss
         "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
         "</image>",
         '2.0 - image/[module] with known module'
+    );
+}
+
+## Test the RSS 2.0 items' ad-hoc modules support.
+
+{
+    my $rss = create_item_rss({
+        version => "2.0",
+        item_params => 
+        [
+            admin => { 'foobar' => "Quod", },
+        ],
+    });
+    $rss->add_module(prefix => "admin", uri => "http://webns.net/mvcb/");
+
+    # TEST
+    contains($rss, "<item>\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<admin:foobar>Quod</admin:foobar>\n" .
+        "</item>",
+        '2.0 - item/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_item_rss({
+        version => "2.0",
+        item_params => 
+        [
+            eloq => { 'grow' => "There", },
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+
+    # TEST
+    contains($rss, "<item>\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .        
+        "</item>",
+        '2.0 - item/[module] with new module'
+    );
+}
+
+{
+    my $rss = create_item_rss({
+        version => "2.0",
+        item_params => 
+        [
+            admin => { 'generatorAgent' => "Spozilla 5.5", },
+        ],
+    });
+    $rss->add_module(prefix => "admin", uri => "http://webns.net/mvcb/");
+
+    # TEST
+    contains($rss, "<item>\n" .
+        "<title>Freecell Solver</title>\n" .
+        "<link>http://fc-solve.berlios.de/</link>\n" .
+        "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
+        "</item>",
+        '2.0 - item/[module] with known module'
     );
 }
