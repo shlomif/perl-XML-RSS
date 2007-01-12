@@ -1107,6 +1107,24 @@ sub _get_channel_rdf_about
     };
 }
 
+sub _output_taxo_topics
+{
+    my ($self, $elem) = @_;
+
+    if (my $list = $elem->{'taxo'}) {
+        $self->_out("<taxo:topics>\n  <rdf:Bag>\n");
+        foreach my $taxo (@{$list})
+        {
+            $self->_out(
+                "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n"
+            );
+        }
+        $self->_out("  </rdf:Bag>\n</taxo:topics>\n");
+    }
+
+    return;
+}
+
 sub as_rss_1_0 {
     my $self = shift;
     my $output;
@@ -1200,13 +1218,7 @@ sub as_rss_1_0 {
     }
 
     # Taxonomy module
-    if ($self->{'channel'}->{'taxo'}) {
-	$output .= "<taxo:topics>\n  <rdf:Bag>\n";
-	foreach my $taxo (@{$self->{'channel'}->{'taxo'}}) {
-	    $output.= "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n";
-	}
-	$output .= "  </rdf:Bag>\n</taxo:topics>\n";
-    }
+    $self->_output_taxo_topics($self->{channel});
 
     # Ad-hoc modules
 	while ( my($url, $prefix) = each %{$self->{modules}} ) {
@@ -1320,13 +1332,7 @@ sub as_rss_1_0 {
         }
 
         # Taxonomy module
-        if ($item->{'taxo'}) {
-            $output .= "<taxo:topics>\n  <rdf:Bag>\n";
-            foreach my $taxo (@{$item->{'taxo'}}) {
-                $output .= "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n";
-            }
-            $output .= "  </rdf:Bag>\n</taxo:topics>\n";
-        }
+        $self->_output_taxo_topics($item);
 
         # Ad-hoc modules
         while ( my($url, $prefix) = each %{$self->{modules}} ) {
