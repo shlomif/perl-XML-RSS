@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 116;
+use Test::More tests => 117;
 
 use XML::RSS;
 
@@ -292,6 +292,21 @@ sub create_item_rss
         title => "Freecell Solver",
         link  => "http://fc-solve.berlios.de/",
         @$extra_item_params,
+        );
+
+    return $rss;
+}
+
+sub create_rss_without_item
+{
+    my $args = shift;
+    # my $rss = new XML::RSS (version => '0.9');
+    my $rss = new XML::RSS (version => $args->{version});
+
+    $rss->channel(
+        title => "freshmeat.net",
+        link  => "http://freshmeat.net",
+        description => "the one-stop-shop for all your Linux software needs",
         );
 
     return $rss;
@@ -1988,3 +2003,20 @@ sub create_item_rss
         '2.0 - item/[module] with known module'
     );
 }
+
+## Test the RSS 2.0 skipping-items condition.
+
+{
+    my $rss = create_rss_without_item({
+        version => "2.0",
+    });
+    $rss->add_item(
+        link  => "http://freshmeat.net/news/1999/06/21/930003829.html"
+    );
+
+    # TEST
+    not_contains($rss, "<item>\n" .
+        '2.0 - Item without description or title is skipped'
+    );
+}
+
