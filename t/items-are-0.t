@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 97;
+use Test::More tests => 101;
 
 use XML::RSS;
 
@@ -1562,5 +1562,85 @@ sub create_rss_with_image_w_undef_link
         qq{  </rdf:Bag>\n</taxo:topics>\n} .
         "<items>\n",
         "1.0 - taxo topics"
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+        channel_params => 
+        [
+            admin => { 'foobar' => "Quod", },
+        ],
+    });
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<admin:foobar>Quod</admin:foobar>\n" .
+        "<items>\n",
+        '1.0 - channel/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+        channel_params => 
+        [
+            eloq => { 'grow' => "There", },
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .
+        "<items>\n",
+        '1.0 - channel/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_rss_1({
+        version => "1.0",
+        image_params => 
+        [
+            admin => { 'foobar' => "Quod", },
+        ],
+    });
+    # TEST
+    contains($rss, "<image rdf:about=\"0\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<url>0</url>\n" .
+        "<link>http://freshmeat.net/</link>\n" .
+        "<admin:foobar>Quod</admin:foobar>\n" .
+        "</image>",
+        '1.0 - image/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_rss_1({
+        version => "1.0",
+        image_params => 
+        [
+            eloq => { 'grow' => "There", },
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+    # TEST
+    contains($rss, "<image rdf:about=\"0\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<url>0</url>\n" .
+        "<link>http://freshmeat.net/</link>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .
+        "</image>",
+        '1.0 - image/[module] with unknown key'
     );
 }
