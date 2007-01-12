@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 107;
+use Test::More tests => 110;
 
 use XML::RSS;
 
@@ -1791,3 +1791,74 @@ sub create_item_rss
         "1.0 - textinput/[module]",
     );
 }
+
+{
+    my $rss = create_channel_rss({
+        version => "2.0",
+        channel_params => 
+        [
+            admin => { 'generatorAgent' => "Spozilla 5.5", },
+        ],
+    });
+
+    $rss->add_module(prefix => "admin", uri => "http://webns.net/mvcb/");
+    # TEST
+
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
+        "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
+        "\n" . 
+        "<item>\n",
+        '2.0 - channel/[module] with known module and key'
+    );
+}
+
+
+{
+    my $rss = create_channel_rss({
+        version => "2.0",
+        channel_params => 
+        [
+            admin => { 'foobar' => "Quod", },
+        ],
+    });
+    $rss->add_module(prefix => "admin", uri => "http://webns.net/mvcb/");
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
+        "<admin:foobar>Quod</admin:foobar>\n" .
+        "\n" .
+        "<item>\n",
+        '2.0 - channel/[module] with unknown key'
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "2.0",
+        channel_params => 
+        [
+            eloq => { 'grow' => "There", },
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+    # TEST
+    contains($rss, "<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .
+        "\n" .
+        "<item>\n",
+        '2.0 - channel/[module] with new module'
+    );
+}
+
