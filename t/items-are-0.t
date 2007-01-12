@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 106;
+use Test::More tests => 107;
 
 use XML::RSS;
 
@@ -1773,5 +1773,21 @@ sub create_item_rss
         "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
         "</item>",
         '1.0 - item/[module] with known module'
+    );
+}
+
+{
+    my $rss = create_textinput_with_0_rss({version => "1.0",
+            textinput_params => [admin => { 'foobar' => "Quod", },],
+        });
+    # TEST
+    contains(
+        $rss,
+        ("<textinput rdf:about=\"0\">\n" .
+         join("", map {"<$_>0</$_>\n"} (qw(title description name link))) .
+         "<admin:foobar>Quod</admin:foobar>\n" .
+         "</textinput>\n\n"
+        ),
+        "1.0 - textinput/[module]",
     );
 }
