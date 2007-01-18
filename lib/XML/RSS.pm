@@ -2419,6 +2419,56 @@ prefix; access them via their namespace URL like so:
 XML::RSS will continue to provide built-in support for standard RSS 1.0
 modules as they appear.
 
+=head1 Non-API Methods
+
+=head2 $rss->as_rss_0_9()
+
+B<WARNING>: this function is not an API function and should not be called
+directly. It is kept as is for backwards compatibility with legacy code. Use
+the following code instead:
+
+    $rss->{output} = "0.9";
+    my $text = $rss->as_string();
+
+This function renders the data in the object as an RSS version 0.9 feed,
+and returns the resultant XML as text.
+
+=head2 $rss->as_rss_0_9_1()
+
+B<WARNING>: this function is not an API function and should not be called
+directly. It is kept as is for backwards compatibility with legacy code. Use
+the following code instead:
+
+    $rss->{output} = "0.91";
+    my $text = $rss->as_string();
+
+This function renders the data in the object as an RSS version 0.91 feed,
+and returns the resultant XML as text.
+
+=head2 $rss->as_rss_1_0()
+
+B<WARNING>: this function is not an API function and should not be called
+directly. It is kept as is for backwards compatibility with legacy code. Use
+the following code instead:
+
+    $rss->{output} = "1.0";
+    my $text = $rss->as_string();
+
+This function renders the data in the object as an RSS version 1.0 feed,
+and returns the resultant XML as text.
+
+=head2 $rss->as_rss_2_0()
+
+B<WARNING>: this function is not an API function and should not be called
+directly. It is kept as is for backwards compatibility with legacy code. Use
+the following code instead:
+
+    $rss->{output} = "2.0";
+    my $text = $rss->as_string();
+
+This function renders the data in the object as an RSS version 2.0 feed,
+and returns the resultant XML as text.
+
 =head1 BUGS
 
 Please use rt.cpan.org for tracking bugs.  The list of current open
