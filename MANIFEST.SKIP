@@ -11,3 +11,4 @@ MANIFEST.bak
 ~$
 .rej$
 bak$
+^keep-out

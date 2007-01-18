@@ -1918,27 +1918,6 @@ sub handle_start {
     }
 }
 
-sub append {
-	my($self, $inside, $cdata) = @_;
-
-	my $ns = $self->namespace($self->current_element);
-
-	# If it's in the default RSS 1.0 namespace
-	if ($ns eq 'http://purl.org/rss/1.0/') {
-		#$self->{'items'}->[$self->{num_items}-1]->{$self->current_element} .= $cdata;
-		$inside->{$self->current_element} .= $cdata;
-	}
-
-	# If it's in another namespace
-	#$self->{'items'}->[$self->{num_items}-1]->{$ns}->{$self->current_element} .= $cdata;
-	$inside->{$ns}->{$self->current_element} .= $cdata;
-
-	# If it's in a module namespace, provide a friendlier prefix duplicate
-	$self->{modules}->{$ns} and $inside->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
-
-	return $inside;
-}
-
 sub _auto_add_modules {
 	my $self = shift;
 	
@@ -2375,11 +2354,6 @@ namespaces, set the $XML::RSS::AUTO_ADD variable to a true value.  By
 default the value is false. (N.B. AUTO_ADD only updates the
 %{$obj->{'modules'}} hash.  It does not provide the other benefits
 of using add_module.)
-
-=item append
-
-This has never been documented - do you use this?  Please email the
-maintainer a note (Documentation patches welcome too ;-) )
 
 =back
 
