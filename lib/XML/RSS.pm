@@ -1717,6 +1717,11 @@ sub handle_char {
 
 		my $ns = $self->namespace($self->current_element);
 
+        if (!defined($ns))
+        {
+            $ns = "";
+        }
+
 		# If it's in the default RSS 1.0 namespace
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
@@ -1861,6 +1866,11 @@ sub handle_start {
     } elsif ($el eq 'item') {
 		# deal with trouble makers who use mod_content :)
 		my $ns =  $self->namespace( $el );
+
+        if (!defined($ns))
+        {
+            $ns = "";
+        }
 
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
