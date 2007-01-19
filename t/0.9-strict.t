@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 8;
 
 use XML::RSS;
 
@@ -97,5 +97,41 @@ sub item_throws_like
         ],
         qr{\Atotal items cannot exceed},
         "strict - checking for too many items"
+    );
+}
+
+{
+    my $rss = XML::RSS->new(version => "0.9");
+
+    $rss->strict(1);
+
+    $rss->channel(
+        title => "freshmeat.net",
+        link  => "http://freshmeat.net",
+        description => "the one-stop-shop for all your Linux software needs",
+        stupid_key => ("I think therefore I am." x 1000),
+        );
+
+    # TEST
+    ok (1, "Can add unknown keys of unlimited size without restriction");
+
+}
+
+{
+    my $rss = XML::RSS->new(version => "0.9");
+
+    $rss->strict(1);
+
+    eval {
+        $rss->channel(
+            title => "freshmeat.net",
+            link  => "http://freshmeat.net",
+            description => ("I think therefore I am." x 1000),
+        );
+    };
+
+    # TEST
+    like ($@, qr{\Adescription cannot exceed 500 characters in length},
+        "Testing for exception thrown on a very long key"
     );
 }

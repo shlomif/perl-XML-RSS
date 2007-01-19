@@ -2093,7 +2093,14 @@ sub AUTOLOAD {
 
 sub _encode {
 	my ($self, $text) = @_;
-	return $text unless $self->{'encode_output'} and defined $text;
+
+    if (!defined($text))
+    {
+        croak "\$text is undefined in XML::RSS::_encode(). We don't know how ".
+        "to handle it!"
+    }
+
+	return $text unless $self->{'encode_output'};
 
 	my $encoded_text = '';
 	

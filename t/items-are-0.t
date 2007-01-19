@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 155;
+use Test::More tests => 157;
 
 use XML::RSS;
 
@@ -35,8 +35,10 @@ sub not_contains
 sub create_rss_1
 {
     my $args = shift;
+
+    my $extra_rss_args = $args->{rss_args} || [];
     # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = new XML::RSS (version => $args->{version}, @$extra_rss_args);
     my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
         "http://freshmeat.net/";
 
@@ -2073,6 +2075,40 @@ sub create_rss_without_item
         "<dc:publisher>0</dc:publisher>\n" .
         "<items>\n",
         "Unknown version renders as 1.0"
+    );
+}
+
+{
+    my $version = "0.91";
+    my $rss = create_rss_1({
+            version => $version,
+            image_link => "Hello <there&amp;Yes>",
+            rss_args => ["encode_output" => 0],
+        });
+    # TEST
+    contains($rss,
+        "<image>\n<title>freshmeat.net</title>\n<url>0</url>\n<link>Hello <there&amp;Yes></link>\n</image>\n",
+        "Testing encode_output is false",
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+            version => "0.91",
+            image_link => undef,
+            channel_params => [ title => undef ],
+        });
+
+    my $output;
+
+    eval
+    {
+        $output = $rss->as_string();
+    };
+
+    # TEST
+    ok ($@ =~ m{\A\$text is undefined in XML::RSS::_encode},
+        "Undefined string throws an exception"
     );
 }
 
