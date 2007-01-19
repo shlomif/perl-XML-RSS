@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 141;
+use Test::More tests => 143;
 
 use XML::RSS;
 
@@ -2554,6 +2554,135 @@ EOF
     is ($rss_parser->{items}->[0]->{""}->{foo},
         "Aye Karamba",
         "Parsing 1.0 - element in a null namespace contained in image",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "2.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:foo="http://foo.tld/foobar/"
+>
+
+<channel>
+<title>Test 2.0 Feed</title>
+<link>http://example.com/</link>
+<description></description>
+<language>en-us</language>
+<copyright>Copyright 2002</copyright>
+<pubDate>2007-01-19T14:21:43+0200</pubDate>
+<lastBuildDate>2007-01-19T14:21:43+0200</lastBuildDate>
+<docs>http://backend.userland.com/rss</docs>
+<managingEditor>editor@example.com</managingEditor>
+<webMaster>webmaster@example.com</webMaster>
+<category>MyCategory</category>
+<generator>XML::RSS Test</generator>
+<ttl>60</ttl>
+
+<image>
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+<height>25</height>
+<description>Test Image</description>
+</image>
+
+<item>
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda yadda yadda - R&#x26;D;</description>
+<author>joeuser@example.com</author>
+<category>MyCategory</category>
+<comments>http://example.com/2007/01/19/comments.html</comments>
+<guid isPermaLink="true">http://example.com/2007/01/19</guid>
+<pubDate>Fri 19 Jan 2007 02:21:43 PM IST GMT</pubDate>
+<source url="http://example.com">my brain</source>
+<enclosure url="http://127.0.0.1/torrents/The_Passion_of_Dave_Winer.torrent" type="application/x-bittorrent" />
+</item>
+
+<textInput>
+<title>Search</title>
+<description>Search for an example</description>
+<name>q</name>
+<link>http://example.com/search.pl</link>
+<foo:hello>Show Baloon</foo:hello>
+</textInput>
+
+</channel>
+</rss>
+EOF
+
+    # TEST
+    is ($rss_parser->{textinput}->{"http://foo.tld/foobar/"}->{hello},
+        "Show Baloon",
+        "Parsing 2.0 - element in a different namespace contained in a textinput",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:alterrss="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:my="http://purl.org/my/rss/module/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://example.com/">
+<title>Test 1.0 Feed</title>
+<link>http://example.com/</link>
+<description>To lead by example</description>
+<dc:date>2007-01-19T14:21:18+0200</dc:date>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://example.com/2007/01/19" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://example.com/example.gif" />
+<textinput rdf:resource="http://example.com/search.pl" />
+</channel>
+
+<image rdf:about="http://example.com/example.gif">
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+</image>
+
+<item rdf:about="http://example.com/2007/01/19">
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda &#x26; yadda &#x26; yadda</description>
+<dc:creator>joeuser@example.com</dc:creator>
+</item>
+
+<textinput rdf:about="http://example.com/search.pl" xmlns="">
+<title>Search</title>
+<description>Search for an example</description>
+<name>q</name>
+<link>http://example.com/search.pl</link>
+<foo>Priceless</foo>
+</textinput>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is ($rss_parser->{textinput}->{""}->{foo},
+        "Priceless",
+        "Parsing 1.0 - element in a null namespace contained in a textinput",
     );
 }
 
