@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 145;
+use Test::More tests => 146;
 
 use XML::RSS;
 
@@ -2812,6 +2812,62 @@ EOF
     is ($rss_parser->{channel}->{""}->{foo},
         "Placebo is here",
         "Parsing 1.0 - element in a null namespace contained in a channel",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://freshmeat.net">
+<title>freshmeat.net</title>
+<link>http://freshmeat.net</link>
+<description>Linux software</description>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://freshmeat.net/news/1999/06/21/930003829.html" />
+  <rdf:li rdf:resource="http://jungle.tld/Enter/" />
+ </rdf:Seq>
+</items>
+</channel>
+
+<item rdf:about="http://freshmeat.net/news/1999/06/21/930003829.html">
+<title>GTKeyboard 0.85</title>
+<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>
+</item>
+
+<item rdf:about="http://jungle.tld/Enter/">
+<title>In the Jungle</title>
+<link>http://jungle.tld/Enter/</link>
+<taxo:topics>
+  <rdf:Bag>
+    <rdf:li resource="Foo" />
+    <rdf:li resource="Loom" />
+    <rdf:li resource="Hello" />
+    <rdf:li resource="myowA" />
+  </rdf:Bag>
+</taxo:topics>
+</item>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is_deeply ($rss_parser->{items}->[1]->{taxo},
+        ["Foo", "Loom", "Hello", "myowA"],
+        "Parsing 1.0 - taxo items",
     );
 }
 

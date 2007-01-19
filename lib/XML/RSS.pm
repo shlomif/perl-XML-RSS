@@ -1898,7 +1898,7 @@ sub handle_start {
     # beginning of taxo li element in item element
     #'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
     } elsif ($self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'))
-	     && $self->within_element($self->generate_ns_name("item",$self->{namespace_map}->{'rss10'}))
+	     && $self->within_element($self->generate_ns_name("item",$namespace_map->{'rss10'}))
 	     && $self->current_element eq 'Bag'
 	     && $el eq 'li') {
 		#print "taxo: ", $attribs{'resource'},"\n";
@@ -1907,7 +1907,7 @@ sub handle_start {
 
     # beginning of taxo li in channel element
     } elsif ($self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'))
-	     && $self->within_element($self->generate_ns_name("channel",$self->{namespace_map}->{'rss10'}))
+	     && $self->within_element($self->generate_ns_name("channel",$namespace_map->{'rss10'}))
 	     && $self->current_element eq 'Bag'
 	     && $el eq 'li') {
 	push(@{$self->{'channel'}->{'taxo'}},$attribs{'resource'});
