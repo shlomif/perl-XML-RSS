@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 162;
+use Test::More tests => 164;
 
 use XML::RSS;
 
@@ -3673,3 +3673,125 @@ EOF
     # TEST
     is (scalar(@{$rss_parser->{items}}), 1, "Parse 1.0 with nested <item>");
 }
+
+{
+    my $rss_parser = XML::RSS->new(version => "2.0");
+
+my $xml_text = <<'EOF';
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:foo="http://foo.tld/foobar/"
+ xmlns:anno="http://purl.org/rss/1.0/modules/annotate/"
+>
+
+<channel>
+<title>Test 2.0 Feed</title>
+<link>http://example.com/</link>
+<description>Lambda</description>
+<anno:reference resource="Aloha" />
+
+</channel>
+</rss>
+EOF
+
+    $rss_parser->parse($xml_text);
+
+    my $channel = $rss_parser->{channel};
+
+    # Sanitize the channel out of uninitialised keys.
+    foreach my $field (qw(
+        category
+        channel
+        cloud
+        copyright
+        docs
+        generator
+        image
+        language
+        lastBuildDate
+        managingEditor
+        pubDate
+        skipDays
+        skipHours
+        textinput
+        ttl
+        webMaster
+    ))
+    {
+        delete $channel->{$field};
+    }
+    # TEST
+    is_deeply($channel,
+        {
+            title => "Test 2.0 Feed",
+            link => "http://example.com/",
+            description => "Lambda",
+            "http://purl.org/rss/1.0/modules/annotate/" =>
+            {
+                reference => "Aloha",
+            },
+        },
+        "Testing for non-moduled-namespaced element inside the channel."
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "2.0");
+
+my $xml_text = <<'EOF';
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:foo="http://foo.tld/foobar/"
+ xmlns:anno="http://purl.org/rss/1.0/modules/annotate/"
+>
+
+<channel>
+<title>Test 2.0 Feed</title>
+<link>http://example.com/</link>
+<description>Lambda</description>
+
+
+<item>
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda yadda yadda</description>
+<author>joeuser@example.com</author>
+<anno:reference resource="Aloha" />
+</item>
+
+</channel>
+
+</rss>
+EOF
+
+    $rss_parser->parse($xml_text);
+
+    my $item = $rss_parser->{items}->[0];
+
+    # Sanitize the channel out of uninitialised keys.
+    foreach my $field (qw(
+        item
+    ))
+    {
+        delete $item->{$field};
+    }
+    # TEST
+    is_deeply($item,
+        {
+            title => "This is an item",
+            link => "http://example.com/2007/01/19",
+            description => "Yadda yadda yadda",
+            author => "joeuser\@example.com",
+            "http://purl.org/rss/1.0/modules/annotate/" =>
+            {
+                reference => "Aloha",
+            },
+        },
+        "Testing for non-moduled-namespaced element inside an item."
+    );
+}
+

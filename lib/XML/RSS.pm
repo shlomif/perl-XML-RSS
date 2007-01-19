@@ -1925,10 +1925,15 @@ sub handle_start {
 	{
 		my $ns = $self->namespace( $el );
 
-		if ( $ns eq $self->{rss_namespace} ) {
-			$self->{channel}->{$el} = $attribs{resource};
-		}
-		else {
+        # Commented out by shlomif - the RSS namespaces are not present
+        # in the %rdf_resource_fields so this condition always evaluates
+        # to false.
+        # if ( $ns eq $self->{rss_namespace} ) {
+        # 	$self->{channel}->{$el} = $attribs{resource};
+        # }
+        # else 
+
+        {
 			$self->{channel}->{$ns}->{$el} = $attribs{resource};
 			# add short cut
 			#
@@ -1946,9 +1951,14 @@ sub handle_start {
 	{
 		my $ns = $self->namespace( $el );
 
-		if ( $ns eq $self->{rss_namespace} ) {
-	    	$self->{'items'}->[$self->{num_items}-1]->{ $el } = $attribs{resource};
-		} else {
+        # Commented out by shlomif - the RSS namespaces are not present
+        # in the %rdf_resource_fields so this condition always evaluates
+        # to false.
+        # if ( $ns eq $self->{rss_namespace} ) {
+	    #   $self->{'items'}->[$self->{num_items}-1]->{ $el } = $attribs{resource};
+        # } 
+        # else
+        {
 	    	$self->{'items'}->[$self->{num_items}-1]->{$ns}->{ $el } = $attribs{resource};
 
 			# add short cut
