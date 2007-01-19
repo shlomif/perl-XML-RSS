@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 11;
 
 use XML::RSS;
 
@@ -152,6 +152,28 @@ sub item_throws_like
     # TEST
     like ($@, qr{\AUnregistered entity: Can't access autoklone field in object of class},
         "Testing for exception thrown on an unknown field"
+    );
+}
+
+{
+    my $rss = XML::RSS->new(version => "0.9");
+
+    $rss->channel(
+        title => "freshmeat.net",
+        link  => "http://freshmeat.net",
+        description => "the one-stop-shop for all your Linux software needs",
+        );
+
+    # TEST
+    is ($rss->channel()->{title},
+        "freshmeat.net",
+        "Testing for an AUTOLOAD accessor with 0 arguments"
+    );
+    
+    # TEST
+    is ($rss->channel('title'),
+        "freshmeat.net",
+        "Testing for an AUTOLOAD accessor with 1 argument"
     );
 }
 
