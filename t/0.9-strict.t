@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
+use Test::More tests => 9;
 
 use XML::RSS;
 
@@ -135,3 +135,23 @@ sub item_throws_like
         "Testing for exception thrown on a very long key"
     );
 }
+
+{
+    my $rss = XML::RSS->new(version => "0.9");
+
+    $rss->strict(1);
+
+    eval {
+        $rss->autoklone(
+            title => "freshmeat.net",
+            link  => "http://freshmeat.net",
+            description => ("I think therefore I am." x 1000),
+        );
+    };
+
+    # TEST
+    like ($@, qr{\AUnregistered entity: Can't access autoklone field in object of class},
+        "Testing for exception thrown on an unknown field"
+    );
+}
+
