@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 120;
+use Test::More tests => 121;
 
 use XML::RSS;
 
@@ -2051,4 +2051,27 @@ sub create_rss_without_item
             "2.0 - item - Source and/or Source URL are not defined",
         );
     }
+}
+
+{
+    # Here we create an RSS 2.0 object and render it as the output
+    # version "3.5" in order to test that version 1.0 is the default
+    # version for output.
+    my $rss = create_channel_rss({
+            version => "2.0", 
+            channel_params =>
+            [copyright => "Martha", managingEditor => 0,],
+            omit_date => 1,
+        });
+    $rss->{output} = "3.5";
+    # TEST
+    contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<dc:rights>Martha</dc:rights>\n" .
+        "<dc:publisher>0</dc:publisher>\n" .
+        "<items>\n",
+        "Unknown version renders as 1.0"
+    );
 }

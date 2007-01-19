@@ -1619,37 +1619,43 @@ sub as_rss_2_0 {
     return $self->_flush_output();
 }
 
+sub _get_output_methods_map
+{
+    return
+    {
+        '0.9' => "as_rss_0_9",
+        '0.91' => "as_rss_0_9_1",
+        '2.0' => "as_rss_2_0",
+        '1.0' => "as_rss_1_0",
+    };
+}
+
+sub _get_default_output_method
+{
+    return "as_rss_1_0";
+}
+
+sub _get_output_method
+{
+    my ($self, $version) = @_;
+
+    if (my $output_method = $self->_get_output_methods_map()->{$version})
+    {
+        return $output_method;
+    }
+    else
+    {
+        return $self->_get_default_output_method();
+    }
+}
+
 sub as_string {
     my $self = shift;
     my $version = ($self->{output} =~ /\d/) ? $self->{output} : $self->{version};
-    my $output;
 
-    ###########
-    # RSS 0.9 #
-    ###########
-    if ($version eq '0.9') {
-	$output = &as_rss_0_9($self);
+    my $output_method = $self->_get_output_method($version);
 
-    ############
-    # RSS 0.91 #
-    ############
-    } elsif ($version eq '0.91') {
-	$output = &as_rss_0_9_1($self);
-
-    ###########
-    # RSS 2.0 #
-    ###########
-    } elsif ($version eq '2.0') {
-        $output = &as_rss_2_0($self);
-
-    ###########
-    # RSS 1.0 #
-    ###########
-    } else {
-	$output = &as_rss_1_0($self);
-    }
-
-    return $output;
+    return $self->$output_method();
 }
 
 sub handle_char {
