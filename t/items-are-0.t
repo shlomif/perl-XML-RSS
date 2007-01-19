@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 150;
+use Test::More tests => 152;
 
 use XML::RSS;
 
@@ -2897,6 +2897,63 @@ EOF
   <rdf:li rdf:resource="http://jungle.tld/Enter/" />
  </rdf:Seq>
 </items>
+</channel>
+
+<item rdf:about="http://freshmeat.net/news/1999/06/21/930003829.html">
+<title>GTKeyboard 0.85</title>
+<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>
+</item>
+
+<item rdf:about="http://jungle.tld/Enter/">
+<title>In the Jungle</title>
+<link>http://jungle.tld/Enter/</link>
+<taxo:topics>
+  <rdf:Bag>
+    <rdf:li resource="Everybody" />
+    <rdf:li resource="needs" />
+    <dc:hello />
+    <rdf:li resource="a" />
+    <rdf:li resource="[[[HUG]]]" />
+  </rdf:Bag>
+</taxo:topics>
+</item>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is_deeply ($rss_parser->{items}->[1]->{taxo},
+        ["Everybody", "needs", "a", "[[[HUG]]]"],
+        "Parsing 1.0 - taxo bag in <item> with junk elements",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://freshmeat.net">
+<title>freshmeat.net</title>
+<link>http://freshmeat.net</link>
+<description>Linux software</description>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://freshmeat.net/news/1999/06/21/930003829.html" />
+  <rdf:li rdf:resource="http://jungle.tld/Enter/" />
+ </rdf:Seq>
+</items>
 <taxo:topics>
   <rdf:Bag>
     <rdf:li resource="Elastic" />
@@ -3113,6 +3170,64 @@ EOF
     ok ((!grep { exists($_->{"http://webns.net/mvcb/"}->{generatorAgent}) }
         @{$rss_parser->{items}}),
         "Parsing 1.0 - Elements that exist in \%rdf_resource_fields but not inside item",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://freshmeat.net">
+<title>freshmeat.net</title>
+<link>http://freshmeat.net</link>
+<description>Linux software</description>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://freshmeat.net/news/1999/06/21/930003829.html" />
+  <rdf:li rdf:resource="http://jungle.tld/Enter/" />
+ </rdf:Seq>
+</items>
+<taxo:topics>
+  <rdf:Bag>
+    <rdf:li resource="Elastic" />
+    <rdf:li resource="Plastic" />
+    <rdf:li resource="stochastic" />
+    <dc:hello />
+    <rdf:li resource="dynamic^^K" />
+  </rdf:Bag>
+</taxo:topics>
+</channel>
+
+<item rdf:about="http://freshmeat.net/news/1999/06/21/930003829.html">
+<title>GTKeyboard 0.85</title>
+<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>
+</item>
+
+<item rdf:about="http://jungle.tld/Enter/">
+<title>In the Jungle</title>
+<link>http://jungle.tld/Enter/</link>
+</item>
+<enclosure foo="bar" good="them" />
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    ok ((!grep { exists($_->{enclosure}) }
+        @{$rss_parser->{items}}),
+        "Parsing 1.0 - Testing \%empty_ok_elements",
     );
 }
 
