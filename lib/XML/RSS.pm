@@ -2469,6 +2469,18 @@ the following code instead:
 This function renders the data in the object as an RSS version 2.0 feed,
 and returns the resultant XML as text.
 
+=head2 $rss->handle_char()
+
+Needed for XML::Parser. Don't use this directly.
+
+=head2 $rss->handle_dec()
+
+Needed for XML::Parser. Don't use this directly.
+
+=head2 $rss->handle_start()
+
+Needed for XML::Parser. Don't use this directly.
+
 =head1 BUGS
 
 Please use rt.cpan.org for tracking bugs.  The list of current open
