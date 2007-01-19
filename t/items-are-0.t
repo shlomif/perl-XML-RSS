@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 159;
+use Test::More tests => 160;
 
 use XML::RSS;
 
@@ -3497,3 +3497,64 @@ EOF
     );
 }
 
+{
+    my $rss_parser = XML::RSS->new(version => "2.0");
+
+my $xml_text = <<'EOF';
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:foo="http://foo.tld/foobar/"
+>
+
+<channel>
+<title>Test 2.0 Feed</title>
+<link>http://example.com/</link>
+<description></description>
+<language>en-us</language>
+<copyright>Copyright 2002</copyright>
+<pubDate>2007-01-19T14:21:43+0200</pubDate>
+<lastBuildDate>2007-01-19T14:21:43+0200</lastBuildDate>
+<docs>http://backend.userland.com/rss</docs>
+<managingEditor>editor@example.com</managingEditor>
+<webMaster>webmaster@example.com</webMaster>
+<category>MyCategory</category>
+<generator>XML::RSS Test</generator>
+<ttl>60</ttl>
+
+<image>
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+<height>25</height>
+<description>Test Image</description>
+<foo:hello>Hi there!</foo:hello>
+</image>
+
+<item>
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda yadda yadda - R&#x26;D;</description>
+<author>joeuser@example.com</author>
+<category>MyCategory</category>
+<comments>http://example.com/2007/01/19/comments.html</comments>
+<guid isPermaLink="true">http://example.com/2007/01/19</guid>
+<pubDate>Fri 19 Jan 2007 02:21:43 PM IST GMT</pubDate>
+<source url="http://example.com">my brain</source>
+<enclosure url="http://127.0.0.1/torrents/The_Passion_of_Dave_Winer.torrent" type="application/x-bittorrent" />
+</item>
+
+</channel>
+</rss>
+EOF
+
+    eval {
+        $rss_parser->parse($xml_text);
+    };
+
+    # TEST
+    ok ($@ =~ m{\AMalformed RSS},
+        "Checking for thrown exception on missing version attribute"
+    );
+}
