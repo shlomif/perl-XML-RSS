@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 135;
+use Test::More tests => 139;
 
 use XML::RSS;
 
@@ -2081,70 +2081,97 @@ sub create_rss_without_item
 ### We generate RSS and test that we get the same results.
 ################
 
+sub parse_generated_rss
 {
-    my $rss = create_textinput_with_0_rss({version => "0.9",
-        textinput_params => [
-            description => "Welcome to the Jungle.", 
-            'link' => "http://fooque.tld/",
-            'title' => "The Jungle of the City",
-            'name' => "There's more than one way to do it.",
-        ]});
+    my $args = shift;
 
-    $rss->{output} = "0.9";
+    my $gen_func = $args->{'func'};
 
-    my $rss_output = $rss->as_string();
+    my $rss_generator = $gen_func->($args);
 
-    $rss_output =~ s{(<rdf:RDF)[^>]*(>)}{<rss version="0.9">};
-    $rss_output =~ s{</rdf:RDF>}{</rss>};
+    $rss_generator->{output} = $args->{version};
 
-    my $rss_parser = XML::RSS->new();
-    $rss_parser->parse($rss_output);
+    my $output = $rss_generator->as_string();
+    
+    if ($args->{postproc})
+    {
+        $args->{postproc}->(\$output);
+    }
+    
+    my $parser = XML::RSS->new(version => $args->{version});
+
+    $parser->parse($output);
+
+    return $parser;
+}
+
+{
+    my $rss =
+        parse_generated_rss({
+            func => \&create_textinput_with_0_rss,
+            version => "0.9",
+            textinput_params => [
+                description => "Welcome to the Jungle.", 
+                'link' => "http://fooque.tld/",
+                'title' => "The Jungle of the City",
+                'name' => "There's more than one way to do it.",
+                ],
+            postproc => sub {
+                    for (${shift()})
+                    {
+                        s{(<rdf:RDF)[^>]*(>)}{<rss version="0.9">};
+                        s{</rdf:RDF>}{</rss>};
+                    }
+            },
+        });
 
     # TEST
-    is ($rss_parser->{textinput}->{description},
+    is ($rss->{textinput}->{description},
         "Welcome to the Jungle.",
         "0.9 parse - textinput/description",
     );
 
     # TEST
-    is ($rss_parser->{textinput}->{link},
+    is ($rss->{textinput}->{link},
         "http://fooque.tld/",
         "0.9 parse - textinput/link",
     );
 
     # TEST
-    is ($rss_parser->{textinput}->{title},
+    is ($rss->{textinput}->{title},
         "The Jungle of the City",
         "0.9 parse - textinput/title",
     );
 
     # TEST
-    is ($rss_parser->{textinput}->{name},
+    is ($rss->{textinput}->{name},
         "There's more than one way to do it.",
         "0.9 parse - textinput/name",
     );
 }
 
 {
-    my $rss = create_textinput_with_0_rss({version => "0.9",
-        textinput_params => [
-            description => "Welcome to the Jungle.", 
-            'link' => "http://fooque.tld/",
-            'title' => "The Jungle of the City",
-            'name' => "There's more than one way to do it.",
-        ]});
-
-    $rss->{output} = "0.9";
-
-    my $rss_output = $rss->as_string();
-
-    $rss_output =~ s{(<rdf:RDF)[^>]*(>)}{<rss version="0.9">};
-    $rss_output =~ s{</rdf:RDF>}{</rss>};
-
-    $rss_output =~ s{<(/?)textinput>}{<$1textInput>}g;
-
-    my $rss_parser = XML::RSS->new();
-    $rss_parser->parse($rss_output);
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_textinput_with_0_rss,
+                version => "0.9",
+                textinput_params => [
+                    description => "Welcome to the Jungle.", 
+                    'link' => "http://fooque.tld/",
+                    'title' => "The Jungle of the City",
+                    'name' => "There's more than one way to do it.",
+                ],
+                postproc => sub {
+                    for (${shift()})
+                    {
+                        s{(<rdf:RDF)[^>]*(>)}{<rss version="0.9">};
+                        s{</rdf:RDF>}{</rss>};
+                        s{<(/?)textinput>}{<$1textInput>}g;
+                    }   
+                },
+            }
+        );
 
     # TEST
     is ($rss_parser->{textinput}->{description},
@@ -2172,22 +2199,25 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_textinput_with_0_rss({version => "0.9",
-        textinput_params => [
-            description => "Welcome to the Jungle.", 
-            'link' => "http://fooque.tld/",
-            'title' => "The Jungle of the City",
-            'name' => "There's more than one way to do it.",
-        ]});
-
-    $rss->{output} = "0.9";
-
-    my $rss_output = $rss->as_string();
-
-    $rss_output =~ s{<(/?)textinput>}{<$1textInput>}g;
-
-    my $rss_parser = XML::RSS->new();
-    $rss_parser->parse($rss_output);
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_textinput_with_0_rss,
+                version => "0.9",
+                textinput_params => [
+                    description => "Welcome to the Jungle.", 
+                    'link' => "http://fooque.tld/",
+                    'title' => "The Jungle of the City",
+                    'name' => "There's more than one way to do it.",
+                ],
+                postproc => sub {
+                    for (${shift()})
+                    {
+                        s{<(/?)textinput>}{<$1textInput>}g
+                    }
+                },
+            }
+        );
 
     # TEST
     is ($rss_parser->{textinput}->{description},
@@ -2215,17 +2245,14 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_skipHours_rss({
-            version => "0.91", 
-            skipHours_params => [ hour => "5" ],
-        });
-
-    $rss->{output} = "0.91";
-
-    my $rss_output = $rss->as_string();
-    
-    my $rss_parser = XML::RSS->new(version => "0.91");
-    $rss_parser->parse($rss_output);
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_skipHours_rss,
+                version => "0.91", 
+                skipHours_params => [ hour => "5" ],
+            }
+        );
 
     # TEST
     is ($rss_parser->{skipHours}->{hour},
@@ -2235,22 +2262,176 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_skipHours_rss({
-            version => "2.0", 
-            skipHours_params => [ hour => "5" ],
-        });
-
-    $rss->{output} = "2.0";
-
-    my $rss_output = $rss->as_string();
-
-    my $rss_parser = XML::RSS->new(version => "2.0");
-    $rss_parser->parse($rss_output);
-
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_skipHours_rss,
+                version => "2.0", 
+                skipHours_params => [ hour => "5" ],
+            }
+        );
+    
     # TEST
     is ($rss_parser->{skipHours}->{hour},
         "5",
         "Parse 2.0 - skipHours/hour",
+    );
+}
+
+## Test the skipDays parsing.
+
+{
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_skipDays_rss,
+                version => "0.91", 
+                skipDays_params => [ day => "5" ],
+            }
+        );
+
+    # TEST
+    is ($rss_parser->{skipDays}->{day},
+        "5",
+        "Parse 0.91 - skipDays/day",
+    );
+}
+
+{
+    my $rss_parser =
+        parse_generated_rss(
+            {
+                func => \&create_skipDays_rss,
+                version => "2.0", 
+                skipDays_params => [ day => "5" ],
+            }
+        );
+    
+    # TEST
+    is ($rss_parser->{skipDays}->{day},
+        "5",
+        "Parse 2.0 - skipDays/day",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "2.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:foo="http://foo.tld/foobar/"
+>
+
+<channel>
+<title>Test 2.0 Feed</title>
+<link>http://example.com/</link>
+<description></description>
+<language>en-us</language>
+<copyright>Copyright 2002</copyright>
+<pubDate>2007-01-19T14:21:43+0200</pubDate>
+<lastBuildDate>2007-01-19T14:21:43+0200</lastBuildDate>
+<docs>http://backend.userland.com/rss</docs>
+<managingEditor>editor@example.com</managingEditor>
+<webMaster>webmaster@example.com</webMaster>
+<category>MyCategory</category>
+<generator>XML::RSS Test</generator>
+<ttl>60</ttl>
+
+<image>
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+<height>25</height>
+<description>Test Image</description>
+<foo:hello>Hi there!</foo:hello>
+</image>
+
+<item>
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda yadda yadda - R&#x26;D;</description>
+<author>joeuser@example.com</author>
+<category>MyCategory</category>
+<comments>http://example.com/2007/01/19/comments.html</comments>
+<guid isPermaLink="true">http://example.com/2007/01/19</guid>
+<pubDate>Fri 19 Jan 2007 02:21:43 PM IST GMT</pubDate>
+<source url="http://example.com">my brain</source>
+<enclosure url="http://127.0.0.1/torrents/The_Passion_of_Dave_Winer.torrent" type="application/x-bittorrent" />
+</item>
+
+</channel>
+</rss>
+EOF
+
+    # TEST
+    is ($rss_parser->{image}->{"http://foo.tld/foobar/"}->{hello},
+        "Hi there!",
+        "Parsing 2.0 - element in a different namespace contained in image",
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:my="http://purl.org/my/rss/module/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://example.com/">
+<title>Test 1.0 Feed</title>
+<link>http://example.com/</link>
+<description>To lead by example</description>
+<dc:date>2007-01-19T14:21:18+0200</dc:date>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://example.com/2007/01/19" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://example.com/example.gif" />
+<textinput rdf:resource="http://example.com/search.pl" />
+</channel>
+
+<image rdf:about="http://example.com/example.gif" xmlns="">
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+<foo>Aye Karamba</foo>
+</image>
+
+<item rdf:about="http://example.com/2007/01/19">
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda &#x26; yadda &#x26; yadda</description>
+<dc:creator>joeuser@example.com</dc:creator>
+</item>
+
+<textinput rdf:about="http://example.com/search.pl">
+<title>Search</title>
+<description>Search for an example</description>
+<name>q</name>
+<link>http://example.com/search.pl</link>
+</textinput>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is ($rss_parser->{image}->{""}->{foo},
+        "Aye Karamba",
+        "Parsing 1.0 - element in a null namespace contained in image",
     );
 }
 

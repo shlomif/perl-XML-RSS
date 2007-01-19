@@ -1687,6 +1687,10 @@ sub handle_char {
 		$self->within_element($self->generate_ns_name("image",$self->{rss_namespace}))
 	) {
 		my $ns = $self->namespace($self->current_element);
+        if (!defined($ns))
+        {
+            $ns = "";
+        }
 		# If it's in the default namespace
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
@@ -1770,10 +1774,7 @@ sub handle_char {
 		$self->{'skipHours'}->{$self->current_element} .= $cdata;
 
 		# skipDays element
-    } elsif (
-	     $self->within_element("skipDays") ||
-		$self->within_element($self->generate_ns_name("skipDays",$self->{rss_namespace}))
-	) {
+    } elsif (_my_in_element($self, "skipDays")) {
 		$self->{'skipDays'}->{$self->current_element} .= $cdata;
 
 	# channel element
