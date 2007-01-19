@@ -1665,6 +1665,19 @@ sub as_string {
     return $self->$output_method();
 }
 
+# Checks if inside a possibly namespaced element
+# TODO : After increasing test coverage convert all such conditionals to this
+# method.
+sub _my_in_element
+{
+    my ($self, $elem) = @_;
+
+    return $self->within_element($elem) ||
+	       $self->within_element(
+               $self->generate_ns_name($elem,$self->{rss_namespace})
+           );
+}
+
 sub handle_char {
     my ($self,$cdata) = (@_);
 	
@@ -1730,12 +1743,10 @@ sub handle_char {
 
 	# textinput element
     } elsif (
-	     $self->within_element("textinput")
-	     || $self->within_element($self->generate_ns_name("textinput",$self->{rss_namespace}))
-	     # textinput is spelled textInput (with a capital "I") in RSS 2.0
-	     || $self->within_element("textInput")
-	     || $self->within_element($self->generate_ns_name("textInput",$self->{rss_namespace}))
-         
+        # We cannot call these as methods because of the catch that
+        # XML::Parser uses XML::Parser::Expat to do the caching which is a
+        # distinct object than our own parser.
+        _my_in_element($self, "textinput") || _my_in_element($self, "textInput")
 	) {
 		my $ns = $self->namespace($self->current_element);
 
@@ -1755,10 +1766,7 @@ sub handle_char {
 		}
 
 	# skipHours element
-    } elsif (
-	     $self->within_element("skipHours") ||
-	     $self->within_element($self->generate_ns_name("skipHours",$self->{rss_namespace}))
-	) {
+    } elsif (_my_in_element($self, "skipHours")) {
 		$self->{'skipHours'}->{$self->current_element} .= $cdata;
 
 		# skipDays element
