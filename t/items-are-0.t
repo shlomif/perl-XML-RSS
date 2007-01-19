@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 154;
+use Test::More tests => 155;
 
 use XML::RSS;
 
@@ -3286,4 +3286,53 @@ EOF
 
     # TEST
     is ($rss_parser->{items}->[0]->{title}, "GTKeyboard 0.85", "Parse 1.0 with item in a different NS - it is not the item in the other NS");
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+ xmlns:foo="http://foobar.tld/foobardom/"
+>
+
+<channel rdf:about="http://freshmeat.net">
+<title>freshmeat.net</title>
+<link>http://freshmeat.net</link>
+<description>Linux software</description>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://freshmeat.net/news/1999/06/21/930003829.html" />
+  <rdf:li rdf:resource="http://jungle.tld/Enter/" />
+ </rdf:Seq>
+</items>
+<taxo:topics>
+  <rdf:Bag>
+    <rdf:li resource="Elastic" />
+    <rdf:li resource="Plastic" />
+    <rdf:li resource="stochastic" />
+    <rdf:li resource="dynamic^^K" />
+  </rdf:Bag>
+</taxo:topics>
+</channel>
+
+<item xmlns="">
+<title>In the Jungle</title>
+<link>http://jungle.tld/Enter/</link>
+</item>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is (scalar(@{$rss_parser->{items}}), 0, "Parse 1.0 with item in null namespace");
 }

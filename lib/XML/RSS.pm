@@ -439,7 +439,8 @@ sub new {
 		Handlers      => { 
 			Char    => \&handle_char,
 			XMLDecl => \&handle_dec,
-			Start   => \&handle_start
+			Start   => \&handle_start,
+            End     => \&_handle_end,
 			});
 			
     bless $self, $class;
@@ -1708,11 +1709,8 @@ sub handle_char {
 
 	# item element
     }
-	elsif (
-	     $self->within_element("item")
-	     || $self->within_element($self->generate_ns_name("item",$self->{rss_namespace}))
-	
-	) {
+	elsif (defined($self->{_inside_item_elem}))
+    {
 		return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 
 		my $ns = $self->namespace($self->current_element);
@@ -1886,8 +1884,14 @@ sub handle_start {
 			(!$ns && !$self->{rss_namespace}) ||
 			($ns eq $self->{rss_namespace})
 		) {
-			# increment item count
-			$self->{num_items}++;
+            # Sanity check to make sure we don't have nested elements that
+            # can confuse the parser.
+            if (!defined($self->{_inside_item_elem}))
+            {
+    			# increment item count
+    			$self->{num_items}++;
+                $self->{_inside_item_elem} = $self->depth();
+            }
 		}
 	# guid element is a permanent link unless isPermaLink attribute is set to false
 	} elsif ( $el eq 'guid' ) {
@@ -1957,6 +1961,17 @@ sub handle_start {
 	}
     elsif ( $empty_ok_elements{$el} and $self->current_element eq 'item' ){
         $self->{items}->[$self->{num_items}-1]->{$el} = \%attribs;
+    }
+}
+
+sub _handle_end
+{
+    my ($self, $el) = @_;
+
+    if (defined($self->{_inside_item_elem}) &&
+        $self->{_inside_item_elem} == $self->depth())
+    {
+        delete($self->{_inside_item_elem});
     }
 }
 
