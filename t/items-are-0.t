@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 164;
+use Test::More tests => 165;
 
 use XML::RSS;
 
@@ -3792,6 +3792,69 @@ EOF
             },
         },
         "Testing for non-moduled-namespaced element inside an item."
+    );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:my="http://purl.org/my/rss/module/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://example.com/">
+<title>Test 1.0 Feed</title>
+<link>http://example.com/</link>
+<description>To lead by example</description>
+<dc:date>2007-01-19T14:21:18+0200</dc:date>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://example.com/2007/01/19" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://example.com/example.gif" />
+<textinput rdf:resource="http://example.com/search.pl" />
+</channel>
+
+<image rdf:about="http://example.com/example.gif" xmlns="">
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+<dc:date>5 Sep 2006</dc:date>
+</image>
+
+<item rdf:about="http://example.com/2007/01/19">
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda &#x26; yadda &#x26; yadda</description>
+<dc:creator>joeuser@example.com</dc:creator>
+<admin:generatorAgent resource="XmlRssGenKon" />
+</item>
+
+<textinput rdf:about="http://example.com/search.pl">
+<title>Search</title>
+<description>Search for an example</description>
+<name>q</name>
+<link>http://example.com/search.pl</link>
+</textinput>
+
+</rdf:RDF>
+EOF
+
+    # TEST
+    is ($rss_parser->{items}->[0]->{admin}->{generatorAgent},
+        "XmlRssGenKon",
+        "Parsing 1.0 - known module rdf_resource_field",
     );
 }
 
