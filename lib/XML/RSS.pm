@@ -1649,9 +1649,16 @@ sub _get_output_method
     }
 }
 
+sub _get_output_version
+{
+    my $self = shift;
+    return ($self->{output} =~ /\d/) ? $self->{output} : $self->{version};
+}
+
 sub as_string {
     my $self = shift;
-    my $version = ($self->{output} =~ /\d/) ? $self->{output} : $self->{version};
+
+    my $version = $self->_get_output_version();
 
     my $output_method = $self->_get_output_method($version);
 
