@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 160;
+use Test::More tests => 162;
 
 use XML::RSS;
 
@@ -3557,4 +3557,119 @@ EOF
     ok ($@ =~ m{\AMalformed RSS},
         "Checking for thrown exception on missing version attribute"
     );
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    my $xml_text = <<'EOF';
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:my="http://purl.org/my/rss/module/"
+ xmlns:admin="http://webns.net/mvcb/"
+>
+
+<channel rdf:about="http://example.com/">
+<title>Test 1.0 Feed</title>
+<link>http://example.com/</link>
+<description>To lead by example</description>
+<dc:date>2007-01-19T14:21:18+0200</dc:date>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://example.com/2007/01/19" />
+ </rdf:Seq>
+</items>
+<image rdf:resource="http://example.com/example.gif" />
+<textinput rdf:resource="http://example.com/search.pl" />
+</channel>
+
+<image rdf:about="http://example.com/example.gif" xmlns="">
+<title>Test Image</title>
+<url>http://example.com/example.gif</url>
+<link>http://example.com/</link>
+</image>
+
+<item rdf:about="http://example.com/2007/01/19">
+<title>This is an item</title>
+<link>http://example.com/2007/01/19</link>
+<description>Yadda &#x26; yadda &#x26; yadda</description>
+<dc:creator>joeuser@example.com</dc:creator>
+</item>
+
+<textinput rdf:about="http://example.com/search.pl">
+<title>Search</title>
+<description>Search for an example</description>
+<name>q</name>
+<link>http://example.com/search.pl</link>
+<dc:date>5 May 1977</dc:date>
+</textinput>
+
+</rdf:RDF>
+EOF
+
+    eval {
+        $rss_parser->parse($xml_text);
+    };
+
+    # TEST
+    ok ($@ =~ m{\AMalformed RSS: invalid version},
+        "Checking for thrown exception on missing version attribute"
+    );
+
+}
+
+{
+    my $rss_parser = XML::RSS->new(version => "1.0");
+
+    $rss_parser->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rdf:RDF
+ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:content="http://purl.org/rss/1.0/modules/content/"
+ xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/"
+ xmlns:syn="http://purl.org/rss/1.0/modules/syndication/"
+ xmlns:admin="http://webns.net/mvcb/"
+ xmlns:foo="http://foobar.tld/foobardom/"
+>
+
+<channel rdf:about="http://freshmeat.net">
+<title>freshmeat.net</title>
+<link>http://freshmeat.net</link>
+<description>Linux software</description>
+<items>
+ <rdf:Seq>
+  <rdf:li rdf:resource="http://freshmeat.net/news/1999/06/21/930003829.html" />
+  <rdf:li rdf:resource="http://jungle.tld/Enter/" />
+ </rdf:Seq>
+</items>
+<taxo:topics>
+  <rdf:Bag>
+    <rdf:li resource="Elastic" />
+    <rdf:li resource="Plastic" />
+    <rdf:li resource="stochastic" />
+    <rdf:li resource="dynamic^^K" />
+  </rdf:Bag>
+</taxo:topics>
+</channel>
+
+<item rdf:about="http://freshmeat.net/news/1999/06/21/930003829.html">
+<title>GTKeyboard 0.85</title>
+<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>
+<item rdf:about="http://fooque.tld/">
+</item>
+</item>
+</rdf:RDF>
+EOF
+
+    # TEST
+    is (scalar(@{$rss_parser->{items}}), 1, "Parse 1.0 with nested <item>");
 }
