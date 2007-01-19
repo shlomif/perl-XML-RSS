@@ -2057,7 +2057,7 @@ sub AUTOLOAD {
 
     # return reference to RSS structure
     if (@_ == 1) {
-	return $self->{$name}->{$_[0]} if defined $self->{$name}->{$_[0]};
+	return $self->{$name}->{$_[0]};
 
     # we're going to set values here
     } elsif (@_ > 1) {
@@ -2088,7 +2088,6 @@ sub AUTOLOAD {
     } else {
 	return $self->{$name};
     }
-    return 0;
 
     # make sure we have all required elements
 	#foreach my $key (keys(%{$_REQ->{$name}})) {

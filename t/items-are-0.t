@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 165;
+use Test::More tests => 166;
 
 use XML::RSS;
 
@@ -2109,6 +2109,19 @@ sub create_rss_without_item
     # TEST
     ok ($@ =~ m{\A\$text is undefined in XML::RSS::_encode},
         "Undefined string throws an exception"
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+            version => "0.91",
+            image_link => undef,
+            channel_params => [ title => "Hello and <![CDATA[Aloha<&>]]>"],
+        });
+
+    # TEST
+    contains($rss,
+        "<title>Hello and <![CDATA[Aloha<&>]]></title>",
     );
 }
 

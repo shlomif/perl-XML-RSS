@@ -5,7 +5,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 
 use XML::RSS;
 
@@ -177,3 +177,19 @@ sub item_throws_like
     );
 }
 
+{
+    my $rss = XML::RSS->new(version => "0.91");
+
+    $rss->strict(1);
+
+    eval {
+        $rss->skipDays(
+            day => "FoolambdaCroakThemOfMonetaryJudgement"
+        );
+    };
+
+    # TEST
+    like ($@, qr{\Aday cannot exceed 10 characters in length},
+        "Testing for exception thrown on a key for 0.91"
+    );
+}
