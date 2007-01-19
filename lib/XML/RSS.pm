@@ -1796,6 +1796,11 @@ sub handle_char {
 
 		my $ns = $self->namespace($self->current_element);
 
+        if (!defined($ns))
+        {
+            $ns = "";
+        }
+
 		# If it's in the default namespace
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
