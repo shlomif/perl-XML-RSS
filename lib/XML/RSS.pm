@@ -980,6 +980,14 @@ sub _output_common_channel_elements
     );
 }
 
+    
+sub _out_language
+{
+    my $self = shift;
+
+    return $self->_out_channel_self_dc_field("language");
+}
+
 sub _output_start_channel
 {
     my $self = shift;
@@ -988,12 +996,7 @@ sub _output_start_channel
 
     $self->_output_common_channel_elements();
 
-    # language
-    if (defined($self->{channel}->{'dc'}->{'language'})) {
-        $self->_out('<language>'. $self->_encode($self->{channel}->{'dc'}->{'language'}) .'</language>'."\n");
-    } elsif (defined($self->{channel}->{language})) {
-        $self->_output_channel_tag("language");
-    }
+    $self->_out_language();
 
     return;
 }
@@ -1030,6 +1033,13 @@ sub _out_channel_dc_field
         ($self->_prefer_dc() ?  "dc:$dc_key" : $non_dc_key),
         $self->_calc_channel_dc_field($dc_key, $non_dc_key)
     );
+}
+
+sub _out_channel_self_dc_field
+{
+    my ($self, $key) = @_;
+
+    return $self->_out_channel_dc_field($key, $key);
 }
 
 sub _out_managing_editor
@@ -1213,12 +1223,7 @@ sub as_rss_1_0 {
     $self->_output_common_channel_elements();
 
     # additional elements for RSS 0.91
-    # language
-    if (defined($self->{channel}->{'dc'}->{'language'})) {
-	$output .= '<dc:language>'. $self->_encode($self->{channel}->{'dc'}->{'language'}) .'</dc:language>'."\n";
-    } elsif (defined($self->{channel}->{language})) {
-	$output .= '<dc:language>'.  $self->_encode($self->{channel}->{language}) .'</dc:language>'."\n";
-    }
+    $self->_out_language();
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
@@ -1478,28 +1483,13 @@ sub as_rss_2_0 {
 
     $self->_out_webmaster();
 
-    # category
-    if (defined($self->{channel}->{'dc'}->{'category'})) {
-        $output .= '<category>'.$self->_encode($self->{channel}->{'dc'}->{'category'}).'</category>'."\n";
-    } elsif (defined($self->{channel}->{category})) {
-        $output .= '<category>'.$self->_encode($self->{channel}->{category}).'</category>'."\n";
-    }
-
-    # generator
-    if (defined($self->{channel}->{'dc'}->{'generator'})) {
-        $output .= '<generator>'.$self->_encode($self->{channel}->{'dc'}->{'generator'}).'</generator>'."\n";
-    } elsif (defined($self->{channel}->{generator})) {
-        $output .= '<generator>'.$self->_encode($self->{channel}->{generator}).'</generator>'."\n";
-    }
+    $self->_out_channel_self_dc_field("category");
+    $self->_out_channel_self_dc_field("generator");
 
     # Insert cloud support here
 
     # ttl
-    if (defined($self->{channel}->{'dc'}->{'ttl'})) {
-        $output .= '<ttl>'.$self->_encode($self->{channel}->{'dc'}->{'ttl'}).'</ttl>'."\n";
-    } elsif (defined($self->{channel}->{ttl})) {
-        $output .= '<ttl>'.$self->_encode($self->{channel}->{ttl}).'</ttl>'."\n";
-    }
+    $self->_out_channel_self_dc_field("ttl");
 
     # Ad-hoc modules
     while ( my($url, $prefix) = each %{$self->{modules}} ) {
