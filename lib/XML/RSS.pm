@@ -981,6 +981,26 @@ sub _output_start_channel
     return;
 }
 
+# Returns the managingEditor tag or undef if it doesn't exist.
+sub _calc_managingEditor
+{
+    my $self = shift;
+
+    my $channel = $self->{channel};
+
+    return defined($channel->{'dc'}->{'publisher'}) ?
+        $channel->{'dc'}->{'publisher'} :
+        $channel->{managingEditor}
+        ;
+}
+
+sub _out_managing_editor
+{
+    my ($self, $label) = @_;
+
+    $self->_out_defined_tag($label, $self->_calc_managingEditor());
+}
+
 sub as_rss_0_9_1 {
     my $self = shift;
     my $output;
@@ -1021,11 +1041,7 @@ sub as_rss_0_9_1 {
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
     # managing editor
-    if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-	$output .= '<managingEditor>'. $self->_encode($self->{channel}->{'dc'}->{'publisher'}) .'</managingEditor>'."\n";
-    } elsif (defined($self->{channel}->{managingEditor})) {
-	$output .= '<managingEditor>'. $self->_encode($self->{channel}->{managingEditor}) .'</managingEditor>'."\n";
-    }
+    $self->_out_managing_editor("managingEditor");
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
@@ -1182,11 +1198,7 @@ sub as_rss_1_0 {
 	#if $self->{channel}->{docs};
 
     # managing editor
-    if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-	$output .= '<dc:publisher>'.  $self->_encode($self->{channel}->{'dc'}->{'publisher'}) .'</dc:publisher>'."\n";
-    } elsif (defined($self->{channel}->{managingEditor})) {
-	$output .= '<dc:publisher>'.  $self->_encode($self->{channel}->{managingEditor}) .'</dc:publisher>'."\n";
-    }
+    $self->_out_managing_editor("dc:publisher");
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
@@ -1438,11 +1450,7 @@ sub as_rss_2_0 {
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
     # managing editor
-    if (defined($self->{channel}->{'dc'}->{'publisher'})) {
-        $output .= '<managingEditor>'.$self->_encode($self->{channel}->{'dc'}->{'publisher'}).'</managingEditor>'."\n";
-    } elsif (defined($self->{channel}->{managingEditor})) {
-        $output .= '<managingEditor>'.$self->_encode($self->{channel}->{managingEditor}).'</managingEditor>'."\n";
-    }
+    $self->_out_managing_editor("managingEditor");
 
     # webmaster
     if (defined($self->{channel}->{'dc'}->{'creator'})) {
