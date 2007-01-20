@@ -643,18 +643,52 @@ sub _output_common_textinput_sub_elements
     );
 }
 
+sub _out_textinput_rss_1_0_elems
+{
+    my $self = shift;
+
+    $self->_out_dc_elements($self->textinput());
+
+    # Ad-hoc modules
+    # TODO : Should this follow the %rdf_resources conventions of the items'
+    # and channel's modules' support ?
+    while ( my($url, $prefix) = each %{$self->{modules}} )
+    {
+        next if $prefix =~ /^(dc|syn|taxo)$/;
+        while ( my($el, $value) = each %{$self->{textinput}->{$prefix}} ) 
+        {
+            $self->_out("<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n");
+        }
+    }
+}
+
 sub _output_complete_textinput
 {
     my $self = shift;
-    my $args = shift || {version => "0.9"};
 
-    my $master_tag = ($args->{version} eq "2.0") ? "textInput" : "textinput";
+    my $master_tag = ($self->_out_rss_version() eq "2.0") ? 
+        "textInput" : "textinput";
 
     if (defined($self->{textinput}->{'link'}))
     {
-        $self->_out("<$master_tag>\n");
+        my $attr = "";
+        
+        if ($self->_out_rss_version() eq "1.0")
+        {
+            $attr = ' rdf:about="'. 
+                $self->_encode($self->{textinput}->{'link'}) .
+                '"'
+                ;
+        }
+
+        $self->_out("<$master_tag$attr>\n");
 
         $self->_output_common_textinput_sub_elements();
+
+        if ($self->_out_rss_version() eq "1.0")
+        {
+            $self->_out_textinput_rss_1_0_elems();
+        }
 
         $self->_end_top_level_elem($master_tag);
     }
@@ -1440,27 +1474,7 @@ sub as_rss_1_0 {
         $self->_end_item();
     } # end foreach my $item (@{$self->{items}})
 
-    #####################
-    # textinput element #
-    #####################
-    if (defined($self->{textinput}->{'link'})) {
-        $output .= '<textinput rdf:about="'. $self->_encode($self->{textinput}->{'link'}) .'">'."\n";
-        $self->_output_common_textinput_sub_elements();
-
-        $self->_out_dc_elements($self->textinput());
-
-  # Ad-hoc modules
-  # TODO : Should this follow the %rdf_resources conventions of the items'
-  # and channel's modules' support ?
-  while ( my($url, $prefix) = each %{$self->{modules}} ) {
-    next if $prefix =~ /^(dc|syn|taxo)$/;
-    while ( my($el, $value) = each %{$self->{textinput}->{$prefix}} ) {
-		  $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-    }
-	}
-
-	$output .= '</textinput>'."\n\n";
-    }
+    $self->_output_complete_textinput();
 
     $output .= '</rdf:RDF>';
 
@@ -1594,7 +1608,7 @@ sub as_rss_2_0 {
     #####################
     # textinput element #
     #####################
-    $self->_output_complete_textinput({version => "2.0"});
+    $self->_output_complete_textinput();
 
     #####################
     # skipHours element #
