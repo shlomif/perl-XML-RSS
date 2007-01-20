@@ -588,9 +588,16 @@ sub _out_inner_tag
 
     my $ext_tag = $params->{ext};
 
-    if ($params->{defined} ? defined($self->{$ext_tag}->{$tag}) : 1)
+    if (ref($ext_tag) eq "")
     {
-        $self->_out_tag($tag, $self->{$ext_tag}->{$tag});
+        $ext_tag = $self->{$ext_tag};
+    }
+
+    my $value = $ext_tag->{$tag};
+
+    if ($params->{defined} ? defined($value) : 1)
+    {
+        $self->_out_tag($tag, $value);
     }
 
     return;
@@ -887,6 +894,19 @@ sub _out_start_image
     return;
 }
 
+sub _out_start_item
+{
+    my ($self, $item, $params) = @_;
+
+    $params = +{ attr => "",} if (!$params);
+    
+    $self->_out("<item$params->{attr}>\n");
+
+    $self->_output_common_item_tags($item);
+
+    return;
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -924,9 +944,7 @@ sub as_rss_0_9 {
     ################
     foreach my $item (@{$self->{items}})
     {
-        $output .= '<item>'."\n";
-
-        $self->_output_common_item_tags($item);
+        $self->_out_start_item($item);
 
         $output .= '</item>'."\n\n";
     }
@@ -958,8 +976,10 @@ sub _output_common_item_tags
 {
     my ($self, $item) = @_;
 
-    $self->_output_item_tag($item, "title");
-    $self->_output_item_tag($item, "link");
+    $self->_output_multiple_tags(
+        { ext => $item, 'defined' => ($self->_out_rss_version() eq "2.0") },
+        [qw(title link)],
+    );
 
     if ($self->_out_rss_version() ne "0.9")
     {
@@ -1143,8 +1163,7 @@ sub as_rss_0_9_1 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-        $output .= '<item>'."\n";
-        $self->_output_common_item_tags($item);
+        $self->_out_start_item($item);
         # end image element
         $output .= '</item>'."\n\n";
     }
@@ -1387,11 +1406,13 @@ sub as_rss_1_0 {
     ################
     # item element #
     ################
-    foreach my $item (@{$self->{items}}) {
+    foreach my $item (@{$self->{items}})
+    {
         my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
-        $output .= '<item rdf:about="'. $self->_encode($about) ."\">\n";
 
-        $self->_output_common_item_tags($item);
+        $self->_out_start_item($item,
+            { attr => ' rdf:about="'. $self->_encode($about) . '"' }
+        );
 
         $self->_out_dc_elements($item);
 
@@ -1521,9 +1542,11 @@ sub as_rss_2_0 {
     foreach my $item (@{$self->{items}}) {
             # According to the spec either title or description must be present.
             next unless (exists $item->{title} or exists $item->{description});
-            $output .= '<item>'."\n";
 
-            foreach my $tag (qw(title link description author category comments)) {
+            $self->_out_start_item($item);
+
+            foreach my $tag (qw(author category comments))
+            {
                 $self->_output_def_item_tag($item, $tag);
             }
 
