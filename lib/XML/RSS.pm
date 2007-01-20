@@ -1674,18 +1674,31 @@ sub _my_in_element
     my ($self, $elem) = @_;
 
     return $self->within_element($elem) ||
-	       $self->within_element(
+           $self->within_element(
                $self->generate_ns_name($elem,$self->{rss_namespace})
            );
 }
 
-sub _get_elem_namespace
+sub _get_elem_namespace_helper
 {
     my ($self, $el) = @_;
 
     my $ns = $self->namespace( $el );
 
     return (defined($ns) ? $ns : "");
+}
+
+sub _get_elem_namespace
+{
+    my ($self, $el) = @_;
+
+    my $ns = _get_elem_namespace_helper(@_);
+
+    my $verdict =
+        (!$ns && !$self->{rss_namespace}) ||
+        ($ns eq $self->{rss_namespace}) ;
+
+    return ($ns, $verdict);
 }
 
 sub _get_current_namespace
@@ -1701,14 +1714,12 @@ sub handle_char {
     # image element
     if (_my_in_element($self, "image")) 
     {
-		my $ns = _get_current_namespace($self);
+		my ($ns, $verdict) = _get_current_namespace($self);
 
 		# If it's in the default namespace
-		if (
-			(!$ns && !$self->{rss_namespace}) ||
-			($ns eq $self->{rss_namespace})
-		) {
-	    	$self->{'image'}->{$self->current_element} .= $cdata;
+		if ($verdict)
+		{
+			$self->{'image'}->{$self->current_element} .= $cdata;
 		}
 		else {
 	    	# If it's in another namespace
@@ -1724,13 +1735,11 @@ sub handle_char {
     {
 		return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 
-		my $ns = _get_current_namespace($self);
+		my ($ns, $verdict) = _get_current_namespace($self);
 
 		# If it's in the default RSS 1.0 namespace
-		if (
-			(!$ns && !$self->{rss_namespace}) ||
-			($ns eq $self->{rss_namespace})
-		) {
+		if ($verdict)
+        {
             my $elem = $self->current_element;
             if (@{$self->{'items'}} < $self->{num_items})
             {
@@ -1761,13 +1770,11 @@ sub handle_char {
         # distinct object than our own parser.
         _my_in_element($self, "textinput") || _my_in_element($self, "textInput")
 	) {
-		my $ns = _get_current_namespace($self);
+		my ($ns, $verdict) = _get_current_namespace($self);
 
 		# If it's in the default namespace
-		if (
-			(!$ns && !$self->{rss_namespace}) ||
-			($ns eq $self->{rss_namespace})
-		) {
+		if ($verdict)
+		{
 	    	$self->{'textinput'}->{$self->current_element} .= $cdata;
 		}
 		else {
@@ -1793,13 +1800,11 @@ sub handle_char {
 	) {
 		return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 
-		my $ns = _get_current_namespace($self);
+		my ($ns, $verdict) = _get_current_namespace($self);
 
 		# If it's in the default namespace
-		if (
-			(!$ns && !$self->{rss_namespace}) ||
-			($ns eq $self->{rss_namespace})
-		) {
+		if ($verdict)
+		{
 	    	$self->{'channel'}->{$self->current_element} .= $cdata;
 		} else {
 	    	# If it's in another namespace
@@ -1870,12 +1875,10 @@ sub handle_start {
     } elsif ($el eq 'item') {
 		# deal with trouble makers who use mod_content :)
 
-		my $ns = _get_elem_namespace($self, $el);
+		my ($ns, $verdict) = _get_elem_namespace($self, $el);
 
-		if (
-			(!$ns && !$self->{rss_namespace}) ||
-			($ns eq $self->{rss_namespace})
-		) {
+		if ($verdict)
+		{
             # Sanity check to make sure we don't have nested elements that
             # can confuse the parser.
             if (!defined($self->{_inside_item_elem}))
