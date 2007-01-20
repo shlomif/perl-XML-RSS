@@ -1697,12 +1697,10 @@ sub _get_current_namespace
 
 sub handle_char {
     my ($self,$cdata) = (@_);
-	
+
     # image element
-    if (
-		$self->within_element("image") ||
-		$self->within_element($self->generate_ns_name("image",$self->{rss_namespace}))
-	) {
+    if (_my_in_element($self, "image")) 
+    {
 		my $ns = _get_current_namespace($self);
 
 		# If it's in the default namespace
