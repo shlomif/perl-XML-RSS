@@ -891,6 +891,7 @@ sub as_rss_0_9 {
     my $self = shift;
 
     $self->_prefer_dc(0);
+    $self->_out_rss_version("0.9");
     my $output;
 
     $self->_set_output_var(\$output);
@@ -921,13 +922,13 @@ sub as_rss_0_9 {
     ################
     # item element #
     ################
-    foreach my $item (@{$self->{items}}) {
-	$output .= '<item>'."\n";
+    foreach my $item (@{$self->{items}})
+    {
+        $output .= '<item>'."\n";
 
-	$output .= '<title>'. $self->_encode($item->{title}) .'</title>'."\n";
-	$output .= '<link>'. $self->_encode($item->{'link'}) .'</link>'."\n";
+        $self->_output_common_item_tags($item);
 
-	$output .= '</item>'."\n\n";
+        $output .= '</item>'."\n\n";
     }
 
     #####################
@@ -959,7 +960,11 @@ sub _output_common_item_tags
 
     $self->_output_item_tag($item, "title");
     $self->_output_item_tag($item, "link");
-    $self->_output_def_item_tag($item, "description");
+
+    if ($self->_out_rss_version() ne "0.9")
+    {
+        $self->_output_def_item_tag($item, "description");
+    }
 
     return;
 }
@@ -1025,6 +1030,18 @@ sub _prefer_dc
     return $self->{_prefer_dc};
 }
 
+sub _out_rss_version
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_out_rss_version} = shift;
+    }
+    return $self->{_out_rss_version};
+}
+
+
 sub _out_channel_dc_field
 {
     my ($self, $dc_key, $non_dc_key) = @_;
@@ -1067,6 +1084,7 @@ sub as_rss_0_9_1 {
     my $self = shift;
 
     $self->_prefer_dc(0);
+    $self->_out_rss_version("0.91");
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1240,6 +1258,7 @@ sub _out_modules_elements
 sub as_rss_1_0 {
     my $self = shift;
 
+    $self->_out_rss_version("1.0");
     $self->_prefer_dc(1);
 
     my $output;
@@ -1415,6 +1434,7 @@ sub as_rss_1_0 {
 sub as_rss_2_0 {
     my $self = shift;
 
+    $self->_out_rss_version("2.0");
     $self->_prefer_dc(0);
 
     my $output;
