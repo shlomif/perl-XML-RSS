@@ -1207,6 +1207,36 @@ sub _out_dc_elements
     return;
 }
 
+# Output the Ad-hoc modules
+sub _out_modules_elements
+{
+    my ($self, $super_elem) = @_;
+
+    # Ad-hoc modules
+    while ( my($url, $prefix) = each %{$self->{modules}} )
+    {
+        next if $prefix =~ /^(dc|syn|taxo)$/;
+        while ( my($el, $value) = each %{$super_elem->{$prefix}} )
+        {
+            if ( exists( $rdf_resource_fields{ $url } ) and
+                 exists( $rdf_resource_fields{ $url }{ $el }) )
+            {
+                $self->_out(
+                    qq{<${prefix}:${el} rdf:resource="} .
+                    $self->_encode($value) .
+                    qq{" />\n}
+                );
+            }
+            else
+            {
+                $self->_out_tag("${prefix}:${el}", $value);
+            }
+        }
+    }
+
+    return;
+}
+
 sub as_rss_1_0 {
     my $self = shift;
 
@@ -1277,22 +1307,8 @@ sub as_rss_1_0 {
     # Taxonomy module
     $self->_output_taxo_topics($self->{channel});
 
-    # Ad-hoc modules
-	while ( my($url, $prefix) = each %{$self->{modules}} ) {
-		next if $prefix =~ /^(dc|syn|taxo)$/;
-		while ( my($el, $value) = each %{$self->{channel}->{$prefix}} ) {
-			if ( exists( $rdf_resource_fields{ $url } ) and
-				 exists( $rdf_resource_fields{ $url }{ $el }) )
-			{
-				$output .= qq{<$prefix:$el rdf:resource="} .
-						   $self->_encode($value) .
-						   qq{" />\n};
-			}
-			else {
-				$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-			}
-		}
-  	}
+    $self->_out_modules_elements($self->channel());
+
 
     # Seq items
     $output .= "<items>\n <rdf:Seq>\n";
@@ -1343,21 +1359,8 @@ sub as_rss_1_0 {
         $self->_out_dc_elements($self->image());
 
 	  	# Ad-hoc modules for images
-		while ( my($url, $prefix) = each %{$self->{modules}} ) {
-			next if $prefix =~ /^(dc|syn|taxo)$/;
-			while ( my($el, $value) = each %{$self->{image}->{$prefix}} ) {
-				if ( exists( $rdf_resource_fields{ $url } ) and
-					 exists( $rdf_resource_fields{ $url }{ $el }) )
-				{
-					$output .= qq{<$prefix:$el rdf:resource="} .
-							   $self->_encode($value) .
-							   qq{" />\n};
-				}
-				else {
-					$output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-				}
-			}
-	  	}
+        $self->_out_modules_elements($self->image());
+
 		# end image element
 		$output .= '</image>'."\n\n";
 	} # end if ($self->{image}->{url})
@@ -1376,22 +1379,8 @@ sub as_rss_1_0 {
         # Taxonomy module
         $self->_output_taxo_topics($item);
 
-        # Ad-hoc modules
-        while ( my($url, $prefix) = each %{$self->{modules}} ) {
-            next if $prefix =~ /^(dc|syn|taxo)$/;
-            while ( my($el, $value) = each %{$item->{$prefix}} ) {
-                if ( exists( $rdf_resource_fields{ $url } ) and
-                     exists( $rdf_resource_fields{ $url }{ $el }) )
-                {
-                    $output .= qq{<$prefix:$el rdf:resource="} .
-                                           $self->_encode($value) .
-                                           qq{" />\n};
-                }
-                else {
-                    $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-                }
-            }
-        }
+        $self->_out_modules_elements($item);
+
         # end item element
         $output .= '</item>'."\n\n";
     } # end foreach my $item (@{$self->{items}})
@@ -1484,22 +1473,7 @@ sub as_rss_2_0 {
     # ttl
     $self->_out_channel_self_dc_field("ttl");
 
-    # Ad-hoc modules
-    while ( my($url, $prefix) = each %{$self->{modules}} ) {
-        next if $prefix =~ /^(dc|syn|taxo)$/;
-        while ( my($el, $value) = each %{$self->{channel}->{$prefix}} ) {
-            if ( exists( $rdf_resource_fields{ $url } ) and
-                 exists( $rdf_resource_fields{ $url }{ $el }) )
-            {
-                $output .= "<$prefix:$el rdf:resource=\"" .
-                           $self->_encode($value) .
-                           "\" />\n";
-            }
-            else {
-                $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-            }
-        }
-    }
+    $self->_out_modules_elements($self->channel());
 
     $output .= "\n";
 
@@ -1515,22 +1489,7 @@ sub as_rss_2_0 {
             [qw(width height description)]
         );
 
-        # Ad-hoc modules for images
-        while ( my($url, $prefix) = each %{$self->{modules}} ) {
-            next if $prefix =~ /^(dc|syn|taxo)$/;
-            while ( my($el, $value) = each %{$self->{image}->{$prefix}} ) {
-                if ( exists( $rdf_resource_fields{ $url } ) and
-                     exists( $rdf_resource_fields{ $url }{ $el }) )
-                {
-                    $output .= qq{<$prefix:$el rdf:resource="} .
-                               $self->_encode($value) .
-                               qq{" />\n};
-                }
-                else {
-                    $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-                }
-            }
-        }
+        $self->_out_modules_elements($self->image());
 
         # end image element
         $output .= '</image>'."\n\n";
@@ -1573,22 +1532,7 @@ sub as_rss_2_0 {
                     . ' />' . "\n";
             }
 
-            # Ad-hoc modules
-            while ( my($url, $prefix) = each %{$self->{modules}} ) {
-                next if $prefix =~ /^(dc|syn|taxo)$/;
-                while ( my($el, $value) = each %{$item->{$prefix}} ) {
-                    if ( exists( $rdf_resource_fields{ $url } ) and
-                         exists( $rdf_resource_fields{ $url }{ $el }) )
-                    {
-                        $output .= "<$prefix:$el rdf:resource=\"" .
-                                   $self->_encode($value) .
-                                   "\" />\n";
-                    }
-                    else {
-                        $output .= "<$prefix:$el>".  $self->_encode($value) ."</$prefix:$el>\n";
-                    }
-                }
-            }
+            $self->_out_modules_elements($item);
 
             # end image element
             $output .= '</item>'."\n\n";
