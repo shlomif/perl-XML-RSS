@@ -1001,6 +1001,26 @@ sub _out_managing_editor
     $self->_out_defined_tag($label, $self->_calc_managingEditor());
 }
 
+sub _calc_webMaster
+{
+    my $self = shift;
+
+    my $channel = $self->{channel};
+
+    return defined($self->{channel}->{'dc'}->{'creator'}) ?
+        $channel->{'dc'}->{'creator'} :
+        $channel->{webMaster}
+        ;
+}
+
+
+sub _out_webmaster
+{
+    my ($self, $label) = @_;
+
+    $self->_out_defined_tag($label, $self->_calc_webMaster());
+}
+
 sub as_rss_0_9_1 {
     my $self = shift;
     my $output;
@@ -1040,15 +1060,9 @@ sub as_rss_0_9_1 {
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-    # managing editor
     $self->_out_managing_editor("managingEditor");
 
-    # webmaster
-    if (defined($self->{channel}->{'dc'}->{'creator'})) {
-	$output .= '<webMaster>'. $self->_encode($self->{channel}->{'dc'}->{'creator'}) .'</webMaster>'."\n";
-    } elsif (defined($self->{channel}->{webMaster})) {
-	$output .= '<webMaster>'. $self->_encode($self->{channel}->{webMaster}) .'</webMaster>'."\n";
-    }
+    $self->_out_webmaster("webMaster");
 
     $output .= "\n";
 
@@ -1197,15 +1211,9 @@ sub as_rss_1_0 {
     #$output .= '<rss091:docs>'.$self->{channel}->{docs}.'</rss091:docs>'."\n"
 	#if $self->{channel}->{docs};
 
-    # managing editor
     $self->_out_managing_editor("dc:publisher");
 
-    # webmaster
-    if (defined($self->{channel}->{'dc'}->{'creator'})) {
-	$output .= '<dc:creator>'.  $self->_encode($self->{channel}->{'dc'}->{'creator'}) .'</dc:creator>'."\n";
-    } elsif (defined($self->{channel}->{webMaster})) {
-	$output .= '<dc:creator>'.  $self->_encode($self->{channel}->{webMaster})  .'</dc:creator>'."\n";
-    }
+    $self->_out_webmaster("dc:creator");
 
     # Dublin Core module
     foreach my $dc ( keys %dc_ok_fields ) {
@@ -1449,15 +1457,9 @@ sub as_rss_2_0 {
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-    # managing editor
     $self->_out_managing_editor("managingEditor");
 
-    # webmaster
-    if (defined($self->{channel}->{'dc'}->{'creator'})) {
-        $output .= '<webMaster>'.$self->_encode($self->{channel}->{'dc'}->{'creator'}).'</webMaster>'."\n";
-    } elsif (defined($self->{channel}->{webMaster})) {
-        $output .= '<webMaster>'.$self->_encode($self->{channel}->{webMaster}).'</webMaster>'."\n";
-    }
+    $self->_out_webmaster("webMaster");
 
     # category
     if (defined($self->{channel}->{'dc'}->{'category'})) {
