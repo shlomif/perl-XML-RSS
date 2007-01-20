@@ -879,9 +879,7 @@ sub as_rss_0_9 {
     # Channel Element #
     ###################
     $output .= '<channel>'."\n";
-    $output .= '<title>'. $self->_encode($self->{channel}->{title}) .'</title>'."\n";
-    $output .= '<link>'. $self->_encode($self->{channel}->{'link'}) .'</link>'."\n";
-    $output .= '<description>'. $self->_encode($self->{channel}->{description}) .'</description>'."\n";
+    $self->_output_common_channel_elements();
     $output .= '</channel>'."\n\n";
 
     #################
