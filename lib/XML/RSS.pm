@@ -656,8 +656,9 @@ sub _output_complete_textinput
 
         $self->_output_common_textinput_sub_elements();
 
-        $self->_out("</$master_tag>\n\n");
+        $self->_end_top_level_elem($master_tag);
     }
+
     return;
 }
 
@@ -907,6 +908,28 @@ sub _out_start_item
     return;
 }
 
+sub _end_top_level_elem
+{
+    my ($self, $elem) = @_;
+
+    $self->_out("</$elem>\n\n");
+}
+
+sub _end_item
+{
+    shift->_end_top_level_elem("item");
+}
+
+sub _end_image
+{
+    shift->_end_top_level_elem("image");
+}
+
+sub _end_channel
+{
+    shift->_end_top_level_elem("channel");
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -927,16 +950,15 @@ sub as_rss_0_9 {
     ###################
     $output .= '<channel>'."\n";
     $self->_output_common_channel_elements();
-    $output .= '</channel>'."\n\n";
+    $self->_end_channel();
 
     #################
     # image element #
     #################
-    if (defined $self->{image}->{url}) {
+    if (defined $self->{image}->{url})
+    {
         $self->_out_start_image();
-
-        # end image element
-        $output .= '</image>'."\n\n";
+        $self->_end_image();
     }
 
     ################
@@ -945,8 +967,7 @@ sub as_rss_0_9 {
     foreach my $item (@{$self->{items}})
     {
         $self->_out_start_item($item);
-
-        $output .= '</item>'."\n\n";
+        $self->_end_item();
     }
 
     #####################
@@ -1155,8 +1176,8 @@ sub as_rss_0_9_1 {
             [qw(width height description)],
         );
 
-	# end image element
-	$output .= '</image>'."\n\n";
+    $self->_end_image();
+
     }
 
     ################
@@ -1164,8 +1185,7 @@ sub as_rss_0_9_1 {
     ################
     foreach my $item (@{$self->{items}}) {
         $self->_out_start_item($item);
-        # end image element
-        $output .= '</item>'."\n\n";
+        $self->_end_item();
     }
 
     #####################
@@ -1368,8 +1388,7 @@ sub as_rss_1_0 {
 		$output .= '<textinput rdf:resource="'. $self->_encode($self->{textinput}->{'link'}) .'" />'."\n";
     }
 
-    # end channel element
-    $output .= '</channel>'."\n\n";
+    $self->_end_channel();
 
     #################
     # image element #
@@ -1399,8 +1418,7 @@ sub as_rss_1_0 {
 	  	# Ad-hoc modules for images
         $self->_out_modules_elements($self->image());
 
-		# end image element
-		$output .= '</image>'."\n\n";
+        $self->_end_image();
 	} # end if ($self->{image}->{url})
 
     ################
@@ -1421,8 +1439,7 @@ sub as_rss_1_0 {
 
         $self->_out_modules_elements($item);
 
-        # end item element
-        $output .= '</item>'."\n\n";
+        $self->_end_item();
     } # end foreach my $item (@{$self->{items}})
 
     #####################
@@ -1532,8 +1549,7 @@ sub as_rss_2_0 {
 
         $self->_out_modules_elements($self->image());
 
-        # end image element
-        $output .= '</image>'."\n\n";
+        $self->_end_image();
     }
 
     ################
@@ -1577,8 +1593,7 @@ sub as_rss_2_0 {
 
             $self->_out_modules_elements($item);
 
-            # end image element
-            $output .= '</item>'."\n\n";
+            $self->_end_item();
     }
 
     #####################
