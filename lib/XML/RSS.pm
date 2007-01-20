@@ -540,6 +540,17 @@ sub _initialize {
     }
 }
 
+sub _rss_out_version
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_rss_out_version} = shift;
+    }
+    return $self->{_rss_out_version};
+}
+
 sub _set_output_var
 {
     my ($self, $output_var_ref) = @_;
@@ -666,14 +677,14 @@ sub _output_complete_textinput
 {
     my $self = shift;
 
-    my $master_tag = ($self->_out_rss_version() eq "2.0") ? 
+    my $master_tag = ($self->_rss_out_version() eq "2.0") ? 
         "textInput" : "textinput";
 
     if (defined($self->{textinput}->{'link'}))
     {
         my $attr = "";
         
-        if ($self->_out_rss_version() eq "1.0")
+        if ($self->_rss_out_version() eq "1.0")
         {
             $attr = ' rdf:about="'. 
                 $self->_encode($self->{textinput}->{'link'}) .
@@ -685,7 +696,7 @@ sub _output_complete_textinput
 
         $self->_output_common_textinput_sub_elements();
 
-        if ($self->_out_rss_version() eq "1.0")
+        if ($self->_rss_out_version() eq "1.0")
         {
             $self->_out_textinput_rss_1_0_elems();
         }
@@ -984,11 +995,11 @@ sub _output_common_item_tags
     my ($self, $item) = @_;
 
     $self->_output_multiple_tags(
-        { ext => $item, 'defined' => ($self->_out_rss_version() eq "2.0") },
+        { ext => $item, 'defined' => ($self->_rss_out_version() eq "2.0") },
         [qw(title link)],
     );
 
-    if ($self->_out_rss_version() ne "0.9")
+    if ($self->_rss_out_version() ne "0.9")
     {
         $self->_output_def_item_tag($item, "description");
     }
@@ -1030,7 +1041,7 @@ sub _start_channel
 
     $self->_output_common_channel_elements();
 
-    if ($self->_out_rss_version() ne "0.9")
+    if ($self->_rss_out_version() ne "0.9")
     {
         $self->_out_language();
     }
@@ -1062,16 +1073,6 @@ sub _prefer_dc
     return $self->{_prefer_dc};
 }
 
-sub _out_rss_version
-{
-    my $self = shift;
-
-    if (@_)
-    {
-        $self->{_out_rss_version} = shift;
-    }
-    return $self->{_out_rss_version};
-}
 
 
 sub _out_channel_dc_field
@@ -1194,7 +1195,7 @@ sub as_rss_0_9 {
     my $self = shift;
 
     $self->_prefer_dc(0);
-    $self->_out_rss_version("0.9");
+    $self->_rss_out_version("0.9");
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1240,7 +1241,7 @@ sub as_rss_0_9_1 {
     my $self = shift;
 
     $self->_prefer_dc(0);
-    $self->_out_rss_version("0.91");
+    $self->_rss_out_version("0.91");
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1333,7 +1334,7 @@ sub as_rss_0_9_1 {
 sub as_rss_1_0 {
     my $self = shift;
 
-    $self->_out_rss_version("1.0");
+    $self->_rss_out_version("1.0");
     $self->_prefer_dc(1);
 
     my $output;
@@ -1484,7 +1485,7 @@ sub as_rss_1_0 {
 sub as_rss_2_0 {
     my $self = shift;
 
-    $self->_out_rss_version("2.0");
+    $self->_rss_out_version("2.0");
     $self->_prefer_dc(0);
 
     my $output;
@@ -1605,9 +1606,6 @@ sub as_rss_2_0 {
             $self->_end_item();
     }
 
-    #####################
-    # textinput element #
-    #####################
     $self->_output_complete_textinput();
 
     #####################
