@@ -863,6 +863,30 @@ sub _output_xml_declaration
     return undef;
 }
 
+sub _out_image_title_and_url
+{
+    my $self = shift;
+
+    return $self->_output_multiple_tags({ext => "image"}, [qw(title url)]);
+}
+
+sub _out_start_image
+{
+    my $self = shift;
+
+    my $params = shift;
+
+    $params = +{ attr => "",} if (!$params);
+    
+    $self->_out("<image$params->{attr}>\n");
+
+    $self->_out_image_title_and_url();
+       
+    $self->_output_def_image_tag("link");
+
+    return;
+}
+
 sub as_rss_0_9 {
     my $self = shift;
     my $output;
@@ -886,19 +910,10 @@ sub as_rss_0_9 {
     # image element #
     #################
     if (defined $self->{image}->{url}) {
-	$output .= '<image>'."\n";
+        $self->_out_start_image();
 
-	# title
-	$output .= '<title>'. $self->_encode($self->{image}->{title}) .'</title>'."\n";
-
-	# url
-	$output .= '<url>'. $self->_encode($self->{image}->{url}) .'</url>'."\n";
-
-	# link
-        $self->_output_def_image_tag("link");
-
-	# end image element
-	$output .= '</image>'."\n\n";
+        # end image element
+        $output .= '</image>'."\n\n";
     }
 
     ################
@@ -1070,17 +1085,12 @@ sub as_rss_0_9_1 {
     # image element #
     #################
     if (defined($self->{image}->{url})) {
-	$output .= '<image>'."\n";
 
-	# title
-	$output .= '<title>'. $self->_encode($self->{image}->{title}) .'</title>'."\n";
-
-	# url
-	$output .= '<url>'. $self->_encode($self->{image}->{url}) .'</url>'."\n";
+        $self->_out_start_image();
 
     # link, image width, image height and description
     $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
-            [qw(link width height description)],
+            [qw(width height description)],
         );
 
 	# end image element
@@ -1283,16 +1293,12 @@ sub as_rss_1_0 {
     # image element #
     #################
     if (defined($self->{image}->{url})) {
-		$output .= '<image rdf:about="'. $self->_encode($self->{image}->{url}) .'">'."\n";
-
-		# title
-		$output .= '<title>'.  $self->_encode($self->{image}->{title}) .'</title>'."\n";
-
-		# url
-		$output .= '<url>'.  $self->_encode($self->{image}->{url}) .'</url>'."\n";
-
-		# link
-        $self->_output_def_image_tag("link");
+        $self->_out_start_image(
+            {
+                'attr' =>
+                ' rdf:about="'. $self->_encode($self->{image}->{url}) .'"',
+            }
+        );
 
 		# image width
 		#$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
@@ -1507,16 +1513,12 @@ sub as_rss_2_0 {
     # image element #
     #################
     if (defined($self->{image}->{url})) {
-        $output .= '<image>'."\n";
 
-        # title
-        $output .= '<title>'.$self->_encode($self->{image}->{title}).'</title>'."\n";
+        $self->_out_start_image();
 
-        # url
-        $output .= '<url>'.$self->_encode($self->{image}->{url}).'</url>'."\n";
         # link, image width, image height and description
         $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
-            [qw(link width height description)]
+            [qw(width height description)]
         );
 
         # Ad-hoc modules for images
