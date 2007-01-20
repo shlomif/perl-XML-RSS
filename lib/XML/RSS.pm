@@ -878,7 +878,7 @@ sub _out_image_title_and_url
     return $self->_output_multiple_tags({ext => "image"}, [qw(title url)]);
 }
 
-sub _out_start_image
+sub _start_image
 {
     my $self = shift;
 
@@ -895,7 +895,7 @@ sub _out_start_image
     return;
 }
 
-sub _out_start_item
+sub _start_item
 {
     my ($self, $item, $params) = @_;
 
@@ -986,7 +986,7 @@ sub _out_language
     return $self->_out_channel_self_dc_field("language");
 }
 
-sub _output_start_channel
+sub _start_channel
 {
     my ($self, $params) = @_;
 
@@ -1171,7 +1171,7 @@ sub as_rss_0_9 {
     $output .= '<rdf:RDF'."\n".'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
     $output .= 'xmlns="http://my.netscape.com/rdf/simple/0.9/">'."\n\n";
 
-    $self->_output_start_channel();
+    $self->_start_channel();
     $self->_end_channel();
 
     #################
@@ -1179,7 +1179,7 @@ sub as_rss_0_9 {
     #################
     if (defined $self->{image}->{url})
     {
-        $self->_out_start_image();
+        $self->_start_image();
         $self->_end_image();
     }
 
@@ -1188,7 +1188,7 @@ sub as_rss_0_9 {
     ################
     foreach my $item (@{$self->{items}})
     {
-        $self->_out_start_item($item);
+        $self->_start_item($item);
         $self->_end_item();
     }
 
@@ -1220,7 +1220,7 @@ sub as_rss_0_9_1 {
     # RSS root element
     $output .= '<rss version="0.91">'."\n\n";
 
-    $self->_output_start_channel();
+    $self->_start_channel();
 
     # PICS rating
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
@@ -1247,7 +1247,7 @@ sub as_rss_0_9_1 {
     #################
     if (defined($self->{image}->{url})) {
 
-        $self->_out_start_image();
+        $self->_start_image();
 
     # link, image width, image height and description
     $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
@@ -1262,7 +1262,7 @@ sub as_rss_0_9_1 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-        $self->_out_start_item($item);
+        $self->_start_item($item);
         $self->_end_item();
     }
 
@@ -1323,7 +1323,7 @@ sub as_rss_1_0 {
     ###################
     # Channel Element #
     ###################
-    $self->_output_start_channel(
+    $self->_start_channel(
         {attr => 
             (' rdf:about="' . 
                 $self->_encode($self->_get_channel_rdf_about()) . '"')
@@ -1392,7 +1392,7 @@ sub as_rss_1_0 {
     # image element #
     #################
     if (defined($self->{image}->{url})) {
-        $self->_out_start_image(
+        $self->_start_image(
             {
                 'attr' =>
                 ' rdf:about="'. $self->_encode($self->{image}->{url}) .'"',
@@ -1426,7 +1426,7 @@ sub as_rss_1_0 {
     {
         my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
 
-        $self->_out_start_item($item,
+        $self->_start_item($item,
             { attr => ' rdf:about="'. $self->_encode($about) . '"' }
         );
 
@@ -1496,7 +1496,7 @@ sub as_rss_2_0 {
  
     $output .=">"."\n\n";
 
-    $self->_output_start_channel();
+    $self->_start_channel();
 
     # PICS rating
     # Not supported by RSS 2.0
@@ -1535,7 +1535,7 @@ sub as_rss_2_0 {
     #################
     if (defined($self->{image}->{url})) {
 
-        $self->_out_start_image();
+        $self->_start_image();
 
         # link, image width, image height and description
         $self->_output_multiple_tags ({ext => "image", 'defined' => 1},
@@ -1554,7 +1554,7 @@ sub as_rss_2_0 {
             # According to the spec either title or description must be present.
             next unless (exists $item->{title} or exists $item->{description});
 
-            $self->_out_start_item($item);
+            $self->_start_item($item);
 
             foreach my $tag (qw(author category comments))
             {
