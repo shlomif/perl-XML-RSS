@@ -2599,13 +2599,12 @@ modify it under the same terms as Perl itself.
  Jim Hebert <jim@cosource.com>
  Randal Schwartz <merlyn@stonehenge.com>
  rjp@browser.org
- Kellan <kellan@protest.net>
+ Kellan Elliott-McCrea <kellan@protest.net>
  Rafe Colburn <rafe@rafe.us>
  Adam Trickett <adam.trickett@btinternet.com>
  Aaron Straup Cope <asc@vineyard.net>
  Ian Davis <iand@internetalchemy.org>
  rayg@varchars.com
- Kellan Elliott-McCrea <kellan@protest.net>
  Shlomi Fish <shlomif@iglu.org.il>
 
 =head1 SEE ALSO
