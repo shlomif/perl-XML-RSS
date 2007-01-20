@@ -1679,6 +1679,22 @@ sub _my_in_element
            );
 }
 
+sub _get_elem_namespace
+{
+    my ($self, $el) = @_;
+
+    my $ns = $self->namespace( $el );
+
+    return (defined($ns) ? $ns : "");
+}
+
+sub _get_current_namespace
+{
+    my $self = shift;
+
+    return _get_elem_namespace($self, $self->current_element);
+}
+
 sub handle_char {
     my ($self,$cdata) = (@_);
 	
@@ -1687,11 +1703,8 @@ sub handle_char {
 		$self->within_element("image") ||
 		$self->within_element($self->generate_ns_name("image",$self->{rss_namespace}))
 	) {
-		my $ns = $self->namespace($self->current_element);
-        if (!defined($ns))
-        {
-            $ns = "";
-        }
+		my $ns = _get_current_namespace($self);
+
 		# If it's in the default namespace
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
@@ -1713,12 +1726,7 @@ sub handle_char {
     {
 		return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 
-		my $ns = $self->namespace($self->current_element);
-
-        if (!defined($ns))
-        {
-            $ns = "";
-        }
+		my $ns = _get_current_namespace($self);
 
 		# If it's in the default RSS 1.0 namespace
 		if (
@@ -1755,12 +1763,7 @@ sub handle_char {
         # distinct object than our own parser.
         _my_in_element($self, "textinput") || _my_in_element($self, "textInput")
 	) {
-		my $ns = $self->namespace($self->current_element);
-
-		if (!defined($ns))
-		{
-			$ns = "";
-		}
+		my $ns = _get_current_namespace($self);
 
 		# If it's in the default namespace
 		if (
@@ -1792,12 +1795,7 @@ sub handle_char {
 	) {
 		return if $self->within_element($self->generate_ns_name("topics",'http://purl.org/rss/1.0/modules/taxonomy/'));
 
-		my $ns = $self->namespace($self->current_element);
-
-        if (!defined($ns))
-        {
-            $ns = "";
-        }
+		my $ns = _get_current_namespace($self);
 
 		# If it's in the default namespace
 		if (
@@ -1873,12 +1871,8 @@ sub handle_start {
     # beginning of item element
     } elsif ($el eq 'item') {
 		# deal with trouble makers who use mod_content :)
-		my $ns =  $self->namespace( $el );
 
-        if (!defined($ns))
-        {
-            $ns = "";
-        }
+		my $ns = _get_elem_namespace($self, $el);
 
 		if (
 			(!$ns && !$self->{rss_namespace}) ||
