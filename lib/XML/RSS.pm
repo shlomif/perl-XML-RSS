@@ -1188,6 +1188,25 @@ sub _output_taxo_topics
     return;
 }
 
+# Output the Dublin core properties of a certain elements (channel, image,
+# textinput, item).
+
+sub _out_dc_elements
+{
+    my $self = shift;
+    my $elem = shift;
+    my $skip_hash = shift || {};
+
+    foreach my $dc ( keys %dc_ok_fields )
+    {
+        next if $skip_hash->{$dc};
+
+        $self->_out_defined_tag("dc:$dc", $elem->{dc}->{$dc});
+    }
+
+    return;
+}
+
 sub as_rss_1_0 {
     my $self = shift;
 
@@ -1243,17 +1262,9 @@ sub as_rss_1_0 {
     $self->_out_webmaster();
 
     # Dublin Core module
-    foreach my $dc ( keys %dc_ok_fields ) {
-	next if ($dc eq 'language'
-		 || $dc eq 'creator'
-		 || $dc eq 'publisher'
-		 || $dc eq 'rights'
-		 || $dc eq 'date');
-	if (defined($self->{channel}->{dc}->{$dc}))
-	{
-	    $output .= "<dc:$dc>".  $self->_encode($self->{channel}->{dc}->{$dc}) ."</dc:$dc>\n";
-	}
-    }
+    $self->_out_dc_elements($self->channel(), 
+        { map { $_ => 1 } qw(language creator publisher rights date) },
+    );
 
     # Syndication module
     foreach my $syn ( keys %syn_ok_fields ) {
@@ -1329,13 +1340,7 @@ sub as_rss_1_0 {
 		#$output .= '<rss091:description>'.$self->{image}->{description}.'</rss091:description>'."\n"
 		#    if $self->{image}->{description};
 
-		# Dublin Core Modules
-		foreach my $dc ( keys %dc_ok_fields ) {
-			if (defined($self->{image}->{dc}->{$dc}))
-			{
-				$output .= "<dc:$dc>".  $self->_encode($self->{image}->{dc}->{$dc}) ."</dc:$dc>\n";
-			}
-		}
+        $self->_out_dc_elements($self->image());
 
 	  	# Ad-hoc modules for images
 		while ( my($url, $prefix) = each %{$self->{modules}} ) {
@@ -1362,16 +1367,11 @@ sub as_rss_1_0 {
     ################
     foreach my $item (@{$self->{items}}) {
         my $about = ( defined($item->{'about'}) ) ? $item->{'about'} : $item->{'link'};
-        $output .= '<item rdf:about="'. $self->_encode($about) .qq{">\n};
+        $output .= '<item rdf:about="'. $self->_encode($about) ."\">\n";
+
         $self->_output_common_item_tags($item);
 
-        # Dublin Core module
-        foreach my $dc ( keys %dc_ok_fields ) {
-            if (defined($item->{dc}->{$dc}))
-            {
-                $output .= "<dc:$dc>".  $self->_encode($item->{dc}->{$dc}) ."</dc:$dc>\n";
-            }
-        }
+        $self->_out_dc_elements($item);
 
         # Taxonomy module
         $self->_output_taxo_topics($item);
@@ -1403,14 +1403,7 @@ sub as_rss_1_0 {
         $output .= '<textinput rdf:about="'. $self->_encode($self->{textinput}->{'link'}) .'">'."\n";
         $self->_output_common_textinput_sub_elements();
 
-        # Dublin Core module
-        foreach my $dc ( keys %dc_ok_fields )
-        {
-            if (defined($self->{textinput}->{dc}->{$dc}))
-            {
-                $output .= "<dc:$dc>".  $self->_encode($self->{textinput}->{dc}->{$dc}) ."</dc:$dc>\n";
-            }
-        }
+        $self->_out_dc_elements($self->textinput());
 
   # Ad-hoc modules
   # TODO : Should this follow the %rdf_resources conventions of the items'
