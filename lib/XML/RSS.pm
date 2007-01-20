@@ -930,55 +930,7 @@ sub _end_channel
     shift->_end_top_level_elem("channel");
 }
 
-sub as_rss_0_9 {
-    my $self = shift;
 
-    $self->_prefer_dc(0);
-    $self->_out_rss_version("0.9");
-    my $output;
-
-    $self->_set_output_var(\$output);
-
-    $self->_output_xml_declaration();
-
-    # RDF root element
-    $output .= '<rdf:RDF'."\n".'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
-    $output .= 'xmlns="http://my.netscape.com/rdf/simple/0.9/">'."\n\n";
-
-    ###################
-    # Channel Element #
-    ###################
-    $output .= '<channel>'."\n";
-    $self->_output_common_channel_elements();
-    $self->_end_channel();
-
-    #################
-    # image element #
-    #################
-    if (defined $self->{image}->{url})
-    {
-        $self->_out_start_image();
-        $self->_end_image();
-    }
-
-    ################
-    # item element #
-    ################
-    foreach my $item (@{$self->{items}})
-    {
-        $self->_out_start_item($item);
-        $self->_end_item();
-    }
-
-    #####################
-    # textinput element #
-    #####################
-    $self->_output_complete_textinput();
-
-    $output .= '</rdf:RDF>';
-
-    return $self->_flush_output();
-}
 
 sub _output_def_item_tag
 {
@@ -1121,6 +1073,134 @@ sub _out_copyright
     return $self->_out_channel_dc_field("rights", "copyright");
 }
 
+
+
+sub _get_channel_rdf_about
+{
+    my $self = shift;
+
+    return $self->{channel}->{
+        defined($self->{channel}->{'about'}) ? "about" : "link"
+    };
+}
+
+sub _output_taxo_topics
+{
+    my ($self, $elem) = @_;
+
+    if (my $list = $elem->{'taxo'}) {
+        $self->_out("<taxo:topics>\n  <rdf:Bag>\n");
+        foreach my $taxo (@{$list})
+        {
+            $self->_out(
+                "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n"
+            );
+        }
+        $self->_out("  </rdf:Bag>\n</taxo:topics>\n");
+    }
+
+    return;
+}
+
+# Output the Dublin core properties of a certain elements (channel, image,
+# textinput, item).
+
+sub _out_dc_elements
+{
+    my $self = shift;
+    my $elem = shift;
+    my $skip_hash = shift || {};
+
+    foreach my $dc ( keys %dc_ok_fields )
+    {
+        next if $skip_hash->{$dc};
+
+        $self->_out_defined_tag("dc:$dc", $elem->{dc}->{$dc});
+    }
+
+    return;
+}
+
+# Output the Ad-hoc modules
+sub _out_modules_elements
+{
+    my ($self, $super_elem) = @_;
+
+    # Ad-hoc modules
+    while ( my($url, $prefix) = each %{$self->{modules}} )
+    {
+        next if $prefix =~ /^(dc|syn|taxo)$/;
+        while ( my($el, $value) = each %{$super_elem->{$prefix}} )
+        {
+            if ( exists( $rdf_resource_fields{ $url } ) and
+                 exists( $rdf_resource_fields{ $url }{ $el }) )
+            {
+                $self->_out(
+                    qq{<${prefix}:${el} rdf:resource="} .
+                    $self->_encode($value) .
+                    qq{" />\n}
+                );
+            }
+            else
+            {
+                $self->_out_tag("${prefix}:${el}", $value);
+            }
+        }
+    }
+
+    return;
+}
+
+sub as_rss_0_9 {
+    my $self = shift;
+
+    $self->_prefer_dc(0);
+    $self->_out_rss_version("0.9");
+    my $output;
+
+    $self->_set_output_var(\$output);
+
+    $self->_output_xml_declaration();
+
+    # RDF root element
+    $output .= '<rdf:RDF'."\n".'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
+    $output .= 'xmlns="http://my.netscape.com/rdf/simple/0.9/">'."\n\n";
+
+    ###################
+    # Channel Element #
+    ###################
+    $output .= '<channel>'."\n";
+    $self->_output_common_channel_elements();
+    $self->_end_channel();
+
+    #################
+    # image element #
+    #################
+    if (defined $self->{image}->{url})
+    {
+        $self->_out_start_image();
+        $self->_end_image();
+    }
+
+    ################
+    # item element #
+    ################
+    foreach my $item (@{$self->{items}})
+    {
+        $self->_out_start_item($item);
+        $self->_end_item();
+    }
+
+    #####################
+    # textinput element #
+    #####################
+    $self->_output_complete_textinput();
+
+    $output .= '</rdf:RDF>';
+
+    return $self->_flush_output();
+}
+
 sub as_rss_0_9_1 {
     my $self = shift;
 
@@ -1216,82 +1296,6 @@ sub as_rss_0_9_1 {
     $output .= '</rss>';
 
     return $self->_flush_output();
-}
-
-sub _get_channel_rdf_about
-{
-    my $self = shift;
-
-    return $self->{channel}->{
-        defined($self->{channel}->{'about'}) ? "about" : "link"
-    };
-}
-
-sub _output_taxo_topics
-{
-    my ($self, $elem) = @_;
-
-    if (my $list = $elem->{'taxo'}) {
-        $self->_out("<taxo:topics>\n  <rdf:Bag>\n");
-        foreach my $taxo (@{$list})
-        {
-            $self->_out(
-                "    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n"
-            );
-        }
-        $self->_out("  </rdf:Bag>\n</taxo:topics>\n");
-    }
-
-    return;
-}
-
-# Output the Dublin core properties of a certain elements (channel, image,
-# textinput, item).
-
-sub _out_dc_elements
-{
-    my $self = shift;
-    my $elem = shift;
-    my $skip_hash = shift || {};
-
-    foreach my $dc ( keys %dc_ok_fields )
-    {
-        next if $skip_hash->{$dc};
-
-        $self->_out_defined_tag("dc:$dc", $elem->{dc}->{$dc});
-    }
-
-    return;
-}
-
-# Output the Ad-hoc modules
-sub _out_modules_elements
-{
-    my ($self, $super_elem) = @_;
-
-    # Ad-hoc modules
-    while ( my($url, $prefix) = each %{$self->{modules}} )
-    {
-        next if $prefix =~ /^(dc|syn|taxo)$/;
-        while ( my($el, $value) = each %{$super_elem->{$prefix}} )
-        {
-            if ( exists( $rdf_resource_fields{ $url } ) and
-                 exists( $rdf_resource_fields{ $url }{ $el }) )
-            {
-                $self->_out(
-                    qq{<${prefix}:${el} rdf:resource="} .
-                    $self->_encode($value) .
-                    qq{" />\n}
-                );
-            }
-            else
-            {
-                $self->_out_tag("${prefix}:${el}", $value);
-            }
-        }
-    }
-
-    return;
 }
 
 sub as_rss_1_0 {
