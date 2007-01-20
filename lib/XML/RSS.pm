@@ -889,6 +889,8 @@ sub _out_start_image
 
 sub as_rss_0_9 {
     my $self = shift;
+
+    $self->_prefer_dc(0);
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1009,52 +1011,52 @@ sub _calc_channel_dc_field
     return defined($dc_value) ? $dc_value : $channel->{$non_dc_key};
 }
 
-# Returns the managingEditor tag or undef if it doesn't exist.
-sub _calc_managingEditor
+sub _prefer_dc
 {
     my $self = shift;
 
-    return $self->_calc_channel_dc_field("publisher", "managingEditor");
+    if (@_)
+    {
+        $self->{_prefer_dc} = shift;
+    }
+    return $self->{_prefer_dc};
+}
+
+sub _out_channel_dc_field
+{
+    my ($self, $dc_key, $non_dc_key) = @_;
+
+    return $self->_out_defined_tag(
+        ($self->_prefer_dc() ?  "dc:$dc_key" : $non_dc_key),
+        $self->_calc_channel_dc_field($dc_key, $non_dc_key)
+    );
 }
 
 sub _out_managing_editor
 {
-    my ($self, $label) = @_;
-
-    $self->_out_defined_tag($label, $self->_calc_managingEditor());
-}
-
-sub _calc_webMaster
-{
     my $self = shift;
 
-    return $self->_calc_channel_dc_field("creator", "webMaster");
+    return $self->_out_channel_dc_field("publisher", "managingEditor");
 }
-
 
 sub _out_webmaster
 {
-    my ($self, $label) = @_;
-
-    $self->_out_defined_tag($label, $self->_calc_webMaster());
-}
-
-sub _calc_copyright
-{
     my $self = shift;
 
-    return $self->_calc_channel_dc_field("rights", "copyright");
+    return $self->_out_channel_dc_field("creator", "webMaster");
 }
 
 sub _out_copyright
 {
-    my ($self, $label) = @_;
+    my $self = shift;
 
-    $self->_out_defined_tag($label, $self->_calc_copyright());
+    return $self->_out_channel_dc_field("rights", "copyright");
 }
 
 sub as_rss_0_9_1 {
     my $self = shift;
+
+    $self->_prefer_dc(0);
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1076,7 +1078,7 @@ sub as_rss_0_9_1 {
     # PICS rating
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
 
-    $self->_out_copyright("copyright");
+    $self->_out_copyright();
 
     # publication date
     $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
@@ -1087,9 +1089,9 @@ sub as_rss_0_9_1 {
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-    $self->_out_managing_editor("managingEditor");
+    $self->_out_managing_editor();
 
-    $self->_out_webmaster("webMaster");
+    $self->_out_webmaster();
 
     $output .= "\n";
 
@@ -1178,6 +1180,9 @@ sub _output_taxo_topics
 
 sub as_rss_1_0 {
     my $self = shift;
+
+    $self->_prefer_dc(1);
+
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1219,7 +1224,7 @@ sub as_rss_1_0 {
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
 	#$if $self->{channel}->{rating};
 
-    $self->_out_copyright("dc:rights");
+    $self->_out_copyright();
 
     # publication date
     $self->_out_defined_tag("dc:date",$self->_calc_dc_date());
@@ -1228,9 +1233,9 @@ sub as_rss_1_0 {
     #$output .= '<rss091:docs>'.$self->{channel}->{docs}.'</rss091:docs>'."\n"
 	#if $self->{channel}->{docs};
 
-    $self->_out_managing_editor("dc:publisher");
+    $self->_out_managing_editor();
 
-    $self->_out_webmaster("dc:creator");
+    $self->_out_webmaster();
 
     # Dublin Core module
     foreach my $dc ( keys %dc_ok_fields ) {
@@ -1422,6 +1427,9 @@ sub as_rss_1_0 {
 
 sub as_rss_2_0 {
     my $self = shift;
+
+    $self->_prefer_dc(0);
+
     my $output;
 
     $self->_set_output_var(\$output);
@@ -1456,7 +1464,7 @@ sub as_rss_2_0 {
     #    if $self->{channel}->{rating};
 
     # copyright
-    $self->_out_copyright("copyright");
+    $self->_out_copyright();
 
     # publication date
     $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
@@ -1466,9 +1474,9 @@ sub as_rss_2_0 {
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-    $self->_out_managing_editor("managingEditor");
+    $self->_out_managing_editor();
 
-    $self->_out_webmaster("webMaster");
+    $self->_out_webmaster();
 
     # category
     if (defined($self->{channel}->{'dc'}->{'category'})) {
