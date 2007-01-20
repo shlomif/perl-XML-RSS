@@ -996,17 +996,25 @@ sub _output_start_channel
     return;
 }
 
+# Calculates a channel field that has a dc: and non-dc alternative, 
+# prefering the dc: one.
+sub _calc_channel_dc_field
+{
+    my ($self, $dc_key, $non_dc_key) = @_;
+
+    my $channel = $self->{channel};
+
+    my $dc_value = $channel->{'dc'}->{$dc_key};
+
+    return defined($dc_value) ? $dc_value : $channel->{$non_dc_key};
+}
+
 # Returns the managingEditor tag or undef if it doesn't exist.
 sub _calc_managingEditor
 {
     my $self = shift;
 
-    my $channel = $self->{channel};
-
-    return defined($channel->{'dc'}->{'publisher'}) ?
-        $channel->{'dc'}->{'publisher'} :
-        $channel->{managingEditor}
-        ;
+    return $self->_calc_channel_dc_field("publisher", "managingEditor");
 }
 
 sub _out_managing_editor
@@ -1020,12 +1028,7 @@ sub _calc_webMaster
 {
     my $self = shift;
 
-    my $channel = $self->{channel};
-
-    return defined($self->{channel}->{'dc'}->{'creator'}) ?
-        $channel->{'dc'}->{'creator'} :
-        $channel->{webMaster}
-        ;
+    return $self->_calc_channel_dc_field("creator", "webMaster");
 }
 
 
@@ -1040,13 +1043,7 @@ sub _calc_copyright
 {
     my $self = shift;
 
-    my $channel = $self->{channel};
-
-    return
-        defined($channel->{'dc'}->{'rights'}) ?
-            $channel->{'dc'}->{'rights'} :
-            $channel->{copyright}
-        ;
+    return $self->_calc_channel_dc_field("rights", "copyright");
 }
 
 sub _out_copyright
