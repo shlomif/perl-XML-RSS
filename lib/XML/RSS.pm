@@ -1036,6 +1036,26 @@ sub _out_webmaster
     $self->_out_defined_tag($label, $self->_calc_webMaster());
 }
 
+sub _calc_copyright
+{
+    my $self = shift;
+
+    my $channel = $self->{channel};
+
+    return
+        defined($channel->{'dc'}->{'rights'}) ?
+            $channel->{'dc'}->{'rights'} :
+            $channel->{copyright}
+        ;
+}
+
+sub _out_copyright
+{
+    my ($self, $label) = @_;
+
+    $self->_out_defined_tag($label, $self->_calc_copyright());
+}
+
 sub as_rss_0_9_1 {
     my $self = shift;
     my $output;
@@ -1059,12 +1079,7 @@ sub as_rss_0_9_1 {
     # PICS rating
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
 
-    # copyright
-    if (defined($self->{channel}->{'dc'}->{'rights'})) {
-	$output .= '<copyright>'. $self->_encode($self->{channel}->{'dc'}->{'rights'}) .'</copyright>'."\n";
-    } elsif (defined($self->{channel}->{copyright})) {
-	$output .= '<copyright>'. $self->_encode($self->{channel}->{copyright}) .'</copyright>'."\n";
-    }
+    $self->_out_copyright("copyright");
 
     # publication date
     $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
@@ -1207,12 +1222,7 @@ sub as_rss_1_0 {
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
 	#$if $self->{channel}->{rating};
 
-    # copyright
-    if (defined($self->{channel}->{'dc'}->{'rights'})) {
-	$output .= '<dc:rights>'.  $self->_encode($self->{channel}->{'dc'}->{'rights'}) .'</dc:rights>'."\n";
-    } elsif (defined($self->{channel}->{copyright})) {
-	$output .= '<dc:rights>'.  $self->_encode($self->{channel}->{copyright}) .'</dc:rights>'."\n";
-    }
+    $self->_out_copyright("dc:rights");
 
     # publication date
     $self->_out_defined_tag("dc:date",$self->_calc_dc_date());
@@ -1449,11 +1459,7 @@ sub as_rss_2_0 {
     #    if $self->{channel}->{rating};
 
     # copyright
-    if (defined($self->{channel}->{'dc'}->{'rights'})) {
-        $output .= '<copyright>'.$self->_encode($self->{channel}->{'dc'}->{'rights'}).'</copyright>'."\n";
-    } elsif (defined($self->{channel}->{copyright})) {
-        $output .= '<copyright>'.$self->_encode($self->{channel}->{copyright}).'</copyright>'."\n";
-    }
+    $self->_out_copyright("copyright");
 
     # publication date
     $self->_out_defined_tag("pubDate",$self->_calc_pubDate());
