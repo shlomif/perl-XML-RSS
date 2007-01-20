@@ -988,13 +988,18 @@ sub _out_language
 
 sub _output_start_channel
 {
-    my $self = shift;
+    my ($self, $params) = @_;
 
-    $self->_out('<channel>'."\n");
+    $params = +{ attr => "",} if (!$params);
+    
+    $self->_out("<channel$params->{attr}>\n");
 
     $self->_output_common_channel_elements();
 
-    $self->_out_language();
+    if ($self->_out_rss_version() ne "0.9")
+    {
+        $self->_out_language();
+    }
 
     return;
 }
@@ -1166,11 +1171,7 @@ sub as_rss_0_9 {
     $output .= '<rdf:RDF'."\n".'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"'."\n";
     $output .= 'xmlns="http://my.netscape.com/rdf/simple/0.9/">'."\n\n";
 
-    ###################
-    # Channel Element #
-    ###################
-    $output .= '<channel>'."\n";
-    $self->_output_common_channel_elements();
+    $self->_output_start_channel();
     $self->_end_channel();
 
     #################
@@ -1219,9 +1220,6 @@ sub as_rss_0_9_1 {
     # RSS root element
     $output .= '<rss version="0.91">'."\n\n";
 
-    ###################
-    # Channel Element #
-    ###################
     $self->_output_start_channel();
 
     # PICS rating
@@ -1325,16 +1323,12 @@ sub as_rss_1_0 {
     ###################
     # Channel Element #
     ###################
-    $self->_out('<channel rdf:about="' . 
-        $self->_encode($self->_get_channel_rdf_about()) .
-        '">'."\n"
+    $self->_output_start_channel(
+        {attr => 
+            (' rdf:about="' . 
+                $self->_encode($self->_get_channel_rdf_about()) . '"')
+        },
         );
-
-    # title, link and description
-    $self->_output_common_channel_elements();
-
-    # additional elements for RSS 0.91
-    $self->_out_language();
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
@@ -1502,9 +1496,6 @@ sub as_rss_2_0 {
  
     $output .=">"."\n\n";
 
-    ###################
-    # Channel Element #
-    ###################
     $self->_output_start_channel();
 
     # PICS rating
