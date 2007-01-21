@@ -716,6 +716,7 @@ sub _flush_output
 
     return $ret;
 }
+
 sub add_module {
     my $self = shift;
     my $hash = {@_};
