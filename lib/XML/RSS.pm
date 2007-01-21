@@ -1202,6 +1202,17 @@ sub _out_skip_hours
     }
 }
 
+sub _out_skip_days
+{
+    my $self = shift;
+
+    if (defined($self->{skipDays}->{day})) {
+	    $self->_out('<skipDays>'."\n");
+    	$self->_out_tag("day", $self->_encode($self->{skipDays}->{day}));
+    	$self->_out('</skipDays>'."\n\n");
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1319,14 +1330,7 @@ sub as_rss_0_9_1 {
 
     $self->_out_skip_hours();
 
-    ####################
-    # skipDays element #
-    ####################
-    if (defined($self->{skipDays}->{day})) {
-	$output .= '<skipDays>'."\n";
-	$output .= '<day>'. $self->_encode($self->{skipDays}->{day}) .'</day>'."\n";
-	$output .= '</skipDays>'."\n\n";
-    }
+    $self->_out_skip_days();
 
     # end channel element
     $output .= '</channel>'."\n";
@@ -1613,15 +1617,7 @@ sub as_rss_2_0 {
     $self->_output_complete_textinput();
 
     $self->_out_skip_hours();
-
-    ####################
-    # skipDays element #
-    ####################
-    if (defined($self->{skipDays}->{day})) {
-        $output .= '<skipDays>'."\n";
-        $output .= '<day>'.$self->_encode($self->{skipDays}->{day}).'</day>'."\n";
-        $output .= '</skipDays>'."\n\n";
-    }
+    $self->_out_skip_days();
 
     # end channel element
     $output .= '</channel>'."\n";
@@ -2110,7 +2106,7 @@ sub _encode {
 
     if (!defined($text))
     {
-        croak "\$text is undefined in XML::RSS::_encode(). We don't know how ".
+        confess "\$text is undefined in XML::RSS::_encode(). We don't know how ".
         "to handle it!"
     }
 
