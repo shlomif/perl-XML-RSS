@@ -1191,26 +1191,35 @@ sub _out_modules_elements
     return;
 }
 
+sub _out_complete_outer_tag
+{
+    my ($self, $outer, $inner) = @_;
+
+    my $value = $self->{$outer}->{$inner};
+
+    if (defined($value))
+    {
+        $self->_out("<$outer>\n");
+        $self->_out_tag($inner, $value);
+        $self->_end_top_level_elem($outer);
+    }
+}
+
+sub _out_skip_tag
+{
+    my ($self, $what) = @_;
+
+    return $self->_out_complete_outer_tag("skip\u${what}s", $what);
+}
+
 sub _out_skip_hours
 {
-    my $self = shift;
-
-    if (defined($self->{skipHours}->{hour})) {
-        $self->_out('<skipHours>'."\n");
-        $self->_out_tag("hour", $self->{skipHours}->{hour});
-        $self->_out('</skipHours>'."\n\n");
-    }
+    return shift->_out_skip_tag("hour");
 }
 
 sub _out_skip_days
 {
-    my $self = shift;
-
-    if (defined($self->{skipDays}->{day})) {
-	    $self->_out('<skipDays>'."\n");
-    	$self->_out_tag("day", $self->_encode($self->{skipDays}->{day}));
-    	$self->_out('</skipDays>'."\n\n");
-    }
+    return shift->_out_skip_tag("day");
 }
 
 sub as_rss_0_9 {
