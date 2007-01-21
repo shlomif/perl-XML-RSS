@@ -470,10 +470,17 @@ sub _initialize {
     $self->{namespaces} = {};
 	$self->{rss_namespace} = '';
 
-    #get version info
-    (exists($hash{version}))
-	? ($self->{version} = $hash{version})
-	    : ($self->{version} = '1.0');
+    foreach my $k (
+        { key => "version", default => '1.0', },
+        { key => "encode_output", default => 1, },
+        { key => "output", default => "", },
+        { key => "encoding", default => "UTF-8", },
+    )
+    {
+        my $key = $k->{key};
+        $self->{$key} = exists($hash{$key}) ? $hash{$key} : $k->{default};
+    }
+
 
     # modules
     $self->{modules} =
@@ -481,22 +488,6 @@ sub _initialize {
             $self->_get_default_rss_2_0_modules() :
             $self->_get_default_modules()
         );
-
-	# encode output from as_string?
-	(exists($hash{encode_output}))
-	? ($self->{encode_output} = $hash{encode_output})
-		: ($self->{encode_output} = 1);
-
-
-    # set default output
-    (exists($hash{output}))
-	? ($self->{output} = $hash{output})
-	    : ($self->{output} = "");
-
-    # encoding
-    (exists($hash{encoding}))
-	? ($self->{encoding} = $hash{encoding})
-	    : ($self->{encoding} = 'UTF-8');
 
     # stylesheet
     if (exists($hash{stylesheet}))
