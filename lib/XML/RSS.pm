@@ -1191,6 +1191,17 @@ sub _out_modules_elements
     return;
 }
 
+sub _out_skip_hours
+{
+    my $self = shift;
+
+    if (defined($self->{skipHours}->{hour})) {
+        $self->_out('<skipHours>'."\n");
+        $self->_out_tag("hour", $self->{skipHours}->{hour});
+        $self->_out('</skipHours>'."\n\n");
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1306,14 +1317,7 @@ sub as_rss_0_9_1 {
     #####################
     $self->_output_complete_textinput();
 
-    #####################
-    # skipHours element #
-    #####################
-    if (defined($self->{skipHours}->{hour})) {
-	$output .= '<skipHours>'."\n";
-	$output .= '<hour>'. $self->_encode($self->{skipHours}->{hour}) .'</hour>'."\n";
-	$output .= '</skipHours>'."\n\n";
-    }
+    $self->_out_skip_hours();
 
     ####################
     # skipDays element #
@@ -1608,14 +1612,7 @@ sub as_rss_2_0 {
 
     $self->_output_complete_textinput();
 
-    #####################
-    # skipHours element #
-    #####################
-    if (defined($self->{skipHours}->{hour})) {
-        $output .= '<skipHours>'."\n";
-        $output .= '<hour>'.$self->_encode($self->{skipHours}->{hour}).'</hour>'."\n";
-        $output .= '</skipHours>'."\n\n";
-    }
+    $self->_out_skip_hours();
 
     ####################
     # skipDays element #
