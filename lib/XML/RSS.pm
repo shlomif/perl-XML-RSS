@@ -13,149 +13,145 @@ $VERSION = '1.22';
 
 $AUTO_ADD = 0;
 
-my %v0_9_ok_fields = (
-    channel => {
-		title       => '',
-		description => '',
-		link        => '',
-		},
-    image  => {
-		title => undef,
-		url   => undef,
-		link  => undef,
-		},
-    textinput => {
-		title       => undef,
-		description => undef,
-		name        => undef,
-		link        => undef,
-		},
-    items => [],
-    num_items => 0,
-    version         => '',
-    encoding        => ''
-);
-
-my %v0_9_1_ok_fields = (
-    channel => {
-		title          => '',
-		copyright      => undef,
-		description    => '',
-		docs           => undef,
-		language       => undef,
-		lastBuildDate  => undef,
-		'link'         => '',
-		managingEditor => undef,
-		pubDate        => undef,
-		rating         => undef,
-		webMaster      => undef,
-		},
-    image  => {
-		title       => undef,
-		url         => undef,
-		'link'      => undef,
-		width       => undef,
-		height      => undef,
-		description => undef,
-		},
-    skipDays  => {
-		day         => undef,
-		},
-    skipHours => {
-		hour        => undef,
-		},
-    textinput => {
-		title       => undef,
-		description => undef,
-		name        => undef,
-		'link'      => undef,
-		},
-    items           => [],
-    num_items       => 0,
-    version         => '',
-    encoding        => '',
-    category        => ''
-);
-
-my %v1_0_ok_fields = (
-    channel => {
-		title       => '',
-		description => '',
-		link        => '',
-		},
-    image  => {
-		title => undef,
-		url   => undef,
-		link  => undef,
-		},
-    textinput => {
-		title       => undef,
-		description => undef,
-		name        => undef,
-		link        => undef,
-		},
-    skipDays  => {
-		day         => ''
-		},
-    skipHours => {
-		hour        => undef,
-		},
-    items => [],
-    num_items => 0,
-    version         => '',
-    encoding        => '',
-    output          => '',
-);
-
-my %v2_0_ok_fields = (
-    channel => {
-        title          => '',
-        'link'         => '',
-        description    => '',
-        language       => undef,
-        copyright      => undef,
-        managingEditor => undef,
-        webMaster      => undef,
-        pubDate        => undef,
-        lastBuildDate  => undef,
-        category       => undef,
-        generator      => undef,
-        docs           => undef,
-        cloud          => '',
-        ttl            => undef,
-        image          => '',
-        textinput      => '',
-        skipHours      => '',
-        skipDays       => '',
+sub _get_ok_fields
+{
+    return
+    {
+        "0.9" => 
+        {
+            channel => 
+            {
+                title       => '',
+                description => '',
+                link        => '',
+            },
+            image  =>
+            {
+                title => undef,
+                url   => undef,
+                link  => undef,
+            },
+            textinput =>
+            {
+                title       => undef,
+                description => undef,
+                name        => undef,
+                link        => undef,
+            },
         },
-    image  => {
-        title       => undef,
-        url         => undef,
-        'link'      => undef,
-        width       => undef,
-        height      => undef,
-        description => undef,
+        "0.91" =>
+        {
+            channel =>
+            {
+                title          => '',
+                copyright      => undef,
+                description    => '',
+                docs           => undef,
+                language       => undef,
+                lastBuildDate  => undef,
+                'link'         => '',
+                managingEditor => undef,
+                pubDate        => undef,
+                rating         => undef,
+                webMaster      => undef,
+            },
+            image  =>
+            {
+                title       => undef,
+                url         => undef,
+                'link'      => undef,
+                width       => undef,
+                height      => undef,
+                description => undef,
+            },
+            skipDays  => 
+            {
+                day         => undef,
+            },
+            skipHours =>
+            {
+                hour        => undef,
+            },
+            textinput =>
+            {
+                title       => undef,
+                description => undef,
+                name        => undef,
+                'link'      => undef,
+            },
         },
-    skipDays  => {
-        day         => undef,
+        "2.0" =>
+        {
+            channel => 
+            {
+                title          => '',
+                'link'         => '',
+                description    => '',
+                language       => undef,
+                copyright      => undef,
+                managingEditor => undef,
+                webMaster      => undef,
+                pubDate        => undef,
+                lastBuildDate  => undef,
+                category       => undef,
+                generator      => undef,
+                docs           => undef,
+                cloud          => '',
+                ttl            => undef,
+                image          => '',
+                textinput      => '',
+                skipHours      => '',
+                skipDays       => '',
+            },
+            image  =>
+            {
+                title       => undef,
+                url         => undef,
+                'link'      => undef,
+                width       => undef,
+                height      => undef,
+                description => undef,
+            },
+            skipDays  =>
+            {
+                day         => undef,
+            },
+            skipHours =>
+            {
+                hour        => undef,
+            },
+            textinput =>
+            {
+                title       => undef,
+                description => undef,
+                name        => undef,
+                'link'      => undef,
+            },
         },
-    skipHours => {
-        hour        => undef,
+        'default' =>
+        {
+            channel =>
+            {
+                title       => '',
+                description => '',
+                link        => '',
+            },
+            image  =>
+            {
+                title => undef,
+                url   => undef,
+                link  => undef,
+            },
+            textinput =>
+            {
+                title       => undef,
+                description => undef,
+                name        => undef,
+                link        => undef,
+            },
         },
-    textinput => {
-        title       => undef,
-        description => undef,
-        name        => undef,
-        'link'      => undef,
-        },
-    items           => [],
-    num_items       => 0,
-    version         => '',
-    encoding        => '',
-    category        => '',
-    cloud           => '',
-    ttl             => ''
-);
+    };
+}
 
 my %languages = (
     'af'    => 'Afrikaans',
@@ -495,39 +491,21 @@ sub _initialize {
         $self->{stylesheet} = $hash{stylesheet};
     }
 
-    # initialize RSS data structure
-    # RSS version 0.9
-    if ($self->{version} eq '0.9') {
-	# Copy the hashes instead of using them directly to avoid
-        # problems with multiple XML::RSS objects being used concurrently
-        foreach my $i (qw(channel image textinput)) {
-	    my %template=%{$v0_9_ok_fields{$i}};
-	    $self->{$i} = \%template;
-        }
+    my $ok_fields = $self->_get_ok_fields();
 
-    # RSS version 0.91
-    } elsif ($self->{version} eq '0.91') {
-	foreach my $i (qw(channel image textinput skipDays skipHours)) {
-	    my %template=%{$v0_9_1_ok_fields{$i}};
-	    $self->{$i} = \%template;
-        }
+    my $ver_ok_fields =
+        exists($ok_fields->{$self->{version}}) ?
+            $ok_fields->{$self->{version}} :
+            $ok_fields->{default};
 
-    # RSS version 2.0
-    } elsif ($self->{version} eq '2.0') {
-    	$self->{namespaces}->{'blogChannel'} = "http://backend.userland.com/blogChannelModule";
-        foreach my $i (qw(channel image textinput skipDays skipHours)) {
-            my %template=%{ $v2_0_ok_fields{$i} };
-            $self->{$i} = \%template;
-        }
+    while (my ($k,$v) = each(%$ver_ok_fields))
+    {
+        $self->{$k} = +{%{$v}};
+    }
 
-    # RSS version 1.0
-    #} elsif ($self->{version} eq '1.0') {
-    } else {
-	foreach my $i (qw(channel image textinput)) {
-	#foreach my $i (keys(%v1_0_ok_fields)) {
-	    my %template=%{$v1_0_ok_fields{$i}};
-	    $self->{$i} = \%template;
-        }
+    if ($self->{version} eq "2.0")
+    {
+        $self->{namespaces}->{'blogChannel'} = "http://backend.userland.com/blogChannelModule";
     }
 }
 
