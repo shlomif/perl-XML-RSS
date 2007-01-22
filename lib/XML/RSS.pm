@@ -1353,7 +1353,6 @@ sub as_rss_2_0 {
 
         $self->_start_image();
 
-        # link, image width, image height and description
         $self->_output_multiple_tags({ext => "image", 'defined' => 1},
             [qw(width height description)]);
 
