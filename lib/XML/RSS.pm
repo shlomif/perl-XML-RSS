@@ -323,7 +323,7 @@ my $namespace_map = {
     rss10 => 'http://purl.org/rss/1.0/',
     rss09 => 'http://my.netscape.com/rdf/simple/0.9/',
 
-#	rss091	=> 'http://purl.org/rss/1.0/modules/rss091/',
+    # rss091 => 'http://purl.org/rss/1.0/modules/rss091/',
     rss20 => 'http://backend.userland.com/blogChannelModule',
 };
 
@@ -1672,7 +1672,7 @@ sub handle_start {
         #} elsif ($self->expand_ns_prefix('#default') =~ /\/0.9\//) {
         #    $self->{_internal}->{version} = '0.9';
         #} else {
-        #	croak "Malformed RSS: invalid version\n";
+        #    croak "Malformed RSS: invalid version\n";
         #}
 
         # beginning of item element
@@ -1745,7 +1745,7 @@ sub handle_start {
         # in the %rdf_resource_fields so this condition always evaluates
         # to false.
         # if ( $ns eq $self->{rss_namespace} ) {
-        # 	$self->{channel}->{$el} = $attribs{resource};
+        #     $self->{channel}->{$el} = $attribs{resource};
         # }
         # else
 
@@ -2049,7 +2049,7 @@ XML::RSS - creates and updates RSS files
  $rss->add_item(title => "GTKeyboard 0.85",
         # creates a guid field with permaLink=true
         permaLink  => "http://freshmeat.net/news/1999/06/21/930003829.html",
-		# alternately creates a guid field with permaLink=false
+        # alternately creates a guid field with permaLink=false
         # guid     => "gtkeyboard-0.85"
         enclosure   => { url=>$url, type=>"application/x-bittorrent" },
         description => 'blah blah'
@@ -2391,15 +2391,15 @@ parameter to diff.
 
 The source is available from the perl.org Subversion server:
 
-        http://svn.perl.org/modules/XML-RSS/
+L<http://svn.perl.org/modules/XML-RSS/>
 
 
 =head1 AUTHOR
 
-	Original code: Jonathan Eisenzopf <eisen@pobox.com>
-	Further changes: Rael Dornfest <rael@oreilly.com>
-	
-	Currently: Ask Bjoern Hansen <ask@develooper.com> 
+    Original code: Jonathan Eisenzopf <eisen@pobox.com>
+    Further changes: Rael Dornfest <rael@oreilly.com>
+
+    Currently: Ask Bjoern Hansen <ask@develooper.com> 
 
 
 =head1 COPYRIGHT
