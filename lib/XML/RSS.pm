@@ -398,6 +398,15 @@ sub new {
     return $self;
 }
 
+sub _get_init_default_key_assignments {
+    return [
+        {key => "version",       default => '1.0',},
+        {key => "encode_output", default => 1,},
+        {key => "output",        default => "",},
+        {key => "encoding",      default => "UTF-8",},
+    ];
+}
+
 sub _initialize {
     my $self = shift;
     my %hash = @_;
@@ -418,12 +427,7 @@ sub _initialize {
     $self->{namespaces}    = {};
     $self->{rss_namespace} = '';
 
-    foreach my $k (
-        {key => "version",       default => '1.0',},
-        {key => "encode_output", default => 1,},
-        {key => "output",        default => "",},
-        {key => "encoding",      default => "UTF-8",},
-      )
+    foreach my $k (@{$self->_get_init_default_key_assignments()})
     {
         my $key = $k->{key};
         $self->{$key} = exists($hash{$key}) ? $hash{$key} : $k->{default};
