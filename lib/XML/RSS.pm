@@ -1022,6 +1022,12 @@ sub _out_skip_days {
     return shift->_out_skip_tag("day");
 }
 
+sub _get_item_about
+{
+    my ($self, $item) = @_;
+    return defined($item->{'about'}) ? $item->{'about'} : $item->{'link'};
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1218,8 +1224,9 @@ sub as_rss_1_0 {
     $output .= "<items>\n <rdf:Seq>\n";
 
     foreach my $item (@{$self->{items}}) {
-        my $about = (defined($item->{'about'})) ? $item->{'about'} : $item->{'link'};
-        $output .= '  <rdf:li rdf:resource="' . $self->_encode($about) . '" />' . "\n";
+        $output .= '  <rdf:li rdf:resource="' .
+            $self->_encode($self->_get_item_about($item)) .
+            '" />' . "\n";
     }
 
     $output .= " </rdf:Seq>\n</items>\n";
@@ -1266,9 +1273,11 @@ sub as_rss_1_0 {
     # item element #
     ################
     foreach my $item (@{$self->{items}}) {
-        my $about = (defined($item->{'about'})) ? $item->{'about'} : $item->{'link'};
-
-        $self->_start_item($item, {attr => ' rdf:about="' . $self->_encode($about) . '"'});
+        $self->_start_item($item, 
+            {attr => ' rdf:about="' . 
+                $self->_encode($self->_get_item_about($item)) . '"'
+            }
+        );
 
         $self->_out_dc_elements($item);
 
