@@ -1127,6 +1127,36 @@ sub _out_seq_items {
     $self->_out(" </rdf:Seq>\n</items>\n");
 }
 
+sub _get_1_0_rdf_decl_mappings
+{
+    my $self = shift;
+
+    my $modules = $self->{modules};
+
+    return
+    [
+        ["rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"],
+        [undef, "http://purl.org/rss/1.0/"],
+        map { [$modules->{$_}, $_] } keys(%$modules)
+    ];
+}
+
+sub _get_1_0_rdf_decl
+{
+    my $self = shift;
+
+    return "<rdf:RDF\n" .
+        join("",
+            map {
+                my ($prefix, $url) = @$_;
+                my $pp = defined($prefix) ? ":$prefix" : "";
+                qq{ xmlns$pp="$url"\n};
+            } 
+            @{$self->_get_1_0_rdf_decl_mappings}
+        ) .
+        ">\n\n";
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1244,17 +1274,7 @@ sub as_rss_1_0 {
 
     $self->_output_xml_declaration();
 
-    # RDF namespaces declaration
-    $output .= "<rdf:RDF" . "\n";
-    $output .= ' xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"' . "\n";
-    $output .= ' xmlns="http://purl.org/rss/1.0/"' . "\n";
-
-    # print all imported namespaces
-    while (my ($k, $v) = each %{$self->{modules}}) {
-        $output .= " xmlns:$v=\"$k\"\n";
-    }
-
-    $output .= ">" . "\n\n";
+    $self->_out($self->_get_1_0_rdf_decl);
 
     ###################
     # Channel Element #
