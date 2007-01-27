@@ -1127,7 +1127,7 @@ sub _out_seq_items {
     $self->_out(" </rdf:Seq>\n</items>\n");
 }
 
-sub _get_1_0_rdf_decl_mappings
+sub _get_rdf_decl_mappings
 {
     my $self = shift;
 
@@ -1135,8 +1135,14 @@ sub _get_1_0_rdf_decl_mappings
 
     return
     [
-        ["rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"],
-        [undef, "http://purl.org/rss/1.0/"],
+        (
+            ($self->_rss_out_version() eq "1.0") ? 
+            (
+                ["rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"],
+                [undef, "http://purl.org/rss/1.0/"]
+            ) :
+            ()
+        ),
         map { [$modules->{$_}, $_] } keys(%$modules)
     ];
 }
@@ -1149,21 +1155,29 @@ sub _render_xmlns {
     return qq{ xmlns$pp="$url"\n};
 }
 
-sub _get_1_0_rdf_xmlnses {
+sub _get_rdf_xmlnses {
     my $self = shift;
 
     return 
         join("",
             map { $self->_render_xmlns(@$_) }
-            @{$self->_get_1_0_rdf_decl_mappings}
+            @{$self->_get_rdf_decl_mappings}
         );
 }
 
-sub _get_1_0_rdf_decl
+sub _get_rdf_decl_open_tag
 {
     my $self = shift;
 
-    return "<rdf:RDF\n" . $self->_get_1_0_rdf_xmlnses() . ">\n\n";
+    return ($self->_rss_out_version() eq "1.0") ? "<rdf:RDF\n" : 
+        qq{<rss version="2.0"\n};
+}
+
+sub _get_rdf_decl
+{
+    my $self = shift;
+
+    return $self->_get_rdf_decl_open_tag() . $self->_get_rdf_xmlnses() . ">\n\n";
 }
 
 sub as_rss_0_9 {
@@ -1283,7 +1297,7 @@ sub as_rss_1_0 {
 
     $self->_output_xml_declaration();
 
-    $self->_out($self->_get_1_0_rdf_decl);
+    $self->_out($self->_get_rdf_decl);
 
     ###################
     # Channel Element #
@@ -1392,14 +1406,7 @@ sub as_rss_2_0 {
     # $output .= '<rss version="0.91">'."\n\n";
 
     # RSS namespaces declaration
-    $output .= q[<rss version="2.0"] . "\n";
-
-    # print all imported namespaces
-    while (my ($k, $v) = each %{$self->{modules}}) {
-        $output .= " xmlns:$v=\"$k\"\n";
-    }
-
-    $output .= ">" . "\n\n";
+    $self->_out($self->_get_rdf_decl());
 
     $self->_start_channel();
 
