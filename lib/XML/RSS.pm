@@ -694,6 +694,18 @@ sub _channel_dc
     }
 }
 
+sub _channel_syn
+{
+    my ($self, $key) = @_;
+
+    if ($self->channel('syn')) {
+        return $self->channel('syn')->{$key};
+    }
+    else {
+        return undef;
+    }
+}
+
 sub _calc_lastBuildDate_2_0 {
     my $self = shift;
     if (defined(my $d = $self->_channel_dc('date'))) {
@@ -1044,6 +1056,24 @@ sub _get_item_about
     return defined($item->{'about'}) ? $item->{'about'} : $item->{'link'};
 }
 
+sub _output_defined_image
+{
+    my $self = shift;
+
+    $self->_start_image();
+    $self->_end_image();
+}
+
+sub _output_complete_image
+{
+    my $self = shift;
+
+    if (defined ($self->image('url')))
+    {
+        $self->_output_defined_image();
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1062,13 +1092,7 @@ sub as_rss_0_9 {
     $self->_start_channel();
     $self->_end_channel();
 
-    #################
-    # image element #
-    #################
-    if (defined $self->{image}->{url}) {
-        $self->_start_image();
-        $self->_end_image();
-    }
+    $self->_output_complete_image();
 
     ################
     # item element #
@@ -1224,14 +1248,14 @@ sub as_rss_1_0 {
 
     # Syndication module
     foreach my $syn (keys %syn_ok_fields) {
-        if (defined($self->{channel}->{syn}->{$syn})) {
+        if (defined(my $value = $self->_channel_syn($syn))) {
             $output
-              .= "<syn:$syn>" . $self->_encode($self->{channel}->{syn}->{$syn}) . "</syn:$syn>\n";
+              .= "<syn:$syn>" . $self->_encode($value) . "</syn:$syn>\n";
         }
     }
 
     # Taxonomy module
-    $self->_output_taxo_topics($self->{channel});
+    $self->_output_taxo_topics($self->channel());
 
     $self->_out_modules_elements($self->channel());
 
