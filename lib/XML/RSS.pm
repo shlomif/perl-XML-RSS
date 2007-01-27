@@ -1136,7 +1136,7 @@ sub _get_rdf_decl_mappings
     return
     [
         (
-            ($self->_rss_out_version() eq "1.0") ? 
+            ($self->_rss_out_version() eq "1.0") ?
             (
                 ["rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"],
                 [undef, "http://purl.org/rss/1.0/"]
@@ -1178,6 +1178,13 @@ sub _get_rdf_decl
     my $self = shift;
 
     return $self->_get_rdf_decl_open_tag() . $self->_get_rdf_xmlnses() . ">\n\n";
+}
+
+sub _out_rdf_decl
+{
+    my $self = shift;
+
+    return $self->_out($self->_get_rdf_decl);
 }
 
 sub as_rss_0_9 {
@@ -1297,7 +1304,7 @@ sub as_rss_1_0 {
 
     $self->_output_xml_declaration();
 
-    $self->_out($self->_get_rdf_decl);
+    $self->_out_rdf_decl;
 
     ###################
     # Channel Element #
@@ -1406,7 +1413,7 @@ sub as_rss_2_0 {
     # $output .= '<rss version="0.91">'."\n\n";
 
     # RSS namespaces declaration
-    $self->_out($self->_get_rdf_decl());
+    $self->_out_rdf_decl;
 
     $self->_start_channel();
 
