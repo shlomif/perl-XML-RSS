@@ -142,15 +142,13 @@ sub item_throws_like
     $rss->strict(1);
 
     eval {
-        $rss->autoklone(
-            title => "freshmeat.net",
-            link  => "http://freshmeat.net",
-            description => ("I think therefore I am." x 1000),
+        $rss->skipHours(
+            hour => 5,
         );
     };
 
     # TEST
-    like ($@, qr{\AUnregistered entity: Can't access autoklone field in object of class},
+    like ($@, qr{\AUnregistered entity: Can't access skipHours field in object of class},
         "Testing for exception thrown on an unknown field"
     );
 }

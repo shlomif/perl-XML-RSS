@@ -1953,12 +1953,11 @@ sub strict {
     $self->{'strict'} = $value;
 }
 
-sub AUTOLOAD {
+sub _handle_accessor {
     my $self = shift;
+    my $name = shift;
+
     my $type = ref($self);
-    my $name = $AUTOLOAD;
-    $name =~ s/.*://;
-    return if $name eq 'DESTROY';
 
     croak "Unregistered entity: Can't access $name field in object of class $type"
       unless (exists $self->{$name});
@@ -2009,6 +2008,35 @@ sub AUTOLOAD {
     #}
 }
 
+sub channel {
+    my $self = shift;
+
+    return $self->_handle_accessor("channel", @_);
+}
+
+sub image {
+    my $self = shift;
+
+    return $self->_handle_accessor("image", @_);
+}
+
+sub textinput {
+    my $self = shift;
+
+    return $self->_handle_accessor("textinput", @_);
+}
+
+sub skipDays {
+    my $self = shift;
+
+    return $self->_handle_accessor("skipDays", @_);
+}
+
+sub skipHours {
+    my $self = shift;
+
+    return $self->_handle_accessor("skipHours", @_);
+}
 
 sub _encode {
     my ($self, $text) = @_;
@@ -2303,6 +2331,14 @@ modules as a string is parsed.
 =item save ($file)
 
 Saves the RSS to a specified file.
+
+=item skipDays (day => $day)
+
+Populates the skipDays element with the day $day.
+
+=item skipHours (hour => $hour)
+
+Populates the skipHours element, with the hour $hour.
 
 =item strict ($boolean)
 
