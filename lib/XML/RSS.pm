@@ -1395,7 +1395,7 @@ sub as_rss_2_0 {
 
     $self->_out_modules_elements($self->channel());
 
-    $output .= "\n";
+    $self->_out("\n");
 
     $self->_output_complete_image();
 
