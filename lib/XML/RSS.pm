@@ -427,6 +427,8 @@ sub _initialize {
     $self->{namespaces}    = {};
     $self->{rss_namespace} = '';
 
+    $self->{_output} = "";
+
     foreach my $k (@{$self->_get_init_default_key_assignments()})
     {
         my $key = $k->{key};
@@ -471,17 +473,9 @@ sub _rss_out_version {
     return $self->{_rss_out_version};
 }
 
-sub _set_output_var {
-    my ($self, $output_var_ref) = @_;
-
-    $self->{_output} = $output_var_ref;
-
-    return;
-}
-
 sub _out {
     my ($self, $string) = @_;
-    ${$self->{_output}} .= $string;
+    $self->{_output} .= $string;
     return;
 }
 
@@ -600,8 +594,8 @@ sub _output_complete_textinput {
 sub _flush_output {
     my $self = shift;
 
-    my $ret = ${$self->{_output}};
-    $self->{_output} = undef;
+    my $ret = $self->{_output};
+    $self->{_output} = "";
 
     return $ret;
 }
@@ -1235,9 +1229,6 @@ sub as_rss_0_9 {
 
     $self->_prefer_dc(0);
     $self->_rss_out_version("0.9");
-    my $output;
-
-    $self->_set_output_var(\$output);
 
     $self->_output_xml_declaration();
 
@@ -1273,9 +1264,6 @@ sub as_rss_0_9_1 {
 
     $self->_prefer_dc(0);
     $self->_rss_out_version("0.91");
-    my $output;
-
-    $self->_set_output_var(\$output);
 
     $self->_output_xml_declaration();
 
@@ -1341,10 +1329,6 @@ sub as_rss_1_0 {
     $self->_rss_out_version("1.0");
     $self->_prefer_dc(1);
 
-    my $output;
-
-    $self->_set_output_var(\$output);
-
     $self->_output_xml_declaration();
 
     $self->_out_rdf_decl;
@@ -1381,8 +1365,9 @@ sub as_rss_1_0 {
     # Syndication module
     foreach my $syn (keys %syn_ok_fields) {
         if (defined(my $value = $self->_channel_syn($syn))) {
-            $output
-              .= "<syn:$syn>" . $self->_encode($value) . "</syn:$syn>\n";
+            $self->_out(
+                "<syn:$syn>" . $self->_encode($value) . "</syn:$syn>\n"
+            );
         }
     }
 
@@ -1441,10 +1426,6 @@ sub as_rss_2_0 {
 
     $self->_rss_out_version("2.0");
     $self->_prefer_dc(0);
-
-    my $output;
-
-    $self->_set_output_var(\$output);
 
     $self->_output_xml_declaration();
 
