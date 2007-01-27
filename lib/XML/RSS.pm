@@ -1216,6 +1216,20 @@ sub _out_item_source {
     }
 }
 
+sub _out_item_enclosure {
+    my ($self, $item) = @_;
+
+    if (my $e = $item->{enclosure}) {
+        $self->_out(
+            "<enclosure " .
+            join(' ', 
+                map { "$_=\"" . $self->_encode($e->{$_}) . '"' } keys(%$e)
+            ) .
+            " />\n"
+        );
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1500,11 +1514,8 @@ sub as_rss_2_0 {
 
         $self->_out_item_source($item);
 
-        if (my $e = $item->{enclosure}) {
-            $output .= "<enclosure "
-              . join(' ', map { qq!$_="! . $self->_encode($e->{$_}) . qq!"! } keys(%$e)) . ' />'
-              . "\n";
-        }
+        $self->_out_item_enclosure($item);
+
 
         $self->_out_modules_elements($item);
 
