@@ -682,9 +682,21 @@ sub _date_to_dc_date {
     return $pf->format_datetime($date);
 }
 
+sub _channel_dc
+{
+    my ($self, $key) = @_;
+
+    if ($self->channel('dc')) {
+        return $self->channel('dc')->{$key};
+    }
+    else {
+        return undef;
+    }
+}
+
 sub _calc_lastBuildDate_2_0 {
     my $self = shift;
-    if (defined(my $d = $self->channel('dc')->{'date'})) {
+    if (defined(my $d = $self->_channel_dc('date'))) {
         return $self->_date_to_rss2($self->_date_from_dc_date($d));
     }
     else
@@ -700,7 +712,7 @@ sub _calc_lastBuildDate_0_9_1 {
     if (defined(my $d = $self->channel('lastBuildDate'))) {
         return $d;
     }
-    elsif (defined(my $d2 = $self->channel('dc')->{'date'})) {
+    elsif (defined(my $d2 = $self->_channel_dc('date'))) {
         return $self->_date_to_rss2($self->_date_from_dc_date($d2));
     }
     else {
@@ -708,13 +720,14 @@ sub _calc_lastBuildDate_0_9_1 {
     }
 }
 
+
 sub _calc_pubDate {
     my $self = shift;
 
     if (defined(my $d = $self->channel('pubDate'))) {
         return $d;
     }
-    elsif (defined(my $d2 = $self->channel('dc')->{'date'})) {
+    elsif (defined(my $d2 = $self->_channel_dc('date'))) {
         return $self->_date_to_rss2($self->_date_from_dc_date($d2));
     }
     else {
@@ -739,7 +752,7 @@ sub _get_other_dc_date {
 sub _calc_dc_date {
     my $self = shift;
 
-    if (defined(my $d1 = $self->channel('dc')->{'date'})) {
+    if (defined(my $d1 = $self->_channel_dc('date'))) {
         return $d1;
     }
     else {
@@ -885,11 +898,9 @@ sub _start_channel {
 sub _calc_channel_dc_field {
     my ($self, $dc_key, $non_dc_key) = @_;
 
-    my $channel = $self->{channel};
+    my $dc_value = $self->_channel_dc($dc_key);
 
-    my $dc_value = $channel->{'dc'}->{$dc_key};
-
-    return defined($dc_value) ? $dc_value : $channel->{$non_dc_key};
+    return defined($dc_value) ? $dc_value : $self->channel($non_dc_key);
 }
 
 sub _prefer_dc {
@@ -939,7 +950,7 @@ sub _out_copyright {
 sub _get_channel_rdf_about {
     my $self = shift;
 
-    return $self->{channel}->{defined($self->{channel}->{'about'}) ? "about" : "link"};
+    return $self->channel(defined($self->channel('about')) ? "about" : "link");
 }
 
 sub _output_taxo_topics {
