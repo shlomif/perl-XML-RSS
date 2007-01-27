@@ -1330,12 +1330,15 @@ sub as_rss_1_0 {
     $self->_out_seq_items();
 
     if ($self->_is_image_defined()) {
-        $output .= '<image rdf:resource="' . $self->_encode($self->{image}->{url}) . '" />' . "\n";
+        $self->_out('<image rdf:resource="' .
+            $self->_encode($self->{image}->{url}) . "\" />\n"
+        );
     }
 
     if (defined($self->{textinput}->{'link'})) {
-        $output .= '<textinput rdf:resource="'
-          . $self->_encode($self->{textinput}->{'link'}) . '" />' . "\n";
+        $self->_out('<textinput rdf:resource="'
+          . $self->_encode($self->{textinput}->{'link'}) . "\" />\n"
+        );
     }
 
     $self->_end_channel();
@@ -1364,7 +1367,7 @@ sub as_rss_1_0 {
 
     $self->_output_complete_textinput();
 
-    $output .= '</rdf:RDF>';
+    $self->_out('</rdf:RDF>');
 
     return $self->_flush_output();
 }
