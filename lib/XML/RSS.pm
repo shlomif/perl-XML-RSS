@@ -950,7 +950,12 @@ sub _out_copyright {
 sub _get_channel_rdf_about {
     my $self = shift;
 
-    return $self->channel(defined($self->channel('about')) ? "about" : "link");
+    if (defined(my $about = $self->channel('about'))) {
+        return $about;
+    }
+    else {
+        return $self->channel('link');
+    }
 }
 
 sub _output_taxo_topics {
