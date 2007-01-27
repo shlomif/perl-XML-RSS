@@ -485,6 +485,12 @@ sub _out_tag {
     return $self->_out("<$tag>" . $self->_encode($inner) . "</$tag>\n");
 }
 
+sub _out_ns_tag {
+    my ($self, $prefix, $tag, $inner) = @_;
+
+    return $self->_out_tag("${prefix}:${tag}", $inner);
+}
+
 sub _out_defined_tag {
     my ($self, $tag, $inner) = @_;
 
@@ -560,8 +566,7 @@ sub _out_textinput_rss_1_0_elems {
     while (my ($url, $prefix) = each %{$self->{modules}}) {
         next if $prefix =~ /^(dc|syn|taxo)$/;
         while (my ($el, $value) = each %{$self->{textinput}->{$prefix}}) {
-            # TODO - change this to _out_tag.
-            $self->_out("<$prefix:$el>" . $self->_encode($value) . "</$prefix:$el>\n");
+            $self->_out_ns_tag($prefix, $el, $value);
         }
     }
 }
@@ -1014,7 +1019,7 @@ sub _out_modules_elements {
                     qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
             }
             else {
-                $self->_out_tag("${prefix}:${el}", $value);
+                $self->_out_ns_tag($prefix, $el, $value);
             }
         }
     }
@@ -1416,10 +1421,7 @@ sub as_rss_1_0 {
     # Syndication module
     foreach my $syn (keys %syn_ok_fields) {
         if (defined(my $value = $self->_channel_syn($syn))) {
-            # TODO - change to _out_tag
-            $self->_out(
-                "<syn:$syn>" . $self->_encode($value) . "</syn:$syn>\n"
-            );
+            $self->_out_ns_tag("syn", $syn, $value);
         }
     }
 
