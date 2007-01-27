@@ -1187,6 +1187,35 @@ sub _out_rdf_decl
     return $self->_out($self->_get_rdf_decl);
 }
 
+sub _out_guid {
+    my ($self, $item) = @_;
+
+    # The unique identifier. Use 'permaLink' for an external
+    # identifier, or 'guid' for a internal string.
+    # (I call it permaLink in the hash for purposes of clarity.)
+
+    for my $guid (qw(permaLink guid)) {
+        if (defined $item->{$guid}) {
+            $self->_out('<guid isPermaLink="'
+              . ($guid eq 'permaLink' ? 'true' : 'false') . '">'
+              . $self->_encode($item->{$guid})
+              . '</guid>' . "\n");
+            last;
+        }
+    }
+}
+
+sub _out_item_source {
+    my ($self, $item) = @_;
+    
+    if (defined $item->{source} && defined $item->{sourceUrl}) {
+        $self->_out('<source url="'
+          . $self->_encode($item->{sourceUrl}) . '">'
+          . $self->_encode($item->{source})
+          . "</source>\n");
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1465,28 +1494,11 @@ sub as_rss_2_0 {
             $self->_output_def_item_tag($item, $tag);
         }
 
-        # The unique identifier. Use 'permaLink' for an external
-        # identifier, or 'guid' for a internal string.
-        # (I call it permaLink in the hash for purposes of clarity.)
-
-        for my $guid (qw(permaLink guid)) {
-            if (defined $item->{$guid}) {
-                $output .= '<guid isPermaLink="'
-                  . ($guid eq 'permaLink' ? 'true' : 'false') . '">'
-                  . $self->_encode($item->{$guid})
-                  . '</guid>' . "\n";
-                last;
-            }
-        }
+        $self->_out_guid($item);
 
         $self->_output_def_item_tag($item, "pubDate");
 
-        if (defined $item->{source} && defined $item->{sourceUrl}) {
-            $output .= '<source url="'
-              . $self->_encode($item->{sourceUrl}) . '">'
-              . $self->_encode($item->{source})
-              . '</source>' . "\n";
-        }
+        $self->_out_item_source($item);
 
         if (my $e = $item->{enclosure}) {
             $output .= "<enclosure "
@@ -1505,8 +1517,8 @@ sub as_rss_2_0 {
     $self->_out_skip_days();
 
     # end channel element
-    $output .= '</channel>' . "\n";
-    $output .= '</rss>';
+    $self->_out("</channel>\n");
+    $self->_out('</rss>');
 
     return $self->_flush_output();
 }
