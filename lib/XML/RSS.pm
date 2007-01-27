@@ -1057,14 +1057,12 @@ sub _get_item_about
     return defined($item->{'about'}) ? $item->{'about'} : $item->{'link'};
 }
 
-sub _output_defined_image
-{
+sub _output_defined_image {
     my $self = shift;
 
     $self->_start_image();
 
-    if ($self->_rss_out_version() eq "0.91")
-    {
+    if ($self->_rss_out_version() eq "0.91") {
         # link, image width, image height and description
         $self->_output_multiple_tags(
             {ext => "image", 'defined' => 1},
@@ -1072,8 +1070,7 @@ sub _output_defined_image
         );
     }
 
-    if ($self->_rss_out_version() eq "1.0")
-    {
+    if ($self->_rss_out_version() eq "1.0") {
         # image width
         #$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
         #    if $self->{image}->{width};
@@ -1095,11 +1092,16 @@ sub _output_defined_image
     $self->_end_image();
 }
 
-sub _output_complete_image
-{
+sub _is_image_defined {
     my $self = shift;
 
-    if (defined ($self->image('url')))
+    return defined ($self->image('url'));
+}
+
+sub _output_complete_image {
+    my $self = shift;
+
+    if ($self->_is_image_defined())
     {
         $self->_output_defined_image();
     }
@@ -1287,7 +1289,7 @@ sub as_rss_1_0 {
 
     $output .= " </rdf:Seq>\n</items>\n";
 
-    if (defined($self->{image}->{url})) {
+    if ($self->_is_image_defined()) {
         $output .= '<image rdf:resource="' . $self->_encode($self->{image}->{url}) . '" />' . "\n";
     }
 
