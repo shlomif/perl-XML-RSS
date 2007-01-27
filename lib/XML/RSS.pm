@@ -560,6 +560,7 @@ sub _out_textinput_rss_1_0_elems {
     while (my ($url, $prefix) = each %{$self->{modules}}) {
         next if $prefix =~ /^(dc|syn|taxo)$/;
         while (my ($el, $value) = each %{$self->{textinput}->{$prefix}}) {
+            # TODO - change this to _out_tag.
             $self->_out("<$prefix:$el>" . $self->_encode($value) . "</$prefix:$el>\n");
         }
     }
@@ -827,7 +828,7 @@ sub _start_item {
 sub _end_top_level_elem {
     my ($self, $elem) = @_;
 
-    $self->_out("</$elem>\n\n");
+    $self->_out("</$elem>\n");
 }
 
 sub _end_item {
@@ -1366,8 +1367,8 @@ sub as_rss_0_9_1 {
 
     $self->_out_skip_days();
 
-    # end channel element
-    $self->_out("</channel>\n");
+    # end channel elemen
+    $self->_end_channel;
     $self->_out("</rss>");
 
     return $self->_flush_output();
@@ -1415,6 +1416,7 @@ sub as_rss_1_0 {
     # Syndication module
     foreach my $syn (keys %syn_ok_fields) {
         if (defined(my $value = $self->_channel_syn($syn))) {
+            # TODO - change to _out_tag
             $self->_out(
                 "<syn:$syn>" . $self->_encode($value) . "</syn:$syn>\n"
             );
@@ -1440,7 +1442,7 @@ sub as_rss_1_0 {
         );
     }
 
-    $self->_end_channel();
+    $self->_end_channel;
 
     $self->_output_complete_image();
 
@@ -1508,7 +1510,7 @@ sub as_rss_2_0 {
     $self->_out_skip_days();
 
     # end channel element
-    $self->_out("</channel>\n");
+    $self->_end_channel;
     $self->_out('</rss>');
 
     return $self->_flush_output();

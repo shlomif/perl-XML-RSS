@@ -54,10 +54,10 @@ sub create_rss
     contains($rss,
         qq{<item>\n<title>GTKeyboard 0.85</title>\n} .
         qq{<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>\n} .
-        qq{</item>\n\n} .
+        qq{</item>\n} .
         qq{<item>\n<title>gcc 10.0.10</title>\n} .
         qq{<link>http://gcc-compiler.tld/</link>\n} .
-        qq{</item>\n\n},
+        qq{</item>\n},
         "Checking for second item after first item when add_item without mode."
     );
 }
@@ -75,10 +75,10 @@ sub create_rss
     contains($rss,
         qq{<item>\n<title>GTKeyboard 0.85</title>\n} .
         qq{<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>\n} .
-        qq{</item>\n\n} .
+        qq{</item>\n} .
         qq{<item>\n<title>gcc 10.0.10</title>\n} .
         qq{<link>http://gcc-compiler.tld/</link>\n} .
-        qq{</item>\n\n},
+        qq{</item>\n},
         "Checking for second item after first item when add_item with mode == append."
     );
 }
@@ -96,10 +96,10 @@ sub create_rss
     contains($rss,
         qq{<item>\n<title>gcc 10.0.10</title>\n} .
         qq{<link>http://gcc-compiler.tld/</link>\n} .
-        qq{</item>\n\n} .        
+        qq{</item>\n} .        
         qq{<item>\n<title>GTKeyboard 0.85</title>\n} .
         qq{<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>\n} .
-        qq{</item>\n\n},
+        qq{</item>\n},
         "Checking for second item before first item when add_item with mode == insert."
     );
 }

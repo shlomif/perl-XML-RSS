@@ -1550,7 +1550,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_with_image_w_undef_link({version => "0.9"});
     # TEST
-    contains ($rss, qq{<image>\n<title>freshmeat.net</title>\n<url>0</url>\n</image>\n\n},
+    contains ($rss, qq{<image>\n<title>freshmeat.net</title>\n<url>0</url>\n</image>\n},
         "Image with undefined link does not render the Image - RSS version 0.9"
     );
 }
@@ -1561,7 +1561,7 @@ sub create_rss_without_item
     # TEST
     contains ($rss, 
         qq{<image rdf:about="0">\n<title>freshmeat.net</title>\n} . 
-        qq{<url>0</url>\n</image>\n\n},
+        qq{<url>0</url>\n</image>\n},
         "Image with undefined link does not render the Image - RSS version 1.0"
     );
 }
@@ -1803,7 +1803,7 @@ sub create_rss_without_item
         ("<textinput rdf:about=\"0\">\n" .
          join("", map {"<$_>0</$_>\n"} (qw(title description name link))) .
          "<admin:foobar>Quod</admin:foobar>\n" .
-         "</textinput>\n\n"
+         "</textinput>\n"
         ),
         "1.0 - textinput/[module]",
     );
@@ -1897,7 +1897,7 @@ sub create_rss_without_item
         "<url>0</url>\n" .
         "<link>http://freshmeat.net/</link>\n" .
         "<admin:foobar>Quod</admin:foobar>\n" .
-        "</image>\n\n",
+        "</image>\n",
         '2.0 - image/[module] with unknown key'
     );
 }
