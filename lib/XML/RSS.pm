@@ -1141,20 +1141,29 @@ sub _get_1_0_rdf_decl_mappings
     ];
 }
 
+sub _render_xmlns {
+    my ($self, $prefix, $url) = @_;
+
+    my $pp = defined($prefix) ? ":$prefix" : "";
+    
+    return qq{ xmlns$pp="$url"\n};
+}
+
+sub _get_1_0_rdf_xmlnses {
+    my $self = shift;
+
+    return 
+        join("",
+            map { $self->_render_xmlns(@$_) }
+            @{$self->_get_1_0_rdf_decl_mappings}
+        );
+}
+
 sub _get_1_0_rdf_decl
 {
     my $self = shift;
 
-    return "<rdf:RDF\n" .
-        join("",
-            map {
-                my ($prefix, $url) = @$_;
-                my $pp = defined($prefix) ? ":$prefix" : "";
-                qq{ xmlns$pp="$url"\n};
-            } 
-            @{$self->_get_1_0_rdf_decl_mappings}
-        ) .
-        ">\n\n";
+    return "<rdf:RDF\n" . $self->_get_1_0_rdf_xmlnses() . ">\n\n";
 }
 
 sub as_rss_0_9 {
