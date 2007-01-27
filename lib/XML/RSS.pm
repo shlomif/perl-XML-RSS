@@ -1112,6 +1112,21 @@ sub _output_complete_image {
     }
 }
 
+sub _out_seq_items {
+    my $self = shift;
+
+    # Seq items
+    $self->_out("<items>\n <rdf:Seq>\n");
+
+    foreach my $item (@{$self->{items}}) {
+        $self->_out('  <rdf:li rdf:resource="' .
+            $self->_encode($self->_get_item_about($item)) .
+            '" />' . "\n");
+    }
+
+    $self->_out(" </rdf:Seq>\n</items>\n");
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1282,17 +1297,7 @@ sub as_rss_1_0 {
 
     $self->_out_modules_elements($self->channel());
 
-
-    # Seq items
-    $output .= "<items>\n <rdf:Seq>\n";
-
-    foreach my $item (@{$self->{items}}) {
-        $output .= '  <rdf:li rdf:resource="' .
-            $self->_encode($self->_get_item_about($item)) .
-            '" />' . "\n";
-    }
-
-    $output .= " </rdf:Seq>\n</items>\n";
+    $self->_out_seq_items();
 
     if ($self->_is_image_defined()) {
         $output .= '<image rdf:resource="' . $self->_encode($self->{image}->{url}) . '" />' . "\n";
