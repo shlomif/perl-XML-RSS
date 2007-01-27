@@ -1061,6 +1061,16 @@ sub _output_defined_image
     my $self = shift;
 
     $self->_start_image();
+
+    if ($self->_rss_out_version() eq "0.91")
+    {
+        # link, image width, image height and description
+        $self->_output_multiple_tags(
+            {ext => "image", 'defined' => 1},
+            [qw(width height description)],
+        );
+    }
+
     $self->_end_image();
 }
 
@@ -1152,22 +1162,7 @@ sub as_rss_0_9_1 {
 
     $output .= "\n";
 
-    #################
-    # image element #
-    #################
-    if (defined($self->{image}->{url})) {
-
-        $self->_start_image();
-
-        # link, image width, image height and description
-        $self->_output_multiple_tags(
-            {ext => "image", 'defined' => 1},
-            [qw(width height description)],
-        );
-
-        $self->_end_image();
-
-    }
+    $self->_output_complete_image();
 
     ################
     # item element #
