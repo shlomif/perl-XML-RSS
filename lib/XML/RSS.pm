@@ -1243,6 +1243,22 @@ sub _get_filtered_items {
     }
 }
 
+sub _out_item_2_0_tags {
+    my ($self, $item) = @_;
+
+    foreach my $tag (qw(author category comments)) {
+        $self->_output_def_item_tag($item, $tag);
+    }
+
+    $self->_out_guid($item);
+
+    $self->_output_def_item_tag($item, "pubDate");
+
+    $self->_out_item_source($item);
+
+    $self->_out_item_enclosure($item);
+}
+
 sub _output_items {
     my $self = shift;
 
@@ -1252,17 +1268,7 @@ sub _output_items {
         $self->_start_item($item);
 
         if ($ver eq "2.0") {
-            foreach my $tag (qw(author category comments)) {
-                $self->_output_def_item_tag($item, $tag);
-            }
-
-            $self->_out_guid($item);
-
-            $self->_output_def_item_tag($item, "pubDate");
-
-            $self->_out_item_source($item);
-
-            $self->_out_item_enclosure($item);
+            $self->_out_item_2_0_tags($item);
         }
 
         if ($ver eq "1.0") {
