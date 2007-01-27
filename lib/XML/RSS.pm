@@ -1160,7 +1160,7 @@ sub as_rss_0_9 {
     #####################
     $self->_output_complete_textinput();
 
-    $output .= '</rdf:RDF>';
+    $self->_out('</rdf:RDF>');
 
     return $self->_flush_output();
 }
@@ -1177,11 +1177,12 @@ sub as_rss_0_9_1 {
     $self->_output_xml_declaration();
 
     # DOCTYPE
-    $output .= '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"' . "\n";
-    $output .= '            "http://my.netscape.com/publish/formats/rss-0.91.dtd">' . "\n\n";
-
+    $self->_out(qq{<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"\n} .
+        qq{            "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n}
+    );
+    
     # RSS root element
-    $output .= '<rss version="0.91">' . "\n\n";
+    $self->_out(qq{<rss version="0.91">\n\n});
 
     $self->_start_channel();
 
@@ -1203,7 +1204,7 @@ sub as_rss_0_9_1 {
 
     $self->_out_webmaster();
 
-    $output .= "\n";
+    $self->_out("\n");
 
     $self->_output_complete_image();
 
@@ -1225,8 +1226,8 @@ sub as_rss_0_9_1 {
     $self->_out_skip_days();
 
     # end channel element
-    $output .= '</channel>' . "\n";
-    $output .= '</rss>';
+    $self->_out("</channel>\n");
+    $self->_out("</rss>");
 
     return $self->_flush_output();
 }
