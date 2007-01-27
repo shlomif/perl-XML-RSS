@@ -802,11 +802,12 @@ sub _out_image_title_and_url {
 sub _start_image {
     my $self = shift;
 
-    my $params = shift;
+    my $attr = 
+        ($self->_rss_out_version() eq "1.0") ?
+            ' rdf:about="' . $self->_encode($self->image('url')) . '"' :
+            "";
 
-    $params = +{attr => "",} if (!$params);
-
-    $self->_out("<image$params->{attr}>\n");
+    $self->_out("<image$attr>\n");
 
     $self->_out_image_title_and_url();
 
@@ -1071,6 +1072,26 @@ sub _output_defined_image
         );
     }
 
+    if ($self->_rss_out_version() eq "1.0")
+    {
+        # image width
+        #$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
+        #    if $self->{image}->{width};
+
+        # image height
+        #$output .= '<rss091:height>'.$self->{image}->{height}.'</rss091:height>'."\n"
+        #    if $self->{image}->{height};
+
+        # description
+        #$output .= '<rss091:description>'.$self->{image}->{description}.'</rss091:description>'."\n"
+        #    if $self->{image}->{description};
+
+        $self->_out_dc_elements($self->image());
+
+        # Ad-hoc modules for images
+        $self->_out_modules_elements($self->image());
+    }
+
     $self->_end_image();
 }
 
@@ -1277,32 +1298,7 @@ sub as_rss_1_0 {
 
     $self->_end_channel();
 
-    #################
-    # image element #
-    #################
-    if (defined($self->{image}->{url})) {
-        $self->_start_image(
-            {'attr' => ' rdf:about="' . $self->_encode($self->{image}->{url}) . '"',});
-
-        # image width
-        #$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
-        #    if $self->{image}->{width};
-
-        # image height
-        #$output .= '<rss091:height>'.$self->{image}->{height}.'</rss091:height>'."\n"
-        #    if $self->{image}->{height};
-
-       # description
-       #$output .= '<rss091:description>'.$self->{image}->{description}.'</rss091:description>'."\n"
-       #    if $self->{image}->{description};
-
-        $self->_out_dc_elements($self->image());
-
-        # Ad-hoc modules for images
-        $self->_out_modules_elements($self->image());
-
-        $self->_end_image();
-    }    # end if ($self->{image}->{url})
+    $self->_output_complete_image();
 
     ################
     # item element #
