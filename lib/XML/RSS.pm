@@ -811,11 +811,13 @@ sub _start_image {
 }
 
 sub _start_item {
-    my ($self, $item, $params) = @_;
+    my ($self, $item) = @_;
 
-    $params = +{attr => "",} if (!$params);
+    my $attr = ($self->_rss_out_version() eq "1.0") ?
+        ' rdf:about="' . $self->_encode($self->_get_item_about($item)) . '"' :
+        "";
 
-    $self->_out("<item$params->{attr}>\n");
+    $self->_out("<item$attr>\n");
 
     $self->_output_common_item_tags($item);
 
@@ -1224,6 +1226,60 @@ sub _out_item_enclosure {
     }
 }
 
+sub _get_filtered_items {
+    my ($self) = @_;
+
+    my $items = $self->{items};
+
+    if ($self->_rss_out_version() eq "2.0") {
+        return
+        [
+            grep {exists($_->{title}) || exists($_->{description})}
+                @$items
+        ];
+    }
+    else {
+        return $items;
+    }
+}
+
+sub _output_items {
+    my $self = shift;
+
+    my $ver = $self->_rss_out_version();
+
+    foreach my $item (@{$self->_get_filtered_items}) {
+        $self->_start_item($item);
+
+        if ($ver eq "2.0") {
+            foreach my $tag (qw(author category comments)) {
+                $self->_output_def_item_tag($item, $tag);
+            }
+
+            $self->_out_guid($item);
+
+            $self->_output_def_item_tag($item, "pubDate");
+
+            $self->_out_item_source($item);
+
+            $self->_out_item_enclosure($item);
+        }
+
+        if ($ver eq "1.0") {
+            $self->_out_dc_elements($item);
+
+            # Taxonomy module
+            $self->_output_taxo_topics($item);
+        }
+
+        if (($ver eq "1.0") || ($ver eq "2.0")) {
+            $self->_out_modules_elements($item);
+        }
+
+        $self->_end_item();
+    }
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1241,13 +1297,7 @@ sub as_rss_0_9 {
 
     $self->_output_complete_image();
 
-    ################
-    # item element #
-    ################
-    foreach my $item (@{$self->{items}}) {
-        $self->_start_item($item);
-        $self->_end_item();
-    }
+    $self->_output_items();
 
     #####################
     # textinput element #
@@ -1299,13 +1349,7 @@ sub as_rss_0_9_1 {
 
     $self->_output_complete_image();
 
-    ################
-    # item element #
-    ################
-    foreach my $item (@{$self->{items}}) {
-        $self->_start_item($item);
-        $self->_end_item();
-    }
+    $self->_output_items;
 
     #####################
     # textinput element #
@@ -1394,25 +1438,7 @@ sub as_rss_1_0 {
 
     $self->_output_complete_image();
 
-    ################
-    # item element #
-    ################
-    foreach my $item (@{$self->{items}}) {
-        $self->_start_item($item, 
-            {attr => ' rdf:about="' . 
-                $self->_encode($self->_get_item_about($item)) . '"'
-            }
-        );
-
-        $self->_out_dc_elements($item);
-
-        # Taxonomy module
-        $self->_output_taxo_topics($item);
-
-        $self->_out_modules_elements($item);
-
-        $self->_end_item();
-    }    # end foreach my $item (@{$self->{items}})
+    $self->_output_items();
 
     $self->_output_complete_textinput();
 
@@ -1475,33 +1501,7 @@ sub as_rss_2_0 {
 
     $self->_output_complete_image();
 
-    ################
-    # item element #
-    ################
-    foreach my $item (@{$self->{items}}) {
-
-        # According to the spec either title or description must be present.
-        next unless (exists $item->{title} or exists $item->{description});
-
-        $self->_start_item($item);
-
-        foreach my $tag (qw(author category comments)) {
-            $self->_output_def_item_tag($item, $tag);
-        }
-
-        $self->_out_guid($item);
-
-        $self->_output_def_item_tag($item, "pubDate");
-
-        $self->_out_item_source($item);
-
-        $self->_out_item_enclosure($item);
-
-
-        $self->_out_modules_elements($item);
-
-        $self->_end_item();
-    }
+    $self->_output_items();
 
     $self->_output_complete_textinput();
 
