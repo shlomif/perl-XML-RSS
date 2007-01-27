@@ -1455,13 +1455,6 @@ sub as_rss_2_0 {
 
     $self->_output_xml_declaration();
 
-    # DOCTYPE
-    # $output .= '<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"'."\n";
-    # $output .= '            "http://my.netscape.com/publish/formats/rss-0.91.dtd">'."\n\n";
-
-    # RSS root element
-    # $output .= '<rss version="0.91">'."\n\n";
-
     # RSS namespaces declaration
     $self->_out_rdf_decl;
 
