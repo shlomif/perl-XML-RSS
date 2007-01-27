@@ -1139,8 +1139,8 @@ sub as_rss_0_9 {
     $self->_output_xml_declaration();
 
     # RDF root element
-    $output .= '<rdf:RDF' . "\n" . 'xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"' . "\n";
-    $output .= 'xmlns="http://my.netscape.com/rdf/simple/0.9/">' . "\n\n";
+    $self->_out(qq{<rdf:RDF\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n});
+    $self->_out(qq{xmlns="http://my.netscape.com/rdf/simple/0.9/">\n\n});
 
     $self->_start_channel();
     $self->_end_channel();
