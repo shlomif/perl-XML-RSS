@@ -1062,7 +1062,9 @@ sub _output_defined_image {
 
     $self->_start_image();
 
-    if ($self->_rss_out_version() eq "0.91") {
+    my $ver = $self->_rss_out_version();
+
+    if (($ver eq "0.91") || ($ver eq "2.0")) {
         # link, image width, image height and description
         $self->_output_multiple_tags(
             {ext => "image", 'defined' => 1},
@@ -1070,7 +1072,7 @@ sub _output_defined_image {
         );
     }
 
-    if ($self->_rss_out_version() eq "1.0") {
+    if ($ver eq "1.0") {
         # image width
         #$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
         #    if $self->{image}->{width};
@@ -1084,7 +1086,10 @@ sub _output_defined_image {
         #    if $self->{image}->{description};
 
         $self->_out_dc_elements($self->image());
+    }
 
+    if (($ver eq "1.0") || ($ver eq "2.0"))
+    {
         # Ad-hoc modules for images
         $self->_out_modules_elements($self->image());
     }
@@ -1392,20 +1397,7 @@ sub as_rss_2_0 {
 
     $output .= "\n";
 
-    #################
-    # image element #
-    #################
-    if (defined($self->{image}->{url})) {
-
-        $self->_start_image();
-
-        $self->_output_multiple_tags({ext => "image", 'defined' => 1},
-            [qw(width height description)]);
-
-        $self->_out_modules_elements($self->image());
-
-        $self->_end_image();
-    }
+    $self->_output_complete_image();
 
     ################
     # item element #
