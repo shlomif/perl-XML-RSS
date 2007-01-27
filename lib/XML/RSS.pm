@@ -684,24 +684,24 @@ sub _date_to_dc_date {
 
 sub _calc_lastBuildDate_2_0 {
     my $self = shift;
-    if (defined($self->{channel}->{'dc'}->{'date'})) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($self->{channel}->{'dc'}->{date}));
+    if (defined(my $d = $self->channel('dc')->{'date'})) {
+        return $self->_date_to_rss2($self->_date_from_dc_date($d));
     }
-    elsif (defined($self->{channel}->{lastBuildDate})) {
-        return $self->{channel}->{lastBuildDate};
-    }
-    else {
-        return undef;
+    else
+    {
+        # If lastBuildDate is undef we can still return it because we
+        # need to return undef.
+        return $self->channel("lastBuildDate");
     }
 }
 
 sub _calc_lastBuildDate_0_9_1 {
     my $self = shift;
-    if (defined($self->{channel}->{lastBuildDate})) {
-        return $self->{channel}->{lastBuildDate};
+    if (defined(my $d = $self->channel('lastBuildDate'))) {
+        return $d;
     }
-    elsif (defined($self->{channel}->{'dc'}->{'date'})) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($self->{channel}->{'dc'}->{date}));
+    elsif (defined(my $d2 = $self->channel('dc')->{'date'})) {
+        return $self->_date_to_rss2($self->_date_from_dc_date($d2));
     }
     else {
         return undef;
@@ -711,11 +711,11 @@ sub _calc_lastBuildDate_0_9_1 {
 sub _calc_pubDate {
     my $self = shift;
 
-    if (defined($self->{channel}->{pubDate})) {
-        return $self->{channel}->{pubDate};
+    if (defined(my $d = $self->channel('pubDate'))) {
+        return $d;
     }
-    elsif (defined($self->{channel}->{'dc'}->{'date'})) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($self->{channel}->{'dc'}->{date}));
+    elsif (defined(my $d2 = $self->channel('dc')->{'date'})) {
+        return $self->_date_to_rss2($self->_date_from_dc_date($d2));
     }
     else {
         return undef;
@@ -725,11 +725,11 @@ sub _calc_pubDate {
 sub _get_other_dc_date {
     my $self = shift;
 
-    if (defined($self->{channel}->{pubDate})) {
-        return $self->{channel}->{pubDate};
+    if (defined(my $d1 = $self->channel('pubDate'))) {
+        return $d1;
     }
-    elsif (defined($self->{channel}->{lastBuildDate})) {
-        return $self->{channel}->{lastBuildDate};
+    elsif (defined(my $d2 = $self->channel('lastBuildDate'))) {
+        return $d2;
     }
     else {
         return undef;
@@ -739,8 +739,8 @@ sub _get_other_dc_date {
 sub _calc_dc_date {
     my $self = shift;
 
-    if (defined($self->{channel}->{'dc'}->{'date'})) {
-        return $self->{channel}->{'dc'}->{'date'};
+    if (defined(my $d1 = $self->channel('dc')->{'date'})) {
+        return $d1;
     }
     else {
         my $date = $self->_get_other_dc_date();
