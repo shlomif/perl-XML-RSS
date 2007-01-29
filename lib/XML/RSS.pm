@@ -1177,11 +1177,40 @@ sub _get_rdf_decl_open_tag
         qq{<rss version="2.0"\n};
 }
 
+sub _get_0_9_rdf_decl
+{
+    return
+    qq{<rdf:RDF\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n} .
+    qq{xmlns="http://my.netscape.com/rdf/simple/0.9/">\n\n};
+}
+
+sub _get_0_9_1_rdf_decl
+{
+    return
+    qq{<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"\n} .
+    qq{            "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n} .
+    qq{<rss version="0.91">\n\n};
+}
+
 sub _get_rdf_decl
 {
     my $self = shift;
 
-    return $self->_get_rdf_decl_open_tag() . $self->_get_rdf_xmlnses() . ">\n\n";
+    my $ver = $self->_rss_out_version();
+
+    if ($ver eq "0.9")
+    {
+        return $self->_get_0_9_rdf_decl();
+    }
+    elsif ($ver eq "0.91")
+    {
+        return $self->_get_0_9_1_rdf_decl();
+    }
+    else
+    {
+        return $self->_get_rdf_decl_open_tag() .
+            $self->_get_rdf_xmlnses() . ">\n\n";
+    }
 }
 
 sub _out_rdf_decl
@@ -1334,9 +1363,7 @@ sub as_rss_0_9 {
 
     $self->_output_xml_declaration();
 
-    # RDF root element
-    $self->_out(qq{<rdf:RDF\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n});
-    $self->_out(qq{xmlns="http://my.netscape.com/rdf/simple/0.9/">\n\n});
+    $self->_out_rdf_decl;
 
     $self->_start_channel();
     $self->_end_channel();
@@ -1356,13 +1383,7 @@ sub as_rss_0_9_1 {
 
     $self->_output_xml_declaration();
 
-    # DOCTYPE
-    $self->_out(qq{<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"\n} .
-        qq{            "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n}
-    );
-    
-    # RSS root element
-    $self->_out(qq{<rss version="0.91">\n\n});
+    $self->_out_rdf_decl;
 
     $self->_start_channel();
 
@@ -1399,9 +1420,6 @@ sub as_rss_1_0 {
 
     $self->_out_rdf_decl;
 
-    ###################
-    # Channel Element #
-    ###################
     $self->_start_channel();
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
