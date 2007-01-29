@@ -1355,17 +1355,30 @@ sub _out_last_elements {
     $self->_out("</rss>");
 }
 
-sub as_rss_0_9 {
+sub _calc_prefer_dc {
     my $self = shift;
+    return ($self->_rss_out_version() eq "1.0");
+}
 
-    $self->_prefer_dc(0);
-    $self->_rss_out_version("0.9");
+sub _output_xml_start {
+    my ($self, $ver) = @_;
+
+    $self->_rss_out_version($ver);
+    $self->_prefer_dc($self->_calc_prefer_dc());
 
     $self->_output_xml_declaration();
 
     $self->_out_rdf_decl;
 
     $self->_start_channel();
+}
+
+
+sub as_rss_0_9 {
+    my $self = shift;
+
+    $self->_output_xml_start("0.9");
+
     $self->_end_channel();
 
     $self->_output_main_elements;
@@ -1378,14 +1391,7 @@ sub as_rss_0_9 {
 sub as_rss_0_9_1 {
     my $self = shift;
 
-    $self->_prefer_dc(0);
-    $self->_rss_out_version("0.91");
-
-    $self->_output_xml_declaration();
-
-    $self->_out_rdf_decl;
-
-    $self->_start_channel();
+    $self->_output_xml_start("0.91");
 
     # PICS rating
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
@@ -1413,14 +1419,7 @@ sub as_rss_0_9_1 {
 sub as_rss_1_0 {
     my $self = shift;
 
-    $self->_rss_out_version("1.0");
-    $self->_prefer_dc(1);
-
-    $self->_output_xml_declaration();
-
-    $self->_out_rdf_decl;
-
-    $self->_start_channel();
+    $self->_output_xml_start("1.0");
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
@@ -1482,15 +1481,7 @@ sub as_rss_1_0 {
 sub as_rss_2_0 {
     my $self = shift;
 
-    $self->_rss_out_version("2.0");
-    $self->_prefer_dc(0);
-
-    $self->_output_xml_declaration();
-
-    # RSS namespaces declaration
-    $self->_out_rdf_decl;
-
-    $self->_start_channel();
+    $self->_output_xml_start("2.0");
 
     # PICS rating
     # Not supported by RSS 2.0
