@@ -802,7 +802,7 @@ sub _out_image_title_and_url {
 sub _start_image {
     my $self = shift;
 
-    my $attr = 
+    my $attr =
         ($self->_rss_out_version() eq "1.0") ?
             ' rdf:about="' . $self->_encode($self->image('url')) . '"' :
             "";
@@ -893,11 +893,13 @@ sub _out_language {
 }
 
 sub _start_channel {
-    my ($self, $params) = @_;
+    my $self = shift;
 
-    $params = +{attr => "",} if (!$params);
+    my $attr = ($self->_rss_out_version() eq "1.0") ?
+        ' rdf:about="' . $self->_encode($self->_get_channel_rdf_about) . '"' :
+        "";
 
-    $self->_out("<channel$params->{attr}>\n");
+    $self->_out("<channel$attr>\n");
 
     $self->_output_common_channel_elements();
 
@@ -1400,9 +1402,7 @@ sub as_rss_1_0 {
     ###################
     # Channel Element #
     ###################
-    $self->_start_channel(
-        {attr => (' rdf:about="' . $self->_encode($self->_get_channel_rdf_about()) . '"')},
-    );
+    $self->_start_channel();
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
