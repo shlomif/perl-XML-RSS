@@ -1292,6 +1292,30 @@ sub _output_items {
     }
 }
 
+# Outputs the last elements - for RSS versions 0.9.1 and 2.0 .
+sub _out_last_elements {
+    my $self = shift;
+
+    $self->_out("\n");
+
+    $self->_output_complete_image();
+
+    $self->_output_items;
+
+    #####################
+    # textinput element #
+    #####################
+    $self->_output_complete_textinput();
+
+    $self->_out_skip_hours();
+
+    $self->_out_skip_days();
+
+    # end channel elemen
+    $self->_end_channel;
+    $self->_out("</rss>");
+}
+
 sub as_rss_0_9 {
     my $self = shift;
 
@@ -1357,24 +1381,7 @@ sub as_rss_0_9_1 {
 
     $self->_out_webmaster();
 
-    $self->_out("\n");
-
-    $self->_output_complete_image();
-
-    $self->_output_items;
-
-    #####################
-    # textinput element #
-    #####################
-    $self->_output_complete_textinput();
-
-    $self->_out_skip_hours();
-
-    $self->_out_skip_days();
-
-    # end channel elemen
-    $self->_end_channel;
-    $self->_out("</rss>");
+    $self->_out_last_elements;
 
     return $self->_flush_output();
 }
@@ -1500,20 +1507,7 @@ sub as_rss_2_0 {
 
     $self->_out_modules_elements($self->channel());
 
-    $self->_out("\n");
-
-    $self->_output_complete_image();
-
-    $self->_output_items();
-
-    $self->_output_complete_textinput();
-
-    $self->_out_skip_hours();
-    $self->_out_skip_days();
-
-    # end channel element
-    $self->_end_channel;
-    $self->_out('</rss>');
+    $self->_out_last_elements;
 
     return $self->_flush_output();
 }
