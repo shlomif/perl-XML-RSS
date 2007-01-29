@@ -1292,26 +1292,28 @@ sub _output_items {
     }
 }
 
+sub _output_main_elements {
+    my $self = shift;
+
+    $self->_output_complete_image();
+
+    $self->_output_items;
+
+    $self->_output_complete_textinput();
+}
+
 # Outputs the last elements - for RSS versions 0.9.1 and 2.0 .
 sub _out_last_elements {
     my $self = shift;
 
     $self->_out("\n");
 
-    $self->_output_complete_image();
-
-    $self->_output_items;
-
-    #####################
-    # textinput element #
-    #####################
-    $self->_output_complete_textinput();
+    $self->_output_main_elements;
 
     $self->_out_skip_hours();
 
     $self->_out_skip_days();
 
-    # end channel elemen
     $self->_end_channel;
     $self->_out("</rss>");
 }
@@ -1331,14 +1333,7 @@ sub as_rss_0_9 {
     $self->_start_channel();
     $self->_end_channel();
 
-    $self->_output_complete_image();
-
-    $self->_output_items();
-
-    #####################
-    # textinput element #
-    #####################
-    $self->_output_complete_textinput();
+    $self->_output_main_elements;
 
     $self->_out('</rdf:RDF>');
 
@@ -1453,11 +1448,7 @@ sub as_rss_1_0 {
 
     $self->_end_channel;
 
-    $self->_output_complete_image();
-
-    $self->_output_items();
-
-    $self->_output_complete_textinput();
+    $self->_output_main_elements;
 
     $self->_out('</rdf:RDF>');
 
