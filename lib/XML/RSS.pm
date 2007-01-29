@@ -1265,30 +1265,36 @@ sub _out_item_2_0_tags {
     $self->_out_item_enclosure($item);
 }
 
-sub _output_items {
-    my $self = shift;
+sub _output_single_item {
+    my ($self, $item) = @_;
 
     my $ver = $self->_rss_out_version();
 
+    $self->_start_item($item);
+
+    if ($ver eq "2.0") {
+        $self->_out_item_2_0_tags($item);
+    }
+
+    if ($ver eq "1.0") {
+        $self->_out_dc_elements($item);
+
+        # Taxonomy module
+        $self->_output_taxo_topics($item);
+    }
+
+    if (($ver eq "1.0") || ($ver eq "2.0")) {
+        $self->_out_modules_elements($item);
+    }
+
+    $self->_end_item($item);
+}
+
+sub _output_items {
+    my $self = shift;
+
     foreach my $item (@{$self->_get_filtered_items}) {
-        $self->_start_item($item);
-
-        if ($ver eq "2.0") {
-            $self->_out_item_2_0_tags($item);
-        }
-
-        if ($ver eq "1.0") {
-            $self->_out_dc_elements($item);
-
-            # Taxonomy module
-            $self->_output_taxo_topics($item);
-        }
-
-        if (($ver eq "1.0") || ($ver eq "2.0")) {
-            $self->_out_modules_elements($item);
-        }
-
-        $self->_end_item();
+        $self->_output_single_item($item);
     }
 }
 
