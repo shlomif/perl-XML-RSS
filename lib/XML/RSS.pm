@@ -1393,54 +1393,8 @@ sub _out_end_tag {
     return $self->_out("</" . $self->_get_end_tag() . ">");
 }
 
-sub as_rss_0_9 {
+sub _output_1_0_rss_middle {
     my $self = shift;
-
-    $self->_output_xml_start("0.9");
-
-    $self->_end_channel();
-
-    $self->_output_main_elements;
-
-    $self->_out_end_tag;
-
-    return $self->_flush_output();
-}
-
-sub as_rss_0_9_1 {
-    my $self = shift;
-
-    $self->_output_xml_start("0.91");
-
-    # PICS rating
-    $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
-
-    $self->_out_copyright();
-
-    # publication date
-    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
-
-    # last build date
-    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
-
-    # external CDF URL
-    $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
-
-    $self->_out_managing_editor();
-
-    $self->_out_webmaster();
-
-    $self->_out_last_elements;
-
-    $self->_out_end_tag;
-
-    return $self->_flush_output();
-}
-
-sub as_rss_1_0 {
-    my $self = shift;
-
-    $self->_output_xml_start("1.0");
 
     # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
     #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
@@ -1493,16 +1447,10 @@ sub as_rss_1_0 {
     $self->_end_channel;
 
     $self->_output_main_elements;
-
-    $self->_out_end_tag;
-
-    return $self->_flush_output();
 }
 
-sub as_rss_2_0 {
+sub _output_2_0_rss_middle {
     my $self = shift;
-
-    $self->_output_xml_start("2.0");
 
     # PICS rating
     # Not supported by RSS 2.0
@@ -1535,11 +1483,83 @@ sub as_rss_2_0 {
     $self->_out_modules_elements($self->channel());
 
     $self->_out_last_elements;
+}
+
+sub _output_rss_middle {
+    my $self = shift;
+
+    my $ver = $self->_rss_out_version;
+
+    if ($ver eq "0.9") {
+        $self->_end_channel();
+        $self->_output_main_elements;
+    }
+    elsif ($ver eq "0.91") {
+            # PICS rating
+        $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
+
+        $self->_out_copyright();
+
+        # publication date
+        $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
+
+        # last build date
+        $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
+
+        # external CDF URL
+        $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
+
+        $self->_out_managing_editor();
+
+        $self->_out_webmaster();
+
+        $self->_out_last_elements;
+    }
+    elsif ($ver eq "1.0") {
+        $self->_output_1_0_rss_middle;
+    }
+    else {
+        $self->_output_2_0_rss_middle;
+    }
+}
+
+# $self->_render_complete_rss_output($xml_version)
+#
+# This function is the workhorse of the XML output and does all the work of
+# rendering the RSS, delegating the work to specialised functions.
+#
+# It accepts the requested version number as its argument.
+
+
+sub _render_complete_rss_output {
+    my ($self, $ver) = @_;
+
+    $self->_output_xml_start($ver);
+
+    $self->_output_rss_middle;
 
     $self->_out_end_tag;
 
     return $self->_flush_output();
 }
+
+sub as_rss_0_9 {
+    return shift->_render_complete_rss_output("0.9");
+}
+
+sub as_rss_0_9_1 {
+    return shift->_render_complete_rss_output("0.91");
+}
+
+sub as_rss_1_0 {
+    return shift->_render_complete_rss_output("1.0");
+}
+
+sub as_rss_2_0 {
+    return shift->_render_complete_rss_output("2.0");
+}
+
+
 
 sub _get_output_methods_map {
     return {
