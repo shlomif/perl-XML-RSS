@@ -963,6 +963,12 @@ sub _out_copyright {
     return $self->_out_channel_dc_field("rights", "copyright");
 }
 
+sub _out_editors {
+    my $self = shift;
+
+    $self->_out_managing_editor;
+    $self->_out_webmaster;
+}
 
 sub _get_channel_rdf_about {
     my $self = shift;
@@ -1430,9 +1436,7 @@ sub _output_1_0_rss_middle {
     #$output .= '<rss091:docs>'.$self->{channel}->{docs}.'</rss091:docs>'."\n"
     #if $self->{channel}->{docs};
 
-    $self->_out_managing_editor();
-
-    $self->_out_webmaster();
+    $self->_out_editors;
 
     $self->_out_all_modules_elems;
 
@@ -1474,9 +1478,7 @@ sub _output_2_0_rss_middle {
     # external CDF URL
     $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-    $self->_out_managing_editor();
-
-    $self->_out_webmaster();
+    $self->_out_editors;
 
     $self->_out_channel_self_dc_field("category");
     $self->_out_channel_self_dc_field("generator");
@@ -1515,9 +1517,7 @@ sub _output_rss_middle {
         # external CDF URL
         $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
 
-        $self->_out_managing_editor();
-
-        $self->_out_webmaster();
+        $self->_out_editors;
 
         $self->_out_last_elements;
     }
