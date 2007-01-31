@@ -1393,6 +1393,27 @@ sub _out_end_tag {
     return $self->_out("</" . $self->_get_end_tag() . ">");
 }
 
+sub _out_all_modules_elems {
+    my $self = shift;
+
+    # Dublin Core module
+    $self->_out_dc_elements($self->channel(),
+        {map { $_ => 1 } qw(language creator publisher rights date)},
+    );
+
+    # Syndication module
+    foreach my $syn (keys %syn_ok_fields) {
+        if (defined(my $value = $self->_channel_syn($syn))) {
+            $self->_out_ns_tag("syn", $syn, $value);
+        }
+    }
+
+    # Taxonomy module
+    $self->_output_taxo_topics($self->channel());
+
+    $self->_out_modules_elements($self->channel());
+}
+
 sub _output_1_0_rss_middle {
     my $self = shift;
 
@@ -1413,22 +1434,7 @@ sub _output_1_0_rss_middle {
 
     $self->_out_webmaster();
 
-    # Dublin Core module
-    $self->_out_dc_elements($self->channel(),
-        {map { $_ => 1 } qw(language creator publisher rights date)},
-    );
-
-    # Syndication module
-    foreach my $syn (keys %syn_ok_fields) {
-        if (defined(my $value = $self->_channel_syn($syn))) {
-            $self->_out_ns_tag("syn", $syn, $value);
-        }
-    }
-
-    # Taxonomy module
-    $self->_output_taxo_topics($self->channel());
-
-    $self->_out_modules_elements($self->channel());
+    $self->_out_all_modules_elems;
 
     $self->_out_seq_items();
 
