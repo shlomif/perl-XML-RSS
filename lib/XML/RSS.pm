@@ -1352,7 +1352,6 @@ sub _out_last_elements {
     $self->_out_skip_days();
 
     $self->_end_channel;
-    $self->_out("</rss>");
 }
 
 sub _calc_prefer_dc {
@@ -1373,6 +1372,26 @@ sub _output_xml_start {
     $self->_start_channel();
 }
 
+sub _get_end_tag_map
+{
+    return
+    { 
+        (map { $_ => "rdf:RDF" } qw(0.9 1.0)),
+        (map { $_ => "rss" } qw(0.91 2.0)),
+    };
+}
+
+sub _get_end_tag {
+    my $self = shift;
+
+    return $self->_get_end_tag_map()->{$self->_rss_out_version()};
+}
+
+sub _out_end_tag {
+    my $self = shift;
+
+    return $self->_out("</" . $self->_get_end_tag() . ">");
+}
 
 sub as_rss_0_9 {
     my $self = shift;
@@ -1383,7 +1402,7 @@ sub as_rss_0_9 {
 
     $self->_output_main_elements;
 
-    $self->_out('</rdf:RDF>');
+    $self->_out_end_tag;
 
     return $self->_flush_output();
 }
@@ -1412,6 +1431,8 @@ sub as_rss_0_9_1 {
     $self->_out_webmaster();
 
     $self->_out_last_elements;
+
+    $self->_out_end_tag;
 
     return $self->_flush_output();
 }
@@ -1473,7 +1494,7 @@ sub as_rss_1_0 {
 
     $self->_output_main_elements;
 
-    $self->_out('</rdf:RDF>');
+    $self->_out_end_tag;
 
     return $self->_flush_output();
 }
@@ -1514,6 +1535,8 @@ sub as_rss_2_0 {
     $self->_out_modules_elements($self->channel());
 
     $self->_out_last_elements;
+
+    $self->_out_end_tag;
 
     return $self->_flush_output();
 }
