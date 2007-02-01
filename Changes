@@ -10,6 +10,18 @@ Revision history for Perl module XML::RSS
          that were executable but need not be. Made them non-executable.
        - Clean up examples/ directory and move generated files out of t/
        - isPermaLink / guid fixes (RT#23983, Shlomi)
+       - increased the test coverage of XML::RSS up to 100%. (Shlomif)
+       - SECURITY BUG FIX: eliminated a markup injection vulnerability in the
+         taxo:topics output of RSS 1.0. (Shlomif)
+       - Moved the append function, which is unused and cannot be effectively 
+         used, out of the main module and into the rejects directory inside
+         the repository (but outside the module). (Shlomif)
+       - Added POD for full POD coverage. (Shlomif)
+       - Several other bug fixes. (Shlomif)
+       - Heavy refactoring of the code. (Shlomif)
+       - perltidy configuration file; run perltidy on XML::RSS (and 
+         intentionally not on the tests) (ABH).
+       - Removed the remaining tab characters. (Shlomif)
 
 1.22 - December 17th, 2006 
        - Fix XML::Feed compatability. Make sure $item->{content} is always setup
