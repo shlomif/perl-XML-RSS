@@ -1453,6 +1453,19 @@ sub _output_1_0_rss_middle {
     $self->_output_main_elements;
 }
 
+sub _to_array_ref {
+    my ($self, $items) = @_;
+    return +(ref($items) eq "ARRAY") ? $items : [$items];
+}
+
+sub _out_def_chan_tags {
+    my ($self, $tags) = @_;
+    return $self->_output_multiple_tags(
+        {ext => "channel", 'defined' => 1}, 
+        $self->_to_array_ref($tags)
+    );
+}
+
 sub _output_2_0_rss_middle {
     my $self = shift;
 
@@ -1470,7 +1483,7 @@ sub _output_2_0_rss_middle {
     $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_2_0());
 
     # external CDF URL
-    $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
+    $self->_out_def_chan_tags("docs");
 
     $self->_out_editors;
 
@@ -1497,8 +1510,8 @@ sub _output_rss_middle {
         $self->_output_main_elements;
     }
     elsif ($ver eq "0.91") {
-            # PICS rating
-        $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["rating"]);
+        # PICS rating
+        $self->_out_def_chan_tags("rating");
 
         $self->_out_copyright();
 
@@ -1509,7 +1522,7 @@ sub _output_rss_middle {
         $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
 
         # external CDF URL
-        $self->_output_multiple_tags({ext => "channel", 'defined' => 1}, ["docs"]);
+        $self->_out_def_chan_tags("docs");
 
         $self->_out_editors;
 
