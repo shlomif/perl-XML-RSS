@@ -571,19 +571,26 @@ sub _out_textinput_rss_1_0_elems {
     }
 }
 
+sub _start_top_elem {
+    my ($self, $tag, $about_sub) = @_;
+    
+    my $about = "";
+    if ($self->_rss_out_version() eq "1.0") {
+        $about = ' rdf:about="' . $self->_encode($about_sub->()) . '"';
+    }
+
+    return $self->_out("<$tag$about>\n");
+}
+
 sub _output_complete_textinput {
     my $self = shift;
 
     my $master_tag = ($self->_rss_out_version() eq "2.0") ? "textInput" : "textinput";
 
-    if (defined($self->{textinput}->{'link'})) {
-        my $attr = "";
-
-        if ($self->_rss_out_version() eq "1.0") {
-            $attr = ' rdf:about="' . $self->_encode($self->{textinput}->{'link'}) . '"';
-        }
-
-        $self->_out("<$master_tag$attr>\n");
+    if (defined(my $link = $self->textinput('link'))) {
+        $self->_start_top_elem($master_tag, 
+            sub { $link }
+        );
 
         $self->_output_common_textinput_sub_elements();
 
@@ -802,12 +809,7 @@ sub _out_image_title_and_url {
 sub _start_image {
     my $self = shift;
 
-    my $attr =
-        ($self->_rss_out_version() eq "1.0") ?
-            ' rdf:about="' . $self->_encode($self->image('url')) . '"' :
-            "";
-
-    $self->_out("<image$attr>\n");
+    $self->_start_top_elem("image", sub { $self->image('url') });
 
     $self->_out_image_title_and_url();
 
@@ -819,11 +821,7 @@ sub _start_image {
 sub _start_item {
     my ($self, $item) = @_;
 
-    my $attr = ($self->_rss_out_version() eq "1.0") ?
-        ' rdf:about="' . $self->_encode($self->_get_item_about($item)) . '"' :
-        "";
-
-    $self->_out("<item$attr>\n");
+    $self->_start_top_elem("item", sub { $self->_get_item_about($item)});
 
     $self->_output_common_item_tags($item);
 
@@ -895,11 +893,7 @@ sub _out_language {
 sub _start_channel {
     my $self = shift;
 
-    my $attr = ($self->_rss_out_version() eq "1.0") ?
-        ' rdf:about="' . $self->_encode($self->_get_channel_rdf_about) . '"' :
-        "";
-
-    $self->_out("<channel$attr>\n");
+    $self->_start_top_elem("channel", sub { $self->_get_channel_rdf_about });
 
     $self->_output_common_channel_elements();
 
