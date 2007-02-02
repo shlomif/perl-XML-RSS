@@ -1414,6 +1414,13 @@ sub _out_all_modules_elems {
     $self->_out_modules_elements($self->channel());
 }
 
+sub _output_0_9_rss_middle {
+    my $self = shift;
+
+    $self->_end_channel();
+    $self->_output_main_elements;
+}
+
 sub _output_0_9_1_rss_middle {
     my $self = shift;
 
@@ -1528,8 +1535,7 @@ sub _output_rss_middle {
     my $ver = $self->_rss_out_version;
 
     if ($ver eq "0.9") {
-        $self->_end_channel();
-        $self->_output_main_elements;
+        $self->_output_0_9_rss_middle;
     }
     elsif ($ver eq "0.91") {
         $self->_output_0_9_1_rss_middle;
