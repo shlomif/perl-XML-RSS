@@ -1414,6 +1414,24 @@ sub _out_all_modules_elems {
     $self->_out_modules_elements($self->channel());
 }
 
+sub _calc_lastBuildDate {
+    my $self = shift;
+
+    if ($self->_rss_out_version() eq "0.91") {
+        return $self->_calc_lastBuildDate_0_9_1();
+    }
+    else {
+        return $self->_calc_lastBuildDate_2_0();
+    }
+}
+
+sub _out_dates {
+    my $self = shift;
+
+    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
+    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate());
+}
+
 sub _output_0_9_rss_middle {
     my $self = shift;
 
@@ -1429,11 +1447,7 @@ sub _output_0_9_1_rss_middle {
 
     $self->_out_copyright();
 
-    # publication date
-    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
-
-    # last build date
-    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
+    $self->_out_dates();
 
     # external CDF URL
     $self->_out_def_chan_tags("docs");
@@ -1506,10 +1520,7 @@ sub _output_2_0_rss_middle {
     # copyright
     $self->_out_copyright();
 
-    # publication date
-    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
-
-    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_2_0());
+    $self->_out_dates();
 
     # external CDF URL
     $self->_out_def_chan_tags("docs");
