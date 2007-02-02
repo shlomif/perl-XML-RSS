@@ -1414,6 +1414,28 @@ sub _out_all_modules_elems {
     $self->_out_modules_elements($self->channel());
 }
 
+sub _output_0_9_1_rss_middle {
+    my $self = shift;
+
+    # PICS rating
+    $self->_out_def_chan_tags("rating");
+
+    $self->_out_copyright();
+
+    # publication date
+    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
+
+    # last build date
+    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
+
+    # external CDF URL
+    $self->_out_def_chan_tags("docs");
+
+    $self->_out_editors;
+
+    $self->_out_last_elements;
+}
+
 sub _output_1_0_rss_middle {
     my $self = shift;
 
@@ -1510,23 +1532,7 @@ sub _output_rss_middle {
         $self->_output_main_elements;
     }
     elsif ($ver eq "0.91") {
-        # PICS rating
-        $self->_out_def_chan_tags("rating");
-
-        $self->_out_copyright();
-
-        # publication date
-        $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
-
-        # last build date
-        $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate_0_9_1());
-
-        # external CDF URL
-        $self->_out_def_chan_tags("docs");
-
-        $self->_out_editors;
-
-        $self->_out_last_elements;
+        $self->_output_0_9_1_rss_middle;
     }
     elsif ($ver eq "1.0") {
         $self->_output_1_0_rss_middle;
