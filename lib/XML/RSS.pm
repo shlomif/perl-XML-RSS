@@ -1529,23 +1529,21 @@ sub _output_2_0_rss_middle {
     $self->_out_last_elements;
 }
 
+sub _get_rss_middle_method_map {
+    return {
+        "0.9" => '_output_0_9_rss_middle',
+        "0.91" => '_output_0_9_1_rss_middle',
+        "1.0" => '_output_1_0_rss_middle',
+        "2.0" => '_output_2_0_rss_middle',
+    };
+}
+
 sub _output_rss_middle {
     my $self = shift;
 
-    my $ver = $self->_rss_out_version;
+    my $method = $self->_get_rss_middle_method_map()->{$self->_rss_out_version};
 
-    if ($ver eq "0.9") {
-        $self->_output_0_9_rss_middle;
-    }
-    elsif ($ver eq "0.91") {
-        $self->_output_0_9_1_rss_middle;
-    }
-    elsif ($ver eq "1.0") {
-        $self->_output_1_0_rss_middle;
-    }
-    else {
-        $self->_output_2_0_rss_middle;
-    }
+    return $self->$method();
 }
 
 # $self->_render_complete_rss_output($xml_version)
