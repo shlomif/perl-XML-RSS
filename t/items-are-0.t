@@ -2017,7 +2017,7 @@ sub create_rss_without_item
     );
 
     # TEST
-    not_contains($rss, "<item>\n" .
+    not_contains($rss, "<item>\n",
         '2.0 - Item without description or title is skipped'
     );
 }
