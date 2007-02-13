@@ -3,9 +3,14 @@ use strict;
 use Carp;
 use XML::Parser;
 use HTML::Entities qw(encode_entities_numeric encode_entities);
-use base qw(XML::Parser);
 use DateTime::Format::Mail;
 use DateTime::Format::W3CDTF;
+
+use XML::RSS::Private::Output::Base;
+use XML::RSS::Private::Output::V0_9;
+use XML::RSS::Private::Output::V0_91;
+use XML::RSS::Private::Output::V1_0;
+use XML::RSS::Private::Output::V2_0;
 
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
@@ -123,102 +128,6 @@ sub _get_ok_fields {
     };
 }
 
-my %languages = (
-    'af'    => 'Afrikaans',
-    'sq'    => 'Albanian',
-    'eu'    => 'Basque',
-    'be'    => 'Belarusian',
-    'bg'    => 'Bulgarian',
-    'ca'    => 'Catalan',
-    'zh-cn' => 'Chinese (Simplified)',
-    'zh-tw' => 'Chinese (Traditional)',
-    'hr'    => 'Croatian',
-    'cs'    => 'Czech',
-    'da'    => 'Danish',
-    'nl'    => 'Dutch',
-    'nl-be' => 'Dutch (Belgium)',
-    'nl-nl' => 'Dutch (Netherlands)',
-    'en'    => 'English',
-    'en-au' => 'English (Australia)',
-    'en-bz' => 'English (Belize)',
-    'en-ca' => 'English (Canada)',
-    'en-ie' => 'English (Ireland)',
-    'en-jm' => 'English (Jamaica)',
-    'en-nz' => 'English (New Zealand)',
-    'en-ph' => 'English (Phillipines)',
-    'en-za' => 'English (South Africa)',
-    'en-tt' => 'English (Trinidad)',
-    'en-gb' => 'English (United Kingdom)',
-    'en-us' => 'English (United States)',
-    'en-zw' => 'English (Zimbabwe)',
-    'fo'    => 'Faeroese',
-    'fi'    => 'Finnish',
-    'fr'    => 'French',
-    'fr-be' => 'French (Belgium)',
-    'fr-ca' => 'French (Canada)',
-    'fr-fr' => 'French (France)',
-    'fr-lu' => 'French (Luxembourg)',
-    'fr-mc' => 'French (Monaco)',
-    'fr-ch' => 'French (Switzerland)',
-    'gl'    => 'Galician',
-    'gd'    => 'Gaelic',
-    'de'    => 'German',
-    'de-at' => 'German (Austria)',
-    'de-de' => 'German (Germany)',
-    'de-li' => 'German (Liechtenstein)',
-    'de-lu' => 'German (Luxembourg)',
-    'el'    => 'Greek',
-    'hu'    => 'Hungarian',
-    'is'    => 'Icelandic',
-    'in'    => 'Indonesian',
-    'ga'    => 'Irish',
-    'it'    => 'Italian',
-    'it-it' => 'Italian (Italy)',
-    'it-ch' => 'Italian (Switzerland)',
-    'ja'    => 'Japanese',
-    'ko'    => 'Korean',
-    'mk'    => 'Macedonian',
-    'no'    => 'Norwegian',
-    'pl'    => 'Polish',
-    'pt'    => 'Portuguese',
-    'pt-br' => 'Portuguese (Brazil)',
-    'pt-pt' => 'Portuguese (Portugal)',
-    'ro'    => 'Romanian',
-    'ro-mo' => 'Romanian (Moldova)',
-    'ro-ro' => 'Romanian (Romania)',
-    'ru'    => 'Russian',
-    'ru-mo' => 'Russian (Moldova)',
-    'ru-ru' => 'Russian (Russia)',
-    'sr'    => 'Serbian',
-    'sk'    => 'Slovak',
-    'sl'    => 'Slovenian',
-    'es'    => 'Spanish',
-    'es-ar' => 'Spanish (Argentina)',
-    'es-bo' => 'Spanish (Bolivia)',
-    'es-cl' => 'Spanish (Chile)',
-    'es-co' => 'Spanish (Colombia)',
-    'es-cr' => 'Spanish (Costa Rica)',
-    'es-do' => 'Spanish (Dominican Republic)',
-    'es-ec' => 'Spanish (Ecuador)',
-    'es-sv' => 'Spanish (El Salvador)',
-    'es-gt' => 'Spanish (Guatemala)',
-    'es-hn' => 'Spanish (Honduras)',
-    'es-mx' => 'Spanish (Mexico)',
-    'es-ni' => 'Spanish (Nicaragua)',
-    'es-pa' => 'Spanish (Panama)',
-    'es-py' => 'Spanish (Paraguay)',
-    'es-pe' => 'Spanish (Peru)',
-    'es-pr' => 'Spanish (Puerto Rico)',
-    'es-es' => 'Spanish (Spain)',
-    'es-uy' => 'Spanish (Uruguay)',
-    'es-ve' => 'Spanish (Venezuela)',
-    'sv'    => 'Swedish',
-    'sv-fi' => 'Swedish (Finland)',
-    'sv-se' => 'Swedish (Sweden)',
-    'tr'    => 'Turkish',
-    'uk'    => 'Ukranian'
-);
-
 # define required elements for RSS 0.9
 my $_REQ_v0_9 = {
     channel => {
@@ -327,38 +236,16 @@ my $namespace_map = {
     rss20 => 'http://backend.userland.com/blogChannelModule',
 };
 
-my %syn_ok_fields = (
-    'updateBase'      => '',
-    'updateFrequency' => '',
-    'updatePeriod'    => '',
-);
-
-my %dc_ok_fields = (
-    'title'       => '',
-    'creator'     => '',
-    'subject'     => '',
-    'description' => '',
-    'publisher'   => '',
-    'contributor' => '',
-    'date'        => '',
-    'type'        => '',
-    'format'      => '',
-    'identifier'  => '',
-    'source'      => '',
-    'language'    => '',
-    'relation'    => '',
-    'coverage'    => '',
-    'rights'      => '',
-);
-
-my %rdf_resource_fields = (
-    'http://webns.net/mvcb/' => {
-        'generatorAgent' => 1,
-        'errorReportsTo' => 1
-    },
-    'http://purl.org/rss/1.0/modules/annotate/' => {'reference' => 1},
-    'http://my.theinfo.org/changed/1.0/rss/'    => {'server'    => 1}
-);
+sub _rdf_resource_fields {
+    return {
+        'http://webns.net/mvcb/' => {
+            'generatorAgent' => 1,
+            'errorReportsTo' => 1
+        },
+        'http://purl.org/rss/1.0/modules/annotate/' => {'reference' => 1},
+        'http://my.theinfo.org/changed/1.0/rss/'    => {'server'    => 1}
+    };
+}
 
 my %empty_ok_elements = (enclosure => 1,);
 
@@ -376,20 +263,34 @@ sub _get_default_rss_2_0_modules {
     return {'http://backend.userland.com/blogChannelModule' => 'blogChannel',};
 }
 
+sub _get_syn_ok_fields {
+    return [qw(updateBase updateFrequency updatePeriod)];
+}
+
+sub _get_dc_ok_fields {
+    return [qw(
+        contributor
+        coverage
+        creator
+        date
+        description
+        format
+        identifier
+        language
+        publisher
+        relation
+        rights
+        source
+        subject
+        title
+        type
+    )];
+}
+
 sub new {
     my $class = shift;
 
-    my $self = $class->SUPER::new(
-        Namespaces    => 1,
-        NoExpand      => 1,
-        ParseParamEnt => 0,
-        Handlers      => {
-            Char    => \&handle_char,
-            XMLDecl => \&handle_dec,
-            Start   => \&handle_start,
-            End     => \&_handle_end,
-        }
-    );
+    my $self = {};
 
     bless $self, $class;
 
@@ -407,9 +308,11 @@ sub _get_init_default_key_assignments {
     ];
 }
 
-sub _initialize {
+# This method resets the contents of the instance to an empty one (with no
+# items, empty keys, etc.). Useful before parsing or during initialization.
+
+sub _reset {
     my $self = shift;
-    my %hash = @_;
 
     # internal hash
     $self->{_internal} = {};
@@ -417,24 +320,39 @@ sub _initialize {
     # init num of items to 0
     $self->{num_items} = 0;
 
-    # adhere to Netscape limits; no by default
-    $self->{'strict'} = 0;
-
     # initialize items
     $self->{items} = [];
+
+    my $ok_fields = $self->_get_ok_fields();
+
+    my $ver_ok_fields =
+      exists($ok_fields->{$self->{version}})
+      ? $ok_fields->{$self->{version}}
+      : $ok_fields->{default};
+
+    while (my ($k, $v) = each(%$ver_ok_fields)) {
+        $self->{$k} = +{%{$v}};
+    }
+
+    return;
+}
+
+sub _initialize {
+    my $self = shift;
+    my %hash = @_;
+
+    # adhere to Netscape limits; no by default
+    $self->{'strict'} = 0;
 
     # namespaces
     $self->{namespaces}    = {};
     $self->{rss_namespace} = '';
-
-    $self->{_output} = "";
 
     foreach my $k (@{$self->_get_init_default_key_assignments()})
     {
         my $key = $k->{key};
         $self->{$key} = exists($hash{$key}) ? $hash{$key} : $k->{default};
     }
-
 
     # modules
     $self->{modules} = (
@@ -448,169 +366,13 @@ sub _initialize {
         $self->{stylesheet} = $hash{stylesheet};
     }
 
-    my $ok_fields = $self->_get_ok_fields();
-
-    my $ver_ok_fields =
-      exists($ok_fields->{$self->{version}})
-      ? $ok_fields->{$self->{version}}
-      : $ok_fields->{default};
-
-    while (my ($k, $v) = each(%$ver_ok_fields)) {
-        $self->{$k} = +{%{$v}};
-    }
-
     if ($self->{version} eq "2.0") {
         $self->{namespaces}->{'blogChannel'} = "http://backend.userland.com/blogChannelModule";
     }
-}
 
-sub _rss_out_version {
-    my $self = shift;
-
-    if (@_) {
-        $self->{_rss_out_version} = shift;
-    }
-    return $self->{_rss_out_version};
-}
-
-sub _out {
-    my ($self, $string) = @_;
-    $self->{_output} .= $string;
-    return;
-}
-
-sub _out_tag {
-    my ($self, $tag, $inner) = @_;
-
-    return $self->_out("<$tag>" . $self->_encode($inner) . "</$tag>\n");
-}
-
-sub _out_ns_tag {
-    my ($self, $prefix, $tag, $inner) = @_;
-
-    return $self->_out_tag("${prefix}:${tag}", $inner);
-}
-
-sub _out_defined_tag {
-    my ($self, $tag, $inner) = @_;
-
-    if (defined($inner)) {
-        $self->_out_tag($tag, $inner);
-    }
+    $self->_reset;
 
     return;
-}
-
-sub _out_inner_tag {
-    my ($self, $params, $tag) = @_;
-
-    if (ref($params) eq "") {
-        $params = {'ext' => $params, 'defined' => 0,};
-    }
-
-    my $ext_tag = $params->{ext};
-
-    if (ref($ext_tag) eq "") {
-        $ext_tag = $self->{$ext_tag};
-    }
-
-    my $value = $ext_tag->{$tag};
-
-    if ($params->{defined} ? defined($value) : 1) {
-        $self->_out_tag($tag, $value);
-    }
-
-    return;
-}
-
-sub _output_item_tag {
-    my ($self, $item, $tag) = @_;
-
-    return $self->_out_tag($tag, $item->{$tag});
-}
-
-sub _output_def_image_tag {
-    my ($self, $tag) = @_;
-
-    my $ext_tag = "image";
-    if (defined($self->{$ext_tag}->{$tag})) {
-        $self->_out_inner_tag($ext_tag, $tag);
-    }
-    return;
-}
-
-sub _output_multiple_tags {
-    my ($self, $ext_tag, $tags_ref) = @_;
-
-    foreach my $tag (@$tags_ref) {
-        $self->_out_inner_tag($ext_tag, $tag);
-    }
-
-    return;
-}
-
-sub _output_common_textinput_sub_elements {
-    my $self = shift;
-
-    $self->_output_multiple_tags("textinput", [qw(title description name link)],);
-}
-
-sub _out_textinput_rss_1_0_elems {
-    my $self = shift;
-
-    $self->_out_dc_elements($self->textinput());
-
-    # Ad-hoc modules
-    # TODO : Should this follow the %rdf_resources conventions of the items'
-    # and channel's modules' support ?
-    while (my ($url, $prefix) = each %{$self->{modules}}) {
-        next if $prefix =~ /^(dc|syn|taxo)$/;
-        while (my ($el, $value) = each %{$self->{textinput}->{$prefix}}) {
-            $self->_out_ns_tag($prefix, $el, $value);
-        }
-    }
-}
-
-sub _start_top_elem {
-    my ($self, $tag, $about_sub) = @_;
-    
-    my $about = "";
-    if ($self->_rss_out_version() eq "1.0") {
-        $about = ' rdf:about="' . $self->_encode($about_sub->()) . '"';
-    }
-
-    return $self->_out("<$tag$about>\n");
-}
-
-sub _output_complete_textinput {
-    my $self = shift;
-
-    my $master_tag = ($self->_rss_out_version() eq "2.0") ? "textInput" : "textinput";
-
-    if (defined(my $link = $self->textinput('link'))) {
-        $self->_start_top_elem($master_tag, 
-            sub { $link }
-        );
-
-        $self->_output_common_textinput_sub_elements();
-
-        if ($self->_rss_out_version() eq "1.0") {
-            $self->_out_textinput_rss_1_0_elems();
-        }
-
-        $self->_end_top_level_elem($master_tag);
-    }
-
-    return;
-}
-
-sub _flush_output {
-    my $self = shift;
-
-    my $ret = $self->{_output};
-    $self->{_output} = "";
-
-    return $ret;
 }
 
 sub add_module {
@@ -663,900 +425,6 @@ sub add_item {
 }
 
 
-sub _date_from_dc_date {
-    my ($self, $string) = @_;
-    my $f = DateTime::Format::W3CDTF->new();
-    return $f->parse_datetime($string);
-}
-
-sub _date_from_rss2 {
-    my ($self, $string) = @_;
-    my $f = DateTime::Format::Mail->new();
-    return $f->parse_datetime($string);
-}
-
-sub _date_to_rss2 {
-    my ($self, $date) = @_;
-
-    my $pf = DateTime::Format::Mail->new();
-    return $pf->format_datetime($date);
-}
-
-sub _date_to_dc_date {
-    my ($self, $date) = @_;
-
-    my $pf = DateTime::Format::W3CDTF->new();
-    return $pf->format_datetime($date);
-}
-
-sub _channel_dc
-{
-    my ($self, $key) = @_;
-
-    if ($self->channel('dc')) {
-        return $self->channel('dc')->{$key};
-    }
-    else {
-        return undef;
-    }
-}
-
-sub _channel_syn
-{
-    my ($self, $key) = @_;
-
-    if ($self->channel('syn')) {
-        return $self->channel('syn')->{$key};
-    }
-    else {
-        return undef;
-    }
-}
-
-sub _calc_lastBuildDate_2_0 {
-    my $self = shift;
-    if (defined(my $d = $self->_channel_dc('date'))) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($d));
-    }
-    else
-    {
-        # If lastBuildDate is undef we can still return it because we
-        # need to return undef.
-        return $self->channel("lastBuildDate");
-    }
-}
-
-sub _calc_lastBuildDate_0_9_1 {
-    my $self = shift;
-    if (defined(my $d = $self->channel('lastBuildDate'))) {
-        return $d;
-    }
-    elsif (defined(my $d2 = $self->_channel_dc('date'))) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($d2));
-    }
-    else {
-        return undef;
-    }
-}
-
-
-sub _calc_pubDate {
-    my $self = shift;
-
-    if (defined(my $d = $self->channel('pubDate'))) {
-        return $d;
-    }
-    elsif (defined(my $d2 = $self->_channel_dc('date'))) {
-        return $self->_date_to_rss2($self->_date_from_dc_date($d2));
-    }
-    else {
-        return undef;
-    }
-}
-
-sub _get_other_dc_date {
-    my $self = shift;
-
-    if (defined(my $d1 = $self->channel('pubDate'))) {
-        return $d1;
-    }
-    elsif (defined(my $d2 = $self->channel('lastBuildDate'))) {
-        return $d2;
-    }
-    else {
-        return undef;
-    }
-}
-
-sub _calc_dc_date {
-    my $self = shift;
-
-    if (defined(my $d1 = $self->_channel_dc('date'))) {
-        return $d1;
-    }
-    else {
-        my $date = $self->_get_other_dc_date();
-
-        if (!defined($date)) {
-            return undef;
-        }
-        else {
-            return $self->_date_to_dc_date($self->_date_from_rss2($date));
-        }
-    }
-}
-
-sub _output_xml_declaration {
-    my $self = shift;
-
-    $self->_out('<?xml version="1.0" encoding="' . $self->{encoding} . '"?>' . "\n");
-    if (defined($self->{stylesheet})) {
-        my $style_url = $self->_encode($self->{stylesheet});
-        $self->_out(qq{<?xml-stylesheet type="text/xsl" href="$style_url"?>\n});
-    }
-
-    $self->_out("\n");
-
-    return undef;
-}
-
-sub _out_image_title_and_url {
-    my $self = shift;
-
-    return $self->_output_multiple_tags({ext => "image"}, [qw(title url)]);
-}
-
-sub _start_image {
-    my $self = shift;
-
-    $self->_start_top_elem("image", sub { $self->image('url') });
-
-    $self->_out_image_title_and_url();
-
-    $self->_output_def_image_tag("link");
-
-    return;
-}
-
-sub _start_item {
-    my ($self, $item) = @_;
-
-    $self->_start_top_elem("item", sub { $self->_get_item_about($item)});
-
-    $self->_output_common_item_tags($item);
-
-    return;
-}
-
-sub _end_top_level_elem {
-    my ($self, $elem) = @_;
-
-    $self->_out("</$elem>\n");
-}
-
-sub _end_item {
-    shift->_end_top_level_elem("item");
-}
-
-sub _end_image {
-    shift->_end_top_level_elem("image");
-}
-
-sub _end_channel {
-    shift->_end_top_level_elem("channel");
-}
-
-
-sub _output_def_item_tag {
-    my ($self, $item, $tag) = @_;
-
-    if (defined($item->{$tag})) {
-        $self->_output_item_tag($item, $tag);
-    }
-
-    return;
-}
-
-# Outputs the common item tags for RSS 0.9.1 and above.
-sub _output_common_item_tags {
-    my ($self, $item) = @_;
-
-    $self->_output_multiple_tags({ext => $item, 'defined' => ($self->_rss_out_version() eq "2.0")},
-        [qw(title link)],);
-
-    if ($self->_rss_out_version() ne "0.9") {
-        $self->_output_def_item_tag($item, "description");
-    }
-
-    return;
-}
-
-sub _output_channel_tag {
-    my ($self, $tag) = @_;
-
-    return $self->_out_inner_tag("channel", $tag);
-}
-
-sub _output_common_channel_elements {
-    my $self = shift;
-
-    $self->_output_multiple_tags("channel", [qw(title link description)],);
-}
-
-
-sub _out_language {
-    my $self = shift;
-
-    return $self->_out_channel_self_dc_field("language");
-}
-
-sub _start_channel {
-    my $self = shift;
-
-    $self->_start_top_elem("channel", sub { $self->_get_channel_rdf_about });
-
-    $self->_output_common_channel_elements();
-
-    if ($self->_rss_out_version() ne "0.9") {
-        $self->_out_language();
-    }
-
-    return;
-}
-
-# Calculates a channel field that has a dc: and non-dc alternative,
-# prefering the dc: one.
-sub _calc_channel_dc_field {
-    my ($self, $dc_key, $non_dc_key) = @_;
-
-    my $dc_value = $self->_channel_dc($dc_key);
-
-    return defined($dc_value) ? $dc_value : $self->channel($non_dc_key);
-}
-
-sub _prefer_dc {
-    my $self = shift;
-
-    if (@_) {
-        $self->{_prefer_dc} = shift;
-    }
-    return $self->{_prefer_dc};
-}
-
-
-sub _out_channel_dc_field {
-    my ($self, $dc_key, $non_dc_key) = @_;
-
-    return $self->_out_defined_tag(
-        ($self->_prefer_dc() ? "dc:$dc_key" : $non_dc_key),
-        $self->_calc_channel_dc_field($dc_key, $non_dc_key)
-    );
-}
-
-sub _out_channel_self_dc_field {
-    my ($self, $key) = @_;
-
-    return $self->_out_channel_dc_field($key, $key);
-}
-
-sub _out_managing_editor {
-    my $self = shift;
-
-    return $self->_out_channel_dc_field("publisher", "managingEditor");
-}
-
-sub _out_webmaster {
-    my $self = shift;
-
-    return $self->_out_channel_dc_field("creator", "webMaster");
-}
-
-sub _out_copyright {
-    my $self = shift;
-
-    return $self->_out_channel_dc_field("rights", "copyright");
-}
-
-sub _out_editors {
-    my $self = shift;
-
-    $self->_out_managing_editor;
-    $self->_out_webmaster;
-}
-
-sub _get_channel_rdf_about {
-    my $self = shift;
-
-    if (defined(my $about = $self->channel('about'))) {
-        return $about;
-    }
-    else {
-        return $self->channel('link');
-    }
-}
-
-sub _output_taxo_topics {
-    my ($self, $elem) = @_;
-
-    if (my $list = $elem->{'taxo'}) {
-        $self->_out("<taxo:topics>\n  <rdf:Bag>\n");
-        foreach my $taxo (@{$list}) {
-            $self->_out("    <rdf:li resource=\"" . $self->_encode($taxo) . "\" />\n");
-        }
-        $self->_out("  </rdf:Bag>\n</taxo:topics>\n");
-    }
-
-    return;
-}
-
-# Output the Dublin core properties of a certain elements (channel, image,
-# textinput, item).
-
-sub _out_dc_elements {
-    my $self      = shift;
-    my $elem      = shift;
-    my $skip_hash = shift || {};
-
-    foreach my $dc (keys %dc_ok_fields) {
-        next if $skip_hash->{$dc};
-
-        $self->_out_defined_tag("dc:$dc", $elem->{dc}->{$dc});
-    }
-
-    return;
-}
-
-# Output the Ad-hoc modules
-sub _out_modules_elements {
-    my ($self, $super_elem) = @_;
-
-    # Ad-hoc modules
-    while (my ($url, $prefix) = each %{$self->{modules}}) {
-        next if $prefix =~ /^(dc|syn|taxo)$/;
-        while (my ($el, $value) = each %{$super_elem->{$prefix}}) {
-            if (    exists($rdf_resource_fields{$url})
-                and exists($rdf_resource_fields{$url}{$el}))
-            {
-                $self->_out(
-                    qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
-            }
-            else {
-                $self->_out_ns_tag($prefix, $el, $value);
-            }
-        }
-    }
-
-    return;
-}
-
-sub _out_complete_outer_tag {
-    my ($self, $outer, $inner) = @_;
-
-    my $value = $self->{$outer}->{$inner};
-
-    if (defined($value)) {
-        $self->_out("<$outer>\n");
-        $self->_out_tag($inner, $value);
-        $self->_end_top_level_elem($outer);
-    }
-}
-
-sub _out_skip_tag {
-    my ($self, $what) = @_;
-
-    return $self->_out_complete_outer_tag("skip\u${what}s", $what);
-}
-
-sub _out_skip_hours {
-    return shift->_out_skip_tag("hour");
-}
-
-sub _out_skip_days {
-    return shift->_out_skip_tag("day");
-}
-
-sub _get_item_about
-{
-    my ($self, $item) = @_;
-    return defined($item->{'about'}) ? $item->{'about'} : $item->{'link'};
-}
-
-sub _output_defined_image {
-    my $self = shift;
-
-    $self->_start_image();
-
-    my $ver = $self->_rss_out_version();
-
-    if (($ver eq "0.91") || ($ver eq "2.0")) {
-        # link, image width, image height and description
-        $self->_output_multiple_tags(
-            {ext => "image", 'defined' => 1},
-            [qw(width height description)],
-        );
-    }
-
-    if ($ver eq "1.0") {
-        # image width
-        #$output .= '<rss091:width>'.$self->{image}->{width}.'</rss091:width>'."\n"
-        #    if $self->{image}->{width};
-
-        # image height
-        #$output .= '<rss091:height>'.$self->{image}->{height}.'</rss091:height>'."\n"
-        #    if $self->{image}->{height};
-
-        # description
-        #$output .= '<rss091:description>'.$self->{image}->{description}.'</rss091:description>'."\n"
-        #    if $self->{image}->{description};
-
-        $self->_out_dc_elements($self->image());
-    }
-
-    if (($ver eq "1.0") || ($ver eq "2.0"))
-    {
-        # Ad-hoc modules for images
-        $self->_out_modules_elements($self->image());
-    }
-
-    $self->_end_image();
-}
-
-sub _is_image_defined {
-    my $self = shift;
-
-    return defined ($self->image('url'));
-}
-
-sub _output_complete_image {
-    my $self = shift;
-
-    if ($self->_is_image_defined())
-    {
-        $self->_output_defined_image();
-    }
-}
-
-sub _out_seq_items {
-    my $self = shift;
-
-    # Seq items
-    $self->_out("<items>\n <rdf:Seq>\n");
-
-    foreach my $item (@{$self->{items}}) {
-        $self->_out('  <rdf:li rdf:resource="' .
-            $self->_encode($self->_get_item_about($item)) .
-            '" />' . "\n");
-    }
-
-    $self->_out(" </rdf:Seq>\n</items>\n");
-}
-
-sub _get_rdf_decl_mappings
-{
-    my $self = shift;
-
-    my $modules = $self->{modules};
-
-    return
-    [
-        (
-            ($self->_rss_out_version() eq "1.0") ?
-            (
-                ["rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#"],
-                [undef, "http://purl.org/rss/1.0/"]
-            ) :
-            ()
-        ),
-        map { [$modules->{$_}, $_] } keys(%$modules)
-    ];
-}
-
-sub _render_xmlns {
-    my ($self, $prefix, $url) = @_;
-
-    my $pp = defined($prefix) ? ":$prefix" : "";
-    
-    return qq{ xmlns$pp="$url"\n};
-}
-
-sub _get_rdf_xmlnses {
-    my $self = shift;
-
-    return 
-        join("",
-            map { $self->_render_xmlns(@$_) }
-            @{$self->_get_rdf_decl_mappings}
-        );
-}
-
-sub _get_rdf_decl_open_tag
-{
-    my $self = shift;
-
-    return ($self->_rss_out_version() eq "1.0") ? "<rdf:RDF\n" : 
-        qq{<rss version="2.0"\n};
-}
-
-sub _get_0_9_rdf_decl
-{
-    return
-    qq{<rdf:RDF\nxmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n} .
-    qq{xmlns="http://my.netscape.com/rdf/simple/0.9/">\n\n};
-}
-
-sub _get_0_9_1_rdf_decl
-{
-    return
-    qq{<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"\n} .
-    qq{            "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n} .
-    qq{<rss version="0.91">\n\n};
-}
-
-sub _get_rdf_decl
-{
-    my $self = shift;
-
-    my $ver = $self->_rss_out_version();
-
-    if ($ver eq "0.9")
-    {
-        return $self->_get_0_9_rdf_decl();
-    }
-    elsif ($ver eq "0.91")
-    {
-        return $self->_get_0_9_1_rdf_decl();
-    }
-    else
-    {
-        return $self->_get_rdf_decl_open_tag() .
-            $self->_get_rdf_xmlnses() . ">\n\n";
-    }
-}
-
-sub _out_rdf_decl
-{
-    my $self = shift;
-
-    return $self->_out($self->_get_rdf_decl);
-}
-
-sub _out_guid {
-    my ($self, $item) = @_;
-
-    # The unique identifier. Use 'permaLink' for an external
-    # identifier, or 'guid' for a internal string.
-    # (I call it permaLink in the hash for purposes of clarity.)
-
-    for my $guid (qw(permaLink guid)) {
-        if (defined $item->{$guid}) {
-            $self->_out('<guid isPermaLink="'
-              . ($guid eq 'permaLink' ? 'true' : 'false') . '">'
-              . $self->_encode($item->{$guid})
-              . '</guid>' . "\n");
-            last;
-        }
-    }
-}
-
-sub _out_item_source {
-    my ($self, $item) = @_;
-    
-    if (defined $item->{source} && defined $item->{sourceUrl}) {
-        $self->_out('<source url="'
-          . $self->_encode($item->{sourceUrl}) . '">'
-          . $self->_encode($item->{source})
-          . "</source>\n");
-    }
-}
-
-sub _out_item_enclosure {
-    my ($self, $item) = @_;
-
-    if (my $e = $item->{enclosure}) {
-        $self->_out(
-            "<enclosure " .
-            join(' ', 
-                map { "$_=\"" . $self->_encode($e->{$_}) . '"' } keys(%$e)
-            ) .
-            " />\n"
-        );
-    }
-}
-
-sub _get_filtered_items {
-    my ($self) = @_;
-
-    my $items = $self->{items};
-
-    if ($self->_rss_out_version() eq "2.0") {
-        return
-        [
-            grep {exists($_->{title}) || exists($_->{description})}
-                @$items
-        ];
-    }
-    else {
-        return $items;
-    }
-}
-
-sub _out_item_2_0_tags {
-    my ($self, $item) = @_;
-
-    foreach my $tag (qw(author category comments)) {
-        $self->_output_def_item_tag($item, $tag);
-    }
-
-    $self->_out_guid($item);
-
-    $self->_output_def_item_tag($item, "pubDate");
-
-    $self->_out_item_source($item);
-
-    $self->_out_item_enclosure($item);
-}
-
-sub _output_single_item {
-    my ($self, $item) = @_;
-
-    my $ver = $self->_rss_out_version();
-
-    $self->_start_item($item);
-
-    if ($ver eq "2.0") {
-        $self->_out_item_2_0_tags($item);
-    }
-
-    if ($ver eq "1.0") {
-        $self->_out_dc_elements($item);
-
-        # Taxonomy module
-        $self->_output_taxo_topics($item);
-    }
-
-    if (($ver eq "1.0") || ($ver eq "2.0")) {
-        $self->_out_modules_elements($item);
-    }
-
-    $self->_end_item($item);
-}
-
-sub _output_items {
-    my $self = shift;
-
-    foreach my $item (@{$self->_get_filtered_items}) {
-        $self->_output_single_item($item);
-    }
-}
-
-sub _output_main_elements {
-    my $self = shift;
-
-    $self->_output_complete_image();
-
-    $self->_output_items;
-
-    $self->_output_complete_textinput();
-}
-
-# Outputs the last elements - for RSS versions 0.9.1 and 2.0 .
-sub _out_last_elements {
-    my $self = shift;
-
-    $self->_out("\n");
-
-    $self->_output_main_elements;
-
-    $self->_out_skip_hours();
-
-    $self->_out_skip_days();
-
-    $self->_end_channel;
-}
-
-sub _calc_prefer_dc {
-    my $self = shift;
-    return ($self->_rss_out_version() eq "1.0");
-}
-
-sub _output_xml_start {
-    my ($self, $ver) = @_;
-
-    $self->_rss_out_version($ver);
-    $self->_prefer_dc($self->_calc_prefer_dc());
-
-    $self->_output_xml_declaration();
-
-    $self->_out_rdf_decl;
-
-    $self->_start_channel();
-}
-
-sub _get_end_tag_map
-{
-    return
-    { 
-        (map { $_ => "rdf:RDF" } qw(0.9 1.0)),
-        (map { $_ => "rss" } qw(0.91 2.0)),
-    };
-}
-
-sub _get_end_tag {
-    my $self = shift;
-
-    return $self->_get_end_tag_map()->{$self->_rss_out_version()};
-}
-
-sub _out_end_tag {
-    my $self = shift;
-
-    return $self->_out("</" . $self->_get_end_tag() . ">");
-}
-
-sub _out_all_modules_elems {
-    my $self = shift;
-
-    # Dublin Core module
-    $self->_out_dc_elements($self->channel(),
-        {map { $_ => 1 } qw(language creator publisher rights date)},
-    );
-
-    # Syndication module
-    foreach my $syn (keys %syn_ok_fields) {
-        if (defined(my $value = $self->_channel_syn($syn))) {
-            $self->_out_ns_tag("syn", $syn, $value);
-        }
-    }
-
-    # Taxonomy module
-    $self->_output_taxo_topics($self->channel());
-
-    $self->_out_modules_elements($self->channel());
-}
-
-sub _calc_lastBuildDate {
-    my $self = shift;
-
-    if ($self->_rss_out_version() eq "0.91") {
-        return $self->_calc_lastBuildDate_0_9_1();
-    }
-    else {
-        return $self->_calc_lastBuildDate_2_0();
-    }
-}
-
-sub _out_dates {
-    my $self = shift;
-
-    $self->_out_defined_tag("pubDate", $self->_calc_pubDate());
-    $self->_out_defined_tag("lastBuildDate", $self->_calc_lastBuildDate());
-}
-
-sub _output_0_9_rss_middle {
-    my $self = shift;
-
-    $self->_end_channel();
-    $self->_output_main_elements;
-}
-
-sub _output_0_9_1_rss_middle {
-    my $self = shift;
-
-    # PICS rating
-    $self->_out_def_chan_tags("rating");
-
-    $self->_out_copyright();
-
-    $self->_out_dates();
-
-    # external CDF URL
-    $self->_out_def_chan_tags("docs");
-
-    $self->_out_editors;
-
-    $self->_out_last_elements;
-}
-
-sub _output_1_0_rss_middle {
-    my $self = shift;
-
-    # PICS rating - Dublin Core has not decided how to incorporate PICS ratings yet
-    #$$output .= '<rss091:rating>'.$self->{channel}->{rating}.'</rss091:rating>'."\n"
-    #$if $self->{channel}->{rating};
-
-    $self->_out_copyright();
-
-    # publication date
-    $self->_out_defined_tag("dc:date", $self->_calc_dc_date());
-
-    # external CDF URL
-    #$output .= '<rss091:docs>'.$self->{channel}->{docs}.'</rss091:docs>'."\n"
-    #if $self->{channel}->{docs};
-
-    $self->_out_editors;
-
-    $self->_out_all_modules_elems;
-
-    $self->_out_seq_items();
-
-    if ($self->_is_image_defined()) {
-        $self->_out('<image rdf:resource="' .
-            $self->_encode($self->{image}->{url}) . "\" />\n"
-        );
-    }
-
-    if (defined($self->{textinput}->{'link'})) {
-        $self->_out('<textinput rdf:resource="'
-          . $self->_encode($self->{textinput}->{'link'}) . "\" />\n"
-        );
-    }
-
-    $self->_end_channel;
-
-    $self->_output_main_elements;
-}
-
-sub _to_array_ref {
-    my ($self, $items) = @_;
-    return +(ref($items) eq "ARRAY") ? $items : [$items];
-}
-
-sub _out_def_chan_tags {
-    my ($self, $tags) = @_;
-    return $self->_output_multiple_tags(
-        {ext => "channel", 'defined' => 1}, 
-        $self->_to_array_ref($tags)
-    );
-}
-
-sub _output_2_0_rss_middle {
-    my $self = shift;
-
-    # PICS rating
-    # Not supported by RSS 2.0
-    # $output .= '<rating>'.$self->{channel}->{rating}.'</rating>'."\n"
-    #    if $self->{channel}->{rating};
-
-    # copyright
-    $self->_out_copyright();
-
-    $self->_out_dates();
-
-    # external CDF URL
-    $self->_out_def_chan_tags("docs");
-
-    $self->_out_editors;
-
-    $self->_out_channel_self_dc_field("category");
-    $self->_out_channel_self_dc_field("generator");
-
-    # Insert cloud support here
-
-    # ttl
-    $self->_out_channel_self_dc_field("ttl");
-
-    $self->_out_modules_elements($self->channel());
-
-    $self->_out_last_elements;
-}
-
-sub _get_rss_middle_method_map {
-    return {
-        "0.9" => '_output_0_9_rss_middle',
-        "0.91" => '_output_0_9_1_rss_middle',
-        "1.0" => '_output_1_0_rss_middle',
-        "2.0" => '_output_2_0_rss_middle',
-    };
-}
-
-sub _output_rss_middle {
-    my $self = shift;
-
-    my $method = $self->_get_rss_middle_method_map()->{$self->_rss_out_version};
-
-    return $self->$method();
-}
-
 # $self->_render_complete_rss_output($xml_version)
 #
 # This function is the workhorse of the XML output and does all the work of
@@ -1564,17 +432,42 @@ sub _output_rss_middle {
 #
 # It accepts the requested version number as its argument.
 
+sub _get_rendering_class {
+    my ($self, $ver) = @_;
+
+    if ($ver eq "1.0")
+    {
+        return "XML::RSS::Private::Output::V1_0";
+    }
+    elsif ($ver eq "0.9")
+    {
+        return "XML::RSS::Private::Output::V0_9";
+    }
+    elsif ($ver eq "0.91")
+    {
+        return "XML::RSS::Private::Output::V0_91";
+    }
+    else
+    {
+        return "XML::RSS::Private::Output::V2_0";
+    }
+}
+
+sub _get_rendering_obj {
+    my ($self, $ver) = @_;
+
+    return $self->_get_rendering_class($ver)->new(
+        {
+            main => $self,
+            version => $ver,
+        }
+    );
+}
 
 sub _render_complete_rss_output {
     my ($self, $ver) = @_;
 
-    $self->_output_xml_start($ver);
-
-    $self->_output_rss_middle;
-
-    $self->_out_end_tag;
-
-    return $self->_flush_output();
+    return $self->_get_rendering_obj($ver)->_render_complete_rss_output();
 }
 
 sub as_rss_0_9 {
@@ -1640,22 +533,28 @@ sub as_string {
 sub _my_in_element {
     my ($self, $elem) = @_;
 
-    return $self->within_element($elem)
-      || $self->within_element($self->generate_ns_name($elem, $self->{rss_namespace}));
+    my $parser = $self->_parser;
+
+    return $parser->within_element($elem)
+        || $parser->within_element(
+            $parser->generate_ns_name($elem, $self->{rss_namespace})
+        );
 }
 
 sub _get_elem_namespace_helper {
     my ($self, $el) = @_;
 
-    my $ns = $self->namespace($el);
+    my $ns = $self->_parser->namespace($el);
 
     return (defined($ns) ? $ns : "");
 }
 
 sub _get_elem_namespace {
-    my ($self, $el) = @_;
+    my $self = shift;
 
-    my $ns = _get_elem_namespace_helper(@_);
+    my ($el) = @_;
+
+    my $ns = $self->_get_elem_namespace_helper(@_);
 
     my $verdict = (!$ns && !$self->{rss_namespace})
       || ($ns eq $self->{rss_namespace});
@@ -1663,142 +562,161 @@ sub _get_elem_namespace {
     return ($ns, $verdict);
 }
 
+sub _current_element {
+    my $self = shift;
+
+    return $self->_parser->current_element;
+}
+
 sub _get_current_namespace {
     my $self = shift;
 
-    return _get_elem_namespace($self, $self->current_element);
+    return $self->_get_elem_namespace($self->_current_element);
 }
 
-sub handle_char {
+sub _is_rdf_resource {
+    my $self = shift;
+    my $el = shift;
+
+    my $ns = shift;
+    if (!defined($ns))
+    {
+        $ns = $self->_parser->namespace($el);
+    }
+    
+    return (
+           exists($self->_rdf_resource_fields->{ $ns })
+        && exists($self->_rdf_resource_fields->{ $ns }{ $el })
+    );
+}
+
+sub _append_text_to_elem_struct {
+    my ($self, $struct, $cdata, $mapping_sub) = @_;
+
+    my $elem = $self->_current_element;
+
+    my ($ns, $verdict) = $self->_get_current_namespace;
+
+    # If it's in the default namespace
+    if ($verdict) {
+        $struct->{$mapping_sub->($struct, $elem)} .= $cdata;
+    }
+    else {
+        # If it's in another namespace
+        $struct->{$ns}->{$elem} .= $cdata;
+
+        # If it's in a module namespace, provide a friendlier prefix duplicate
+        if ($self->{modules}->{$ns}) {
+            $struct->{$self->{modules}->{$ns}}->{$elem} .= $cdata;
+        }
+    }
+
+    return;
+}
+
+sub _return_elem {
+    my ($struct, $elem) = @_;
+    return $elem;
+}
+
+sub _append_text_to_elem {
+    my ($self, $ext_tag, $cdata) = @_;
+
+    return $self->_append_text_to_elem_struct(
+        $self->$ext_tag(),
+        $cdata,
+        \&_return_elem,
+    );
+}
+
+sub _within_topics {
+    my $self = shift;
+
+    my $parser = $self->_parser;
+
+    return $parser->within_element(
+        $parser->generate_ns_name(
+            "topics", 'http://purl.org/rss/1.0/modules/taxonomy/'
+        )
+    );
+}
+
+sub _return_item_elem {
+    my ($item, $elem) = @_;
+    if ($elem eq "guid") {
+        return $item->{isPermaLink} ? "permaLink" : "guid";
+    }
+    else {
+        return $elem;
+    }
+}
+
+sub _append_text_to_item {
+    my ($self, $cdata) = @_;
+
+    if (@{$self->{'items'}} < $self->{num_items}) {
+        push @{$self->{items}}, {};
+    }
+
+    $self->_append_text_to_elem_struct(
+        $self->{'items'}->[$self->{num_items} - 1],
+        $cdata,
+        \&_return_item_elem,
+    );
+}
+sub _handle_char {
     my ($self, $cdata) = (@_);
 
     # image element
-    if (_my_in_element($self, "image")) {
-        my ($ns, $verdict) = _get_current_namespace($self);
-
-        # If it's in the default namespace
-        if ($verdict) {
-            $self->{'image'}->{$self->current_element} .= $cdata;
-        }
-        else {
-
-            # If it's in another namespace
-            $self->{'image'}->{$ns}->{$self->current_element} .= $cdata;
-
-            # If it's in a module namespace, provide a friendlier prefix duplicate
-            $self->{modules}->{$ns}
-              and $self->{'image'}->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
-        }
-
-        # item element
+    if ($self->_my_in_element("image")) {
+        $self->_append_text_to_elem("image", $cdata);
     }
+    # item element
     elsif (defined($self->{_inside_item_elem})) {
-        return
-          if $self->within_element(
-            $self->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/'));
+        return if $self->_within_topics;
 
-        my ($ns, $verdict) = _get_current_namespace($self);
-
-        # If it's in the default RSS 1.0 namespace
-        if ($verdict) {
-            my $elem = $self->current_element;
-            if (@{$self->{'items'}} < $self->{num_items}) {
-                push @{$self->{items}}, {};
-            }
-            my $item = $self->{'items'}->[$self->{num_items} - 1];
-            if ($elem eq "guid") {
-                $item->{$item->{isPermaLink} ? "permaLink" : "guid"} .= $cdata;
-            }
-            else {
-                $item->{$elem} .= $cdata;
-            }
-        }
-        else {
-
-            # If it's in another namespace
-            $self->{'items'}->[$self->{num_items} - 1]->{$ns}->{$self->current_element} .= $cdata;
-
-            # If it's in a module namespace, provide a friendlier prefix duplicate
-            $self->{modules}->{$ns}
-              and $self->{'items'}->[$self->{num_items} - 1]->{$self->{modules}->{$ns}}
-              ->{$self->current_element} .= $cdata;
-        }
-
-        # textinput element
+        $self->_append_text_to_item($cdata);
     }
+    # textinput element
     elsif (
-
-        # We cannot call these as methods because of the catch that
-        # XML::Parser uses XML::Parser::Expat to do the caching which is a
-        # distinct object than our own parser.
-        _my_in_element($self, "textinput") || _my_in_element($self, "textInput")
+        $self->_my_in_element("textinput") || $self->_my_in_element("textInput")
       )
     {
-        my ($ns, $verdict) = _get_current_namespace($self);
-
-        # If it's in the default namespace
-        if ($verdict) {
-            $self->{'textinput'}->{$self->current_element} .= $cdata;
-        }
-        else {
-
-            # If it's in another namespace
-            $self->{'textinput'}->{$ns}->{$self->current_element} .= $cdata;
-
-            # If it's in a module namespace, provide a friendlier prefix duplicate
-            $self->{modules}->{$ns}
-              and $self->{'textinput'}->{$self->{modules}->{$ns}}->{$self->current_element}
-              .= $cdata;
-        }
-
-        # skipHours element
+        $self->_append_text_to_elem("textinput", $cdata);
     }
-    elsif (_my_in_element($self, "skipHours")) {
-        $self->{'skipHours'}->{$self->current_element} .= $cdata;
+    # skipHours element
+    elsif ($self->_my_in_element("skipHours")) {
+        $self->{'skipHours'}->{$self->_current_element} .= $cdata;
 
-        # skipDays element
     }
-    elsif (_my_in_element($self, "skipDays")) {
-        $self->{'skipDays'}->{$self->current_element} .= $cdata;
+    # skipDays element
+    elsif ($self->_my_in_element("skipDays")) {
+        $self->{'skipDays'}->{$self->_current_element} .= $cdata;
 
-        # channel element
     }
-    elsif ($self->within_element("channel")
-        || $self->within_element($self->generate_ns_name("channel", $self->{rss_namespace})))
-    {
-        return
-          if $self->within_element(
-            $self->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/'));
+    # channel element
+    elsif ($self->_my_in_element("channel")) {
+        return if $self->_within_topics;
 
-        my ($ns, $verdict) = _get_current_namespace($self);
-
-        # If it's in the default namespace
-        if ($verdict) {
-            $self->{'channel'}->{$self->current_element} .= $cdata;
-        }
-        else {
-
-            # If it's in another namespace
-            $self->{'channel'}->{$ns}->{$self->current_element} .= $cdata;
-
-            # If it's in a module namespace, provide a friendlier prefix duplicate
-            $self->{modules}->{$ns}
-              and $self->{'channel'}->{$self->{modules}->{$ns}}->{$self->current_element} .= $cdata;
-        }
+        $self->_append_text_to_elem("channel", $cdata);
     }
 }
 
-sub handle_dec {
+sub _handle_dec {
     my ($self, $version, $encoding, $standalone) = (@_);
     $self->{encoding} = $encoding;
 
     #print "ENCODING: $encoding\n";
 }
 
-sub handle_start {
+
+
+sub _handle_start {
     my $self    = shift;
     my $el      = shift;
     my %attribs = @_;
+
+    my $parser = $self->_parser;
 
     # beginning of RSS 0.91
     if ($el eq 'rss') {
@@ -1812,9 +730,9 @@ sub handle_start {
         # beginning of RSS 1.0 or RSS 0.9
     }
     elsif ($el eq 'RDF') {
-        my @prefixes = $self->new_ns_prefixes;
+        my @prefixes = $parser->new_ns_prefixes;
         foreach my $prefix (@prefixes) {
-            my $uri = $self->expand_ns_prefix($prefix);
+            my $uri = $parser->expand_ns_prefix($prefix);
             $self->{namespaces}->{$prefix} = $uri;
 
             #print "$prefix = $uri\n";
@@ -1854,7 +772,7 @@ sub handle_start {
 
         # deal with trouble makers who use mod_content :)
 
-        my ($ns, $verdict) = _get_elem_namespace($self, $el);
+        my ($ns, $verdict) = $self->_get_elem_namespace($el);
 
         if ($verdict) {
 
@@ -1864,7 +782,7 @@ sub handle_start {
 
                 # increment item count
                 $self->{num_items}++;
-                $self->{_inside_item_elem} = $self->depth();
+                $self->{_inside_item_elem} = $parser->depth();
             }
         }
 
@@ -1878,11 +796,11 @@ sub handle_start {
         #'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
     }
     elsif (
-        $self->within_element(
-            $self->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/')
+        $parser->within_element(
+            $parser->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/')
         )
-        && $self->within_element($self->generate_ns_name("item", $namespace_map->{'rss10'}))
-        && $self->current_element eq 'Bag'
+        && $parser->within_element($parser->generate_ns_name("item", $namespace_map->{'rss10'}))
+        && $self->_current_element eq 'Bag'
         && $el                    eq 'li'
       )
     {
@@ -1894,11 +812,11 @@ sub handle_start {
         # beginning of taxo li in channel element
     }
     elsif (
-        $self->within_element(
-            $self->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/')
+        $parser->within_element(
+            $parser->generate_ns_name("topics", 'http://purl.org/rss/1.0/modules/taxonomy/')
         )
-        && $self->within_element($self->generate_ns_name("channel", $namespace_map->{'rss10'}))
-        && $self->current_element eq 'Bag'
+        && $parser->within_element($parser->generate_ns_name("channel", $namespace_map->{'rss10'}))
+        && $self->_current_element eq 'Bag'
         && $el                    eq 'li'
       )
     {
@@ -1907,15 +825,14 @@ sub handle_start {
     }
 
     # beginning of a channel element that stores its info in rdf:resource
-    elsif ( $self->namespace($el)
-        and exists($rdf_resource_fields{$self->namespace($el)})
-        and exists($rdf_resource_fields{$self->namespace($el)}{$el})
-        and $self->current_element eq 'channel')
+    elsif ( $parser->namespace($el) 
+        && $self->_is_rdf_resource($el) 
+        && $self->_current_element eq 'channel')
     {
-        my $ns = $self->namespace($el);
+        my $ns = $parser->namespace($el);
 
         # Commented out by shlomif - the RSS namespaces are not present
-        # in the %rdf_resource_fields so this condition always evaluates
+        # in the 'rdf_resource_fields' so this condition always evaluates
         # to false.
         # if ( $ns eq $self->{rss_namespace} ) {
         #     $self->{channel}->{$el} = $attribs{resource};
@@ -1935,15 +852,14 @@ sub handle_start {
     }
 
     # beginning of an item element that stores its info in rdf:resource
-    elsif ( $self->namespace($el)
-        and exists($rdf_resource_fields{$self->namespace($el)})
-        and exists($rdf_resource_fields{$self->namespace($el)}{$el})
-        and $self->current_element eq 'item')
+    elsif ( $parser->namespace($el)
+        && $self->_is_rdf_resource($el)
+        && $self->_current_element eq 'item')
     {
-        my $ns = $self->namespace($el);
+        my $ns = $parser->namespace($el);
 
         # Commented out by shlomif - the RSS namespaces are not present
-        # in the %rdf_resource_fields so this condition always evaluates
+        # in the 'rdf_resource_fields' so this condition always evaluates
         # to false.
         # if ( $ns eq $self->{rss_namespace} ) {
         #   $self->{'items'}->[$self->{num_items}-1]->{ $el } = $attribs{resource};
@@ -1960,7 +876,7 @@ sub handle_start {
             }
         }
     }
-    elsif ($empty_ok_elements{$el} and $self->current_element eq 'item') {
+    elsif ($empty_ok_elements{$el} and $self->_current_element eq 'item') {
         $self->{items}->[$self->{num_items} - 1]->{$el} = \%attribs;
     }
 }
@@ -1969,7 +885,7 @@ sub _handle_end {
     my ($self, $el) = @_;
 
     if (defined($self->{_inside_item_elem})
-        && $self->{_inside_item_elem} == $self->depth())
+        && $self->{_inside_item_elem} == $self->_parser->depth())
     {
         delete($self->{_inside_item_elem});
     }
@@ -1991,9 +907,61 @@ sub _auto_add_modules {
     $self;
 }
 
+sub _parser {
+    my $self = shift;
+
+    if (@_) {
+        $self->{_parser} = shift;
+    }
+    return $self->{_parser};
+}
+
+sub _get_parser {
+    my $self = shift;
+
+    return XML::Parser->new(
+        Namespaces    => 1,
+        NoExpand      => 1,
+        ParseParamEnt => 0,
+        Handlers      => {
+            Char    => sub {
+                my ($parser, $cdata) = @_;
+                $self->_parser($parser);
+                $self->_handle_char($cdata);
+                # Detach the parser to avoid reference loops.
+                $self->_parser(undef);
+            },
+            XMLDecl => sub {
+                my $parser = shift;
+                $self->_parser($parser);
+                $self->_handle_dec(@_);
+                # Detach the parser to avoid reference loops.
+                $self->_parser(undef);
+            },
+            Start   => sub {
+                my $parser = shift;
+                $self->_parser($parser);
+                $self->_handle_start(@_);
+                # Detach the parser to avoid reference loops.
+                $self->_parser(undef);
+            },
+            End     => sub {
+                my $parser = shift;
+                $self->_parser($parser);
+                $self->_handle_end(@_);
+                # Detach the parser to avoid reference loops.
+                $self->_parser(undef);
+            },
+        }
+    );    
+}
+
+
 sub parse {
     my $self = shift;
-    $self->_initialize((%$self));
+    my $text_to_parse = shift;
+
+    $self->_reset;
 
     # Workaround to make sure that if we were defined with version => "2.0"
     # then we can still parse 1.0 and 0.9.x feeds correctly.
@@ -2001,14 +969,16 @@ sub parse {
         $self->{modules} = +{%{$self->_get_default_modules()}, %{$self->{modules}}};
     }
 
-    $self->SUPER::parse(shift);
+    $self->_get_parser()->parse($text_to_parse);
+
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
 }
 
 sub parsefile {
     my $self = shift;
-    $self->_initialize((%$self));
+
+    $self->_reset;
 
     # Workaround to make sure that if we were defined with version => "2.0"
     # then we can still parse 1.0 and 0.9.x feeds correctly.
@@ -2016,7 +986,8 @@ sub parsefile {
         $self->{modules} = +{%{$self->_get_default_modules()}, %{$self->{modules}}};
     }
 
-    $self->SUPER::parsefile(shift);
+    $self->_get_parser()->parsefile(shift);
+
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
 }
@@ -2089,6 +1060,11 @@ sub _handle_accessor {
     #}
 }
 
+sub _modules {
+    my $self = shift;
+    return $self->_handle_accessor("modules", @_);;
+}
+
 sub channel {
     my $self = shift;
 
@@ -2119,27 +1095,30 @@ sub skipHours {
     return $self->_handle_accessor("skipHours", @_);
 }
 
-sub _encode {
-    my ($self, $text) = @_;
+### Read only, scalar accessors
 
-    if (!defined($text)) {
-        confess "\$text is undefined in XML::RSS::_encode(). We don't know how " . "to handle it!";
-    }
+sub _encode_output {
+    my $self = shift;
 
-    return $text unless $self->{'encode_output'};
+    return $self->{'encode_output'};
+}
 
-    my $encoded_text = '';
+sub _encoding {
+    my $self = shift;
 
-    while ($text =~ s/(.*?)(\<\!\[CDATA\[.*?\]\]\>)//s) {
+    return $self->{'encoding'};
+}
 
-        # we use &named; entities here because it's HTML
-        $encoded_text .= encode_entities($1) . $2;
-    }
+sub _stylesheet {
+    my $self = shift;
 
-    # we use numeric entities here because it's XML
-    $encoded_text .= encode_entities_numeric($text);
+    return $self->{'stylesheet'};
+}
 
-    return $encoded_text;
+sub _get_items {
+    my $self = shift;
+
+    return $self->{items};
 }
 
 1;
