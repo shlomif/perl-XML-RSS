@@ -11,12 +11,16 @@ push(@extras,
      AUTHOR        => ' Ask Bjoern Hansen <ask@develooper.com>')
     if ($ExtUtils::MakeMaker::Version >= 5.4301);
 
-sub ExtUtils::MM_Any::test_via_harness {
-    my($self, $perl, $tests) = @_;
-    
-    return qq|\t$perl "-MTest::Manifest" | .
-      qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | .
-        qq|'\$(INST_ARCHLIB)')"\n|;
+{
+    package MY;
+
+    sub test_via_harness {
+        my($self, $perl, $tests) = @_;
+        
+        return qq|\t$perl "-MTest::Manifest" | .
+          qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | .
+            qq|'\$(INST_ARCHLIB)')"\n|;
+    }
 }
 
 sub MY::postamble {
