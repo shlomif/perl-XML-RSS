@@ -23,7 +23,7 @@ sub MY::postamble {
     return <<'MAKE_FRAG';
 
 runtest: pure_all
-	perl -MFile::Spec -MTest::Run::CmdLine::Iface -MTest::Manifest -e \
+	$(PERLRUNINST) -MFile::Spec -MTest::Run::CmdLine::Iface -MTest::Manifest -e \
         "local @INC = @INC;	unshift @INC, map { File::Spec->rel2abs(\$$_) } ('$(INST_LIB)', '$(INST_ARCHLIB)'); Test::Run::CmdLine::Iface->new({test_files => [Test::Manifest::get_t_files()]})->run();"
 
 distruntest: distdir
