@@ -22,6 +22,19 @@ Revision history for Perl module XML::RSS
        - perltidy configuration file; run perltidy on XML::RSS (and 
          intentionally not on the tests) (ABH).
        - Removed the remaining tab characters. (Shlomif)
+       - Fixed a bug in one of the tests. (Shlomif)
+       - Converted the rendering processes of the various RSS versions to 
+         one class per RSS version and applied the "Convert Conditionals
+         to Polymorphism" refactoring. (Shlomif)
+       - Removed the languages hash which was completely unused. (Shlomif)
+       - Converted the parsing routines to be methods of XML::RSS to increase
+         modularity. XML::RSS no longer inherits from XML::Parser. (Shlomif)
+       - Extracted several methods from the parsing stage. (Shlomif)
+       - Added a regression test to 
+         https://rt.cpan.org/Ticket/Display.html?id=24742   (Shlomif)
+       - Tweaked the Makefile.PL Test::Run integration according to:
+         http://www.nntp.perl.org/group/perl.qa/2006/11/msg7400.html
+         (Shlomif)
 
 1.22 - December 17th, 2006 
        - Fix XML::Feed compatability. Make sure $item->{content} is always setup
