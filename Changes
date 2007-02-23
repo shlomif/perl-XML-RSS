@@ -1,6 +1,6 @@
 Revision history for Perl module XML::RSS
 
-1.29_01 - February 23, 2007
+1.29_02 - February 23, 2007
        - Removed some methods that were not used.
        - Added more tests to increase the test coverage.
        - Fixed a bug where prefixes could be specified with invalid characters
