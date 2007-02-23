@@ -72,3 +72,4 @@ t/version.t
 t/xml-header.t
 testlib/Test/Run/CmdLine/WithTestManifest.pm
 TODO
+MANIFEST

@@ -14,7 +14,7 @@ use XML::RSS::Private::Output::V2_0;
 
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
-$VERSION = '1.29_01';
+$VERSION = '1.29_02';
 
 $AUTO_ADD = 0;
 
@@ -1593,7 +1593,7 @@ L<http://svn.perl.org/modules/XML-RSS/>
 =head1 COPYRIGHT
 
 Copyright (c) 2001 Jonathan Eisenzopf <eisen@pobox.com> and Rael
-Dornfest <rael@oreilly.com>, Copyright (C) 2006 Ask Bjoern Hansen
+Dornfest <rael@oreilly.com>, Copyright (C) 2006-2007 Ask Bjoern Hansen
 <ask@develooper.com>.
 
 XML::RSS is free software. You can redistribute it and/or

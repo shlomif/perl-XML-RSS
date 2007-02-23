@@ -1,55 +1,30 @@
-Copyright (c) 2001 Jonathan Eisenzopf and Rael Dornfest. All rights reserved.
-Maintained by brian d foy
+Copyright (c) 2001 Jonathan Eisenzopf and Rael Dornfest.
+Copyright (c) 2006-2007 Ask Bjoern Hansen, Develooper LLC.
+All rights reserved.
 
 This package is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
-NAME
-XML::RSS Version 0.98_01
-
-DESCRIPTION
 This module was created to help those who need to manage
 RDF Site Summary (RSS) files. It makes quick work of
 creating, updating, and saving RSS files.
 
-XML::RSS currently supports 0.9, 0.91, and 1.0 versions of RSS.
-See http://my.netscape.com/publish/help/mnn20/quickstart.html
-for information on RSS 0.91. See http://my.netscape.com/publish/help/
-for RSS 0.9 and http://purl.org/rss/1.0/.
+   perldoc lib/XML/RSS.pm
+   http://search.cpan.org/dist/XML-RSS/lib/XML/RSS.pm
 
-Feel free to contact us at eisen@pobox.com or rael@oreilly.com
-if you have problems and/or suggestions.
+for more details.
+
 
 REQUIREMENTS
+
 This module requires version 2.23 or greater of the XML::Parser module.
 The latest version is available at any CPAN archive.
 
-You may have problems if you're using Perl 5.004. If you do, you'll
-need to get the latest version of XML::Parser.
 
 INSTALLATION
-perl Makefile.PL
-make
-make install
 
-LIMITATIONS
--XML::RSS doesn't yet validate that the required elements exist before it
- generates the RSS file.
--Ignores the encoding defined in the XML declaration when using parse()
- or parsefile(). This is not intentional, I just haven't been able to
- get it to work yet.
--Same problem with the RSS version attribute as with encoding.
--The module no longer supports the rss0.91 namespace, which was included
- in the first RSS 1.0 specification to support extra 0.91 elements. If you 
- use this module with RSS 1.0 files that used XML::RSS version 0.9, you
- will lose those elements if you load the file and re-save it with 
- this module. This information is now included in the dublin core
- elements which is now supported natively in this module. This does
- not affect coversions from 0.91 to 1.0 formats. That conversion works
- fine.
- 
-TROUBLESHOOTING
--If you get an error when using the parse() or parsefile() methods, your
-RSS file is probably not valid XML. You must be sure to encode all XML
-default entities.
+   perl Makefile.PL
+   make
+   make test  # (optional)
+   make install
 
