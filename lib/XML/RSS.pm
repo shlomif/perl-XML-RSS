@@ -992,9 +992,28 @@ sub parsefile {
     $self->{version} = $self->{_internal}->{version};
 }
 
+# Check if Perl supports the :encoding layer in File I/O.
+sub _perl_supports_encoding {
+    my $self = shift;
+
+    return $] > 5.007;
+}
+
+sub _get_save_output_mode {
+    my $self = shift;
+
+    return $self->_perl_supports_encoding()
+        ? (">:encoding(" . $self->_encoding() . ")")
+        : ">"
+        ;
+}
+
 sub save {
     my ($self, $file) = @_;
-    open(OUT, ">:encoding($self->{encoding})", "$file")
+
+    local (*OUT);
+
+    open(OUT, $self->_get_save_output_mode(), "$file")
       or croak "Cannot open file $file for write: $!";
     print OUT $self->as_string;
     close OUT;

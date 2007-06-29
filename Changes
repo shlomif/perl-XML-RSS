@@ -1,5 +1,9 @@
 Revision history for Perl module XML::RSS
 
+[TODO]
+       - Fixed the save() function to handle perl-5.6.x (and possibly below)
+       where the ":encoding(...)" filehandle are not available.
+
 1.30 - June 18, 2007
        - Same as 1.29_02 (from February 23, 2007)
        - Removed some methods that were not used.
