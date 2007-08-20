@@ -89,10 +89,38 @@ sub _out_tag {
     return $self->_out("<$tag>" . $self->_encode($inner) . "</$tag>\n");
 }
 
+# Remove non-alphanumeric elements and return the modified string.
+# Useful for user-specified tags' attributes.
+
+sub _sanitize {
+    my ($self, $string) = @_;
+
+    $string =~ s{[^a-zA-Z_\-0-9]}{}g;
+    return $string;
+}
+
 sub _out_ns_tag {
     my ($self, $prefix, $tag, $inner) = @_;
 
-    return $self->_out_tag("${prefix}:${tag}", $inner);
+    if (ref($inner) eq "HASH")
+    {
+        $self->_out("<${prefix}:${tag}");
+        foreach my $attr (sort { $a cmp $b } keys(%{$inner}))
+        {
+            $self->_out(
+                  q{ } 
+                . $self->_sanitize($attr)
+                . q{="}
+                . $self->_encode($inner->{$attr})
+                . q{"}
+            );
+        }
+        $self->_out("/>\n");
+    }
+    else
+    {
+        return $self->_out_tag("${prefix}:${tag}", $inner);
+    }
 }
 
 sub _out_defined_tag {

@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+       - Fixed http://rt.cpan.org/Public/Bug/Display.html?id=25336:
+           - made sure the namespace specified elements can have a hash
+           as a value in which case they'll be outputted as a standalone tag
+           with attributes.
+
 1.31 - June 29, 2007
        - Fixed the save() function to handle perl-5.6.x (and possibly below)
          where the ":encoding(...)" filehandle are not available (Shlomi Fish)

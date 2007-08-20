@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 166;
+use Test::More tests => 167;
 
 use XML::RSS;
 
@@ -3871,3 +3871,30 @@ EOF
     );
 }
 
+{
+    my $rss = create_item_rss(
+        {
+            version => "2.0",
+            item_params =>
+            [
+                media => {
+                    title    => "media title",
+                    text     => "media text",
+                    content  => {
+                        url    => "http://somrurl.org/img/foo.jpg",
+                        type   => "image/jpeg",
+                        height => "100",
+                        width  => "100",
+                    },
+                },
+            ],
+        }
+    );
+    $rss->add_module(prefix=>'media', uri=>'http://search.yahoo.com/mrss/');
+
+    # TEST
+    contains($rss, 
+        qq{<media:content height="100" type="image/jpeg" url="http://somrurl.org/img/foo.jpg" width="100"/>\n},
+        "namespaces with attributes are rendered correctly. (bug #25336)"
+    );
+}
