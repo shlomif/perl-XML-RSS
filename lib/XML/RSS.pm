@@ -1293,7 +1293,7 @@ XML::RSS - creates and updates RSS files
  # there are already 15 items
  my $rss = new XML::RSS;
  $rss->parsefile("fm.rdf");
- pop(@{$rss->{'items'}}) if (@{$rss->{'items'}} == 15);
+ shift(@{$rss->{'items'}}) if (@{$rss->{'items'}} == 15);
  $rss->add_item(title => "MpegTV Player (mtv) 1.0.9.7",
                 link  => "http://freshmeat.net/news/1999/06/21/930003958.html",
                 mode  => 'insert'
