@@ -1323,9 +1323,9 @@ site from sources like Slashot and Freshmeat or if you want to syndicate
 your own content.
 
 XML::RSS currently supports 0.9, 0.91, and 1.0 versions of RSS.
-See http://my.netscape.com/publish/help/mnn20/quickstart.html
-for information on RSS 0.91. See http://my.netscape.com/publish/help/
-for RSS 0.9. See http://purl.org/rss/1.0/ for RSS 1.0.
+See http://backend.userland.com/rss091 for information on RSS 0.91. 
+See http://www.purplepages.ie/RSS/netscape/rss0.90.html for RSS 0.9.
+See http://web.resource.org/rss/1.0/ for RSS 1.0.
 
 RSS was originally developed by Netscape as the format for
 Netscape Netcenter channels, however, many Web sites have since

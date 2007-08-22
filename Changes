@@ -7,6 +7,10 @@ Revision history for Perl module XML::RSS
        - Fixed http://rt.cpan.org/Ticket/Display.html?id=25368 :
            - changed pop() to shift() to remove the oldest item in the
            example in lib/XML/RSS.pm, per the comments in the bug report.
+       - Fixed http://rt.cpan.org/Ticket/Display.html?id=24329#txn-296761 :
+           - updated the URLs for information about RSS mentioned under
+           "=head1 DESCRIPTION", based on a Google search. 
+           - (Shlomi Fish)
 
 1.31 - June 29, 2007
        - Fixed the save() function to handle perl-5.6.x (and possibly below)
