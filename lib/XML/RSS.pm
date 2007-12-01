@@ -1319,7 +1319,7 @@ RDF Site Summary (RSS) files. This distribution also contains many
 examples that allow you to generate HTML from an RSS, convert between
 0.9, 0.91, and 1.0 version, and other nifty things.
 This might be helpful if you want to include news feeds on your Web
-site from sources like Slashot and Freshmeat or if you want to syndicate
+site from sources like Slashdot and Freshmeat or if you want to syndicate
 your own content.
 
 XML::RSS currently supports 0.9, 0.91, and 1.0 versions of RSS.
