@@ -790,7 +790,9 @@ sub _handle_start {
     }
     elsif ($el eq 'guid') {
         $self->{'items'}->[$self->{num_items} - 1]->{'isPermaLink'} =
-          !(exists($attribs{'isPermaLink'}) && ($attribs{'isPermaLink'} eq 'false'));
+          (exists($attribs{'isPermaLink'}) && 
+              (lc($attribs{'isPermaLink'}) eq 'true')
+          );
 
         # beginning of taxo li element in item element
         #'http://purl.org/rss/1.0/modules/taxonomy/' => 'taxo'
