@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 167;
+use Test::More tests => 168;
 
 use XML::RSS;
+use HTML::Entities qw(encode_entities);
 
 sub contains
 {
@@ -2092,6 +2093,41 @@ sub create_rss_without_item
     );
 }
 
+sub named_encode
+{
+    my ($self, $text) = @_;
+
+    if (!defined($text)) {
+        require Carp;
+        Carp::confess "\$text is undefined in XML::RSS::_encode(). We don't know how " . "to handle it!";
+    }
+
+    my $encoded_text = '';
+
+    while ($text =~ s/(.*?)(\<\!\[CDATA\[.*?\]\]\>)//s) {
+        # we use &named; entities here because it's HTML
+        $encoded_text .= encode_entities($1) . $2;
+    }
+
+    # we use numeric entities here because it's XML
+    $encoded_text .= encode_entities($text);
+
+    return $encoded_text;
+}
+
+{
+    my $version = "0.91";
+    my $rss = create_rss_1({
+            version => $version,
+            image_link => "Hello <there&Yes>",
+            rss_args => ["encode_cb" => \&named_encode],
+        });
+    # TEST
+    contains($rss,
+        "<image>\n<title>freshmeat.net</title>\n<url>0</url>\n<link>Hello &lt;there&amp;Yes&gt;</link>\n</image>\n",
+        "Testing encode_cb with named encodings",
+    );
+}
 {
     my $rss = create_channel_rss({
             version => "0.91",

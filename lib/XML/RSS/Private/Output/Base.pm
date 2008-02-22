@@ -33,6 +33,16 @@ sub _main {
     return $self->{_main};
 }
 
+sub _encode_cb {
+    my $self = shift;
+
+    if (@_) {
+        $self->{_encode_cb} = shift;
+    }
+
+    return $self->{_encode_cb};
+}
+
 sub _initialize {
     my $self = shift;
     my $args = shift;
@@ -41,6 +51,12 @@ sub _initialize {
     $self->_main($args->{main});
     # TODO : Remove once we have inheritance proper.
     $self->_rss_out_version($args->{version});
+    if (defined($args->{encode_cb})) {
+        $self->_encode_cb($args->{encode_cb});
+    }
+    else {
+        $self->_encode_cb(\&_default_encode);
+    }
 
     return 0;
 }
@@ -55,6 +71,11 @@ sub _rss_out_version {
 }
 
 sub _encode {
+    my ($self, $text) = @_;
+    return $self->_encode_cb()->($self, $text);
+}
+
+sub _default_encode {
     my ($self, $text) = @_;
 
     if (!defined($text)) {

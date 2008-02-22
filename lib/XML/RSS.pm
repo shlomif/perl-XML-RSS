@@ -305,6 +305,7 @@ sub _get_init_default_key_assignments {
         {key => "encode_output", default => 1,},
         {key => "output",        default => "",},
         {key => "encoding",      default => "UTF-8",},
+        {key => "encode_cb",     default => undef(),},
     ];
 }
 
@@ -453,6 +454,17 @@ sub _get_rendering_class {
     }
 }
 
+sub _get_encode_cb_params
+{
+    my $self = shift;
+
+    return 
+        defined($self->{encode_cb}) ?
+            ("encode_cb" => $self->{encode_cb}) :
+            ()
+            ;
+}
+
 sub _get_rendering_obj {
     my ($self, $ver) = @_;
 
@@ -460,6 +472,7 @@ sub _get_rendering_obj {
         {
             main => $self,
             version => $ver,
+            $self->_get_encode_cb_params(),
         }
     );
 }
@@ -1354,6 +1367,17 @@ default.
 You can also pass an optional URL to an XSL stylesheet that can be used to
 output an C<<< <?xsl-stylesheet ... ?> >>> meta-tag in the header that will
 allow some browsers to render the RSS file as HTML.
+
+You can also set C<encode_cb> to a reference to a subroutine that will
+encode the output in a custom way. This subroutine accepts two parameters:
+a reference to the C<XML::RSS::Private::Output::Base>-derived object (which
+should normally not concern you) and the text to encode. It should return
+the text to encode. If not set, then the module will encode using its
+custom encoding routine.
+
+Note that in order to encode properly, you need to handle "CDATA" sections
+properly. Look at L<XML::RSS::Private::Output::Base>'s C<_default_encode()>
+method for how to do it properly.
 
 =item add_item (title=>$title, link=>$link, description=>$desc, mode=>$mode)
 

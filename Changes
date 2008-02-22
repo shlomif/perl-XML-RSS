@@ -1,5 +1,9 @@
 Revision history for Perl module XML::RSS
 
+       - Allowed the end-user to customise the _encode() routine in 
+       XML::RSS::Private::Output::Base from XML::RSS using the
+       encode_cb key.
+
 1.32 - February 8, 2008
        - Fixed http://rt.cpan.org/Public/Bug/Display.html?id=25336 :
            - made sure the namespace specified elements can have a hash
