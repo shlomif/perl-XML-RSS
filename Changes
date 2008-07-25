@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+       - fixed a typo in the documentation of lib/XML/RSS.pm - 
+       "regardless" instead of "regarless".
+            - http://rt.cpan.org/Public/Bug/Display.html?id=37916
+            - (Reported by Reuben Thomas, Fixed by Shlomif).
+
 1.33 - June 8, 2008
        - Allowed the end-user to customise the _encode() routine in 
        XML::RSS::Private::Output::Base from XML::RSS using the

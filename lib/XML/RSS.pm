@@ -1358,7 +1358,7 @@ output=>$output, stylesheet=>$stylesheet_url)
 Constructor for XML::RSS. It returns a reference to an XML::RSS object.
 You may also pass the RSS version and the XML encoding to use. The default
 B<version> is 1.0. The default B<encoding> is UTF-8. You may also specify
-the B<output> format regarless of the input version. This comes in handy
+the B<output> format regardless of the input version. This comes in handy
 when you want to convert RSS between versions. The XML::RSS modules
 will convert between any of the formats.  If you set <encode_output> XML::RSS
 will make sure to encode any entities in generated RSS.  This is now on by
