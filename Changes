@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.34 - September 12, 2008
        - fixed a typo in the documentation of lib/XML/RSS.pm - 
        "regardless" instead of "regarless".
             - http://rt.cpan.org/Public/Bug/Display.html?id=37916
