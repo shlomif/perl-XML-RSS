@@ -4,6 +4,10 @@ Revision history for Perl module XML::RSS
        "regardless" instead of "regarless".
             - http://rt.cpan.org/Public/Bug/Display.html?id=37916
             - (Reported by Reuben Thomas, Fixed by Shlomif).
+       - fixed a code fragment - pop() instead of shift() for older
+       items, and while() instead of if():
+            - http://rt.cpan.org/Public/Bug/Display.html?id=39231
+            - (Reported by Dave, Fixed by Shlomif).
 
 1.33 - June 8, 2008
        - Allowed the end-user to customise the _encode() routine in 

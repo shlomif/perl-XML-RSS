@@ -1304,11 +1304,16 @@ XML::RSS - creates and updates RSS files
  # or save it to a file
  $rss->save("fm.rdf");
 
- # insert an item into an RSS file and removes the oldest item if
- # there are already 15 items
+ # insert an item into an RSS file and removes the oldest ones if
+ # there are already 15 items or more
  my $rss = new XML::RSS;
  $rss->parsefile("fm.rdf");
- shift(@{$rss->{'items'}}) if (@{$rss->{'items'}} == 15);
+
+ while (@{$rss->{'items'}} >= 15)
+ {
+     pop(@{$rss->{'items'});
+ }
+
  $rss->add_item(title => "MpegTV Player (mtv) 1.0.9.7",
                 link  => "http://freshmeat.net/news/1999/06/21/930003958.html",
                 mode  => 'insert'
