@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.35 - September 13, 2008
        - Added a Module::Build-based Build.PL so we'll have an easier time 
        with the META.yml and the Kwalitee.
        - Kwalitee - added "use warnings" to all Perl files.
