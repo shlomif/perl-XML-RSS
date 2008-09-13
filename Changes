@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+       - Added a Module::Build-based Build.PL so we'll have an easier time 
+       with the META.yml and the Kwalitee.
+
 1.34 - September 12, 2008
        - fixed a typo in the documentation of lib/XML/RSS.pm - 
        "regardless" instead of "regarless".
