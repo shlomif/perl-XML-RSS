@@ -6,6 +6,8 @@
 # are available.
 
 use strict;
+use warnings;
+
 use XML::RSS;
 my $rss = new XML::RSS (version => '1.0');
 

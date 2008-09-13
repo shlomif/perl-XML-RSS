@@ -2,6 +2,7 @@
 # https://rt.cpan.org/Ticket/Display.html?id=24742
 
 use strict;
+use warnings;
 
 use Test::More tests => 1;
 

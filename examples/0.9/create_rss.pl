@@ -3,6 +3,8 @@
 # creates and prints RSS 0.9 file
 
 use strict;
+use warnings;
+
 use XML::RSS;
 
 my $rss = new XML::RSS(version => '0.9');

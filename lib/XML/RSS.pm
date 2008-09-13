@@ -1,5 +1,8 @@
 package XML::RSS;
+
 use strict;
+use warnings;
+
 use Carp;
 use XML::Parser;
 use HTML::Entities qw(encode_entities_numeric encode_entities);
@@ -1634,17 +1637,20 @@ L<http://svn.perl.org/modules/XML-RSS/>
 
 =head1 AUTHOR
 
-    Original code: Jonathan Eisenzopf <eisen@pobox.com>
-    Further changes: Rael Dornfest <rael@oreilly.com>
+Original code: Jonathan Eisenzopf <eisen@pobox.com>
 
-    Currently: Ask Bjoern Hansen <ask@develooper.com> 
+Further changes: Rael Dornfest <rael@oreilly.com>, Ask Bjoern Hansen 
+<ask@develooper.com> 
 
+Currently: Shlomi Fish <shlomif@cpan.org>
 
 =head1 COPYRIGHT
 
 Copyright (c) 2001 Jonathan Eisenzopf <eisen@pobox.com> and Rael
 Dornfest <rael@oreilly.com>, Copyright (C) 2006-2007 Ask Bjoern Hansen
 <ask@develooper.com>.
+
+=head1 LICENSE
 
 XML::RSS is free software. You can redistribute it and/or
 modify it under the same terms as Perl itself.

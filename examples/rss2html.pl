@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # rss2html - converts an RSS file to HTML
 # It take one argument, either a file on the local system,
 # or an HTTP URL like http://slashdot.org/slashdot.rdf
@@ -7,6 +7,8 @@
 
 # INCLUDES
 use strict;
+use warnings;
+
 use XML::RSS;
 use LWP::Simple;
 

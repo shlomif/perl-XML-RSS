@@ -1,8 +1,13 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
+
 # channel_info.pl
 # print channel info
+
 use lib '.';
+
 use strict;
+use warnings;
+
 use XML::RSS;
 
 my $rss = new XML::RSS;

@@ -1,8 +1,10 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # create_rss.pl
 # creates multiple instances of XML::RSS
 
 use strict;
+use warnings;
+
 use XML::RSS;
 
 my $rss = new XML::RSS(version => '0.9');

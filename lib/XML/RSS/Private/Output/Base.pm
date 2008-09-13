@@ -1,6 +1,7 @@
 package XML::RSS::Private::Output::Base;
 
 use strict;
+use warnings;
 
 use Carp;
 

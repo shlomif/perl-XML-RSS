@@ -1,4 +1,6 @@
 use strict;
+use warnings;
+
 use Test::More;
 
 use constant RSS_VERSION       => "0.91";

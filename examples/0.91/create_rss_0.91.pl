@@ -2,6 +2,8 @@
 # creates and prints RSS 0.91 file
 
 use strict;
+use warnings;
+
 use XML::RSS;
 
 my $rss = new XML::RSS (version => "0.91") ;

@@ -1,3 +1,5 @@
+use 5.006;
+
 use ExtUtils::MakeMaker;
 @extras = ();
 

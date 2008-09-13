@@ -1,6 +1,7 @@
 package XML::RSS::Private::Output::Roles::ImageDims;
 
 use strict;
+use warnings;
 
 sub _out_image_dims {
     my $self = shift;

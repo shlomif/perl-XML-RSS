@@ -1,6 +1,8 @@
 #!/usr/bin/perl -w
 
 use strict;
+use warnings;
+
 use Test::More;
 
 if (eval "require Test::Differences") {

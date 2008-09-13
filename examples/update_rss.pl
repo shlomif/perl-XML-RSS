@@ -1,7 +1,9 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 # update_rss.pl
 # Adds a new item to the RSS file
 use strict;
+use warnings;
+
 use XML::RSS;
 
 die "Syntax: update_rss.pl source.rdf destination.rdf\n\n"

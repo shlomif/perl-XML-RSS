@@ -1,6 +1,8 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl
 
 use strict;
+use warnings;
+
 use XML::RSS;
 
 # print an error unless there are 2 command-line args

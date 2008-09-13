@@ -1,6 +1,7 @@
 package XML::RSS::Private::Output::V2_0;
 
 use strict;
+use warnings;
 
 use vars (qw(@ISA));
 
