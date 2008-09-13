@@ -7,10 +7,11 @@ use File::Spec;
 
 use Test::Manifest ();
 
-use Test::Run::CmdLine::Iface;
+
 
 sub run_t_manifest
 {
+    require Test::Run::CmdLine::Iface;
     my ($test_verbose, $inst_lib, $inst_archlib, $test_level) = @_;
     local @INC = @INC;
     unshift @INC, map { File::Spec->rel2abs($_) } ($inst_lib, $inst_archlib); 
