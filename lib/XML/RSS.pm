@@ -991,6 +991,8 @@ sub parse {
 
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
+
+    return $self;
 }
 
 sub parsefile {
@@ -1429,7 +1431,9 @@ is for B<channel()>.
 
 =item parse ($string)
 
-Parses an RDF Site Summary which is passed into B<parse()> as the first parameter.
+Parses an RDF Site Summary which is passed into B<parse()> as the first 
+parameter. Returns the instance of the object so one can say 
+C<<$rss->parse($string)->other_method()>>.
 
 See the add_module() method for instructions on automatically adding
 modules as a string is parsed.
