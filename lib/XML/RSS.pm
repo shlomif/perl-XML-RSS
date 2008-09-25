@@ -1010,6 +1010,8 @@ sub parsefile {
 
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
+
+    return $self;
 }
 
 # Check if Perl supports the :encoding layer in File I/O.

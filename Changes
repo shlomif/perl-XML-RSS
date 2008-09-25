@@ -2,6 +2,8 @@ Revision history for Perl module XML::RSS
 
        - ->parse() now explicitly returns $self.
             - http://rt.cpan.org/Public/Bug/Display.html?id=34914
+       - ->parsefile() now explicitly returns $self.
+            - http://rt.cpan.org/Public/Bug/Display.html?id=34914
         
 1.35 - September 13, 2008
        - Added a Module::Build-based Build.PL so we'll have an easier time 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use XML::RSS;
 
@@ -38,19 +38,34 @@ my $text = <<"EOF";
 </rss>
 EOF
 
-my $rss = XML::RSS->new();
+{
+    my $rss = XML::RSS->new();
 
-# TEST
-is ($rss->parse($text)->{textinput}->{link}, "http://www.topix.net/search/", 
-    "->parse() returns the object again"
-);
+    # TEST
+    is ($rss->parse($text)->{textinput}->{link},
+        "http://www.topix.net/search/", 
+        "->parse() returns the object again"
+    );
 
-# TEST
-is ($rss->{textinput}->{link}, "http://www.topix.net/search/",
-    "Testing for textinput link"
-);
+    # TEST
+    is ($rss->{textinput}->{link}, "http://www.topix.net/search/",
+        "Testing for textinput link"
+    );
 
-# TEST
-is ($rss->{channel}->{link}, "http://www.topix.net/news/journalism",
-    "Testing for channel link"
-);
+    # TEST
+    is ($rss->{channel}->{link}, "http://www.topix.net/news/journalism",
+        "Testing for channel link"
+    );
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    # TEST
+    is ($rss->parsefile(
+            File::Spec->catfile("t", "data", "2.0", "sf-hs-with-pubDate.rss")
+        )->{channel}->{link},
+        "http://community.livejournal.com/shlomif_hsite/",
+        "->parsefile() returns the object",
+    );
+}
