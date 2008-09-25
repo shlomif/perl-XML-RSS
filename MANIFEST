@@ -32,6 +32,7 @@ lib/XML/RSS/Private/Output/V1_0.pm
 lib/XML/RSS/Private/Output/V2_0.pm
 Makefile.PL
 MANIFEST
+META.yml
 README
 t/0.91-parse.t
 t/0.9-generate.t
@@ -45,6 +46,7 @@ t/1.0-to-2.0.t
 t/2.0-generate.t
 t/2.0-modules.t
 t/2.0-parse-2.t
+t/2.0-parse-self.t
 t/2.0-parse.t
 t/2.0-permalink.t
 t/2.0-wo-title.t
@@ -74,4 +76,3 @@ t/rss2-gt-encoding.t
 t/test_manifest
 t/version.t
 t/xml-header.t
-META.yml
