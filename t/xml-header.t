@@ -80,7 +80,7 @@ EOF
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
-            "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+            "http://www.rssboard.org/rss-0.91.dtd">
 
 <rss version="0.91">
 EOF
@@ -138,7 +138,7 @@ EOF
 <?xml-stylesheet type="text/xsl" href="http://myhost.tld/foo.xsl"?>
 
 <!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
-            "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+            "http://www.rssboard.org/rss-0.91.dtd">
 
 <rss version="0.91">
 EOF

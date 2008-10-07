@@ -18,7 +18,7 @@ sub _get_rdf_decl
 {
     return
     qq{<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"\n} .
-    qq{            "http://my.netscape.com/publish/formats/rss-0.91.dtd">\n\n} .
+    qq{            "http://www.rssboard.org/rss-0.91.dtd">\n\n} .
     qq{<rss version="0.91">\n\n};
 }
 
