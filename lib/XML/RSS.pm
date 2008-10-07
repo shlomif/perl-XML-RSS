@@ -1509,7 +1509,7 @@ attributes such as title, link, and description.  The only difference
 is the compartmentalization of their key/value paris in a second-level
 hash.
 
-  $rss->add_item (title=>$title, link=>$link, dc=>{ subject=>$subject, creator=>$creator });
+  $rss->add_item (title=>$title, link=>$link, dc=>{ subject=>$subject, creator=>$creator, date=>$date });
 
 For elements of the Dublin Core module, use the key 'dc'.  For elements
 of the Syndication module, 'syn'.  For elements of the Taxonomy module,

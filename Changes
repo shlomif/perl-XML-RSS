@@ -8,7 +8,9 @@ Revision history for Perl module XML::RSS
     to rssboard.org:
         - http://rt.cpan.org/Ticket/Display.html?id=39780
     - Reformatted the Changes file to standardize on 4-space-indents.
-        
+    - Small documentation patch: (add_item with dc:date)
+        - http://rt.cpan.org/Ticket/Display.html?id=39780
+
 1.35 - September 13, 2008
     - Added a Module::Build-based Build.PL so we'll have an easier time 
     with the META.yml and the Kwalitee.
