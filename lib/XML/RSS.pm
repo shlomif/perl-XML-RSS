@@ -975,9 +975,10 @@ sub _get_parser {
 }
 
 
-sub parse {
+sub _generic_parse {
     my $self = shift;
-    my $text_to_parse = shift;
+    my $method = shift;
+    my $arg = shift;
 
     $self->_reset;
 
@@ -987,7 +988,7 @@ sub parse {
         $self->{modules} = +{%{$self->_get_default_modules()}, %{$self->{modules}}};
     }
 
-    $self->_get_parser()->parse($text_to_parse);
+    $self->_get_parser()->$method($arg);
 
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
@@ -995,23 +996,18 @@ sub parse {
     return $self;
 }
 
+sub parse {
+    my $self = shift;
+    my $text_to_parse = shift;
+
+    return $self->_generic_parse("parse", $text_to_parse);
+}
+
 sub parsefile {
     my $self = shift;
+    my $file_to_parse = shift;
 
-    $self->_reset;
-
-    # Workaround to make sure that if we were defined with version => "2.0"
-    # then we can still parse 1.0 and 0.9.x feeds correctly.
-    if ($self->{version} eq "2.0") {
-        $self->{modules} = +{%{$self->_get_default_modules()}, %{$self->{modules}}};
-    }
-
-    $self->_get_parser()->parsefile(shift);
-
-    $self->_auto_add_modules if $AUTO_ADD;
-    $self->{version} = $self->{_internal}->{version};
-
-    return $self;
+    return $self->_generic_parse("parsefile", $file_to_parse);
 }
 
 # Check if Perl supports the :encoding layer in File I/O.

@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+    - Extracted the common parts of parse() and parsefile() into one
+    method (Refactoring - Shlomi Fish)
+
 1.36 - October 7, 2008
     - ->parse() now explicitly returns $self.
         - http://rt.cpan.org/Public/Bug/Display.html?id=34914
