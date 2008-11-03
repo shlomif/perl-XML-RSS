@@ -22,7 +22,7 @@ auto_add_modules.t
 enclosures.t
 enclosures2.t
 encode-output.t
-items-are-0.t
+test-generated-items.t
 pod-coverage.t
 rss2-gt-encoding.t
 charset1.t

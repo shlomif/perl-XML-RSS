@@ -67,12 +67,12 @@ t/encoding.t
 testlib/Test/Run/CmdLine/WithTestManifest.pm
 t/generated/placeholder.txt
 t/guid.t
-t/items-are-0.t
 t/load.t
 TODO
 t/pod-coverage.t
 t/pod.t
 t/rss2-gt-encoding.t
 t/test_manifest
+t/test-generated-items.t
 t/version.t
 t/xml-header.t

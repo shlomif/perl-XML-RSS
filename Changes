@@ -4,6 +4,9 @@ Revision history for Perl module XML::RSS
     method (Refactoring - Shlomi Fish)
     - Incorporated a modified version of a patch from Simon Wistow to
     add support for the "xml:base" attribute.
+    - Renamed t/items-are-0.t into the more descriptive 
+    t/test-generated-items.t , to highlight its significance and make
+    it easier to notice.
 
 1.36 - October 7, 2008
     - ->parse() now explicitly returns $self.
