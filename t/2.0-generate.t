@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 27;
+use Test::More tests => 29;
 
 BEGIN {
   use_ok("XML::RSS");
@@ -30,11 +30,13 @@ use constant RSS_CREATOR    => "joeuser\@example.com";
 use constant RSS_ITEM_TITLE => "This is an item";
 use constant RSS_ITEM_LINK  => "http://example.com/" . &POSIX::strftime( DATE_TEMPLATE_SHORT, gmtime ); # "$short_date";
 use constant RSS_ITEM_DESC  => "Yadda yadda yadda - R&D;";
+use constant RSS_XML_BASE   => "http://example.com";
 
-my $rss = XML::RSS->new( version => RSS_VERSION );
+my $rss = XML::RSS->new( version => RSS_VERSION, 'xml:base' => RSS_XML_BASE );
 isa_ok( $rss, "XML::RSS" );
 
-is( $rss->{'version'}, RSS_VERSION, 'Version is ' . RSS_VERSION );
+is( $rss->{'version'},  RSS_VERSION,  'Version is ' . RSS_VERSION );
+is( $rss->{'xml:base'}, RSS_XML_BASE, 'Base is ' . RSS_XML_BASE );
 
 # This includes all fields, only title, link, and description 
 # are required.
@@ -119,6 +121,8 @@ is( $rss->{channel}->{lastBuildDate}, $current_date,
        "Last built: " . $current_date );
 
 is( $rss->{channel}->{category}, 'MyCategory', 'channel->{category}');
+
+is( $rss->{'xml:base'}, RSS_XML_BASE, 'Base has been reparsed');
 
 cmp_ok( keys %{ $rss->{namespaces} }, ">=", 1,
        "RSS feed has at least one namespace");

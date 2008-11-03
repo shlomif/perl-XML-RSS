@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-plan tests => 22;
+plan tests => 24;
 
 # 1-2
 use_ok("XML::RSS");
@@ -29,16 +29,18 @@ use constant RSS_CREATOR    => "joeuser\@example.com";
 use constant RSS_ITEM_TITLE => "This is an item";
 use constant RSS_ITEM_LINK  => "http://example.com/$short_date";
 use constant RSS_ITEM_DESC  => "Yadda & yadda & yadda";
+use constant RSS_XML_BASE   => "http://example.com/";
 
 # 3
 ok($current_date,"Current date:$current_date");
 
 # 4
-my $rss = XML::RSS->new(version => RSS_VERSION);
+my $rss = XML::RSS->new(version => RSS_VERSION, 'xml:base' => RSS_XML_BASE);
 isa_ok($rss,"XML::RSS");
 
-# 5
+# 5-6
 cmp_ok($rss->{'version'},"eq",RSS_VERSION,"Version is ".RSS_VERSION);
+cmp_ok($rss->{'xml:base'},"eq",RSS_XML_BASE,"Base is ".RSS_XML_BASE);
 
 ok($rss->channel(
 		 'title'          => "Test 1.0 Feed",
@@ -111,34 +113,37 @@ cmp_ok($file_contents,"eq",$as_string,RSS_SAVEAS." contains the as_string() resu
 eval { $rss->parsefile(RSS_SAVEAS)};
 is($@,'',"Parsed ".RSS_SAVEAS);
 
-# 16
+# 17
 cmp_ok($rss->{channel}->{dc}{date},
        "eq",
        $current_date,
        "dc:date:".$current_date);
 
-# 17
+# 18
 cmp_ok(keys(%{$rss->{namespaces}}),
        ">=",
        1,
        "RSS feed has atleast one namespace");
 
-# 18
-cmp_ok(ref($rss->{'items'}),"eq","ARRAY","RSS object has an array of objects");
-
-# 19 
-cmp_ok(scalar(@{$rss->{'items'}}),"==",1,"RSS object has one item");
+# 19
+cmp_ok($rss->{'xml:base'}, "eq", RSS_XML_BASE, "Base is still ".RSS_XML_BASE);
 
 # 20
+cmp_ok(ref($rss->{'items'}),"eq","ARRAY","RSS object has an array of objects");
+
+# 21 
+cmp_ok(scalar(@{$rss->{'items'}}),"==",1,"RSS object has one item");
+
+# 22
 cmp_ok($rss->{items}->[0]->{title},"eq",RSS_ITEM_TITLE,RSS_ITEM_TITLE);
 
-# 21
+# 23
 cmp_ok($rss->{items}->[0]->{link},"eq",RSS_ITEM_LINK,RSS_ITEM_LINK);
 
-# 22 
+# 24 
 cmp_ok($rss->{items}->[0]->{description},"eq",RSS_ITEM_DESC,RSS_ITEM_DESC);
 
-# 23
+# 25
 cmp_ok($rss->{items}->[0]->{dc}->{creator},"eq",RSS_CREATOR,RSS_CREATOR);
 
 __END__

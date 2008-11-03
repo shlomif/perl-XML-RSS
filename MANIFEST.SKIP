@@ -12,3 +12,8 @@ MANIFEST.bak
 .rej$
 bak$
 ^keep-out
+.svn
+_build
+.perltidyrc
+Build
+t/generated/

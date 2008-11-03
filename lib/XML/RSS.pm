@@ -250,7 +250,7 @@ sub _rdf_resource_fields {
     };
 }
 
-my %empty_ok_elements = (enclosure => 1,);
+my %empty_ok_elements = (enclosure => 1, description => 1);
 
 sub _get_default_modules {
     return {
@@ -309,6 +309,7 @@ sub _get_init_default_key_assignments {
         {key => "output",        default => "",},
         {key => "encoding",      default => "UTF-8",},
         {key => "encode_cb",     default => undef(),},
+        {key => "xml:base",      default => undef(),},
     ];
 }
 
@@ -351,7 +352,6 @@ sub _initialize {
     # namespaces
     $self->{namespaces}    = {};
     $self->{rss_namespace} = '';
-
     foreach my $k (@{$self->_get_init_default_key_assignments()})
     {
         my $key = $k->{key};
@@ -615,7 +615,7 @@ sub _append_text_to_elem_struct {
 
     # If it's in the default namespace
     if ($verdict) {
-        $struct->{$mapping_sub->($struct, $elem)} .= $cdata;
+        $self->_append_struct($struct, $mapping_sub->($struct, $elem), $cdata);
     }
     else {
         # If it's in another namespace
@@ -628,6 +628,15 @@ sub _append_text_to_elem_struct {
     }
 
     return;
+}
+
+sub _append_struct {
+    my ($self, $struct, $key, $cdata) = @_;
+    if (defined $struct->{$key} && ref($struct->{$key}) eq 'HASH') {
+        $struct->{$key}->{content} .= $cdata;
+    } else {
+        $struct->{$key} .= $cdata;
+    }
 }
 
 sub _return_elem {
@@ -733,7 +742,7 @@ sub _handle_start {
     my %attribs = @_;
 
     my $parser = $self->_parser;
-
+    
     # beginning of RSS 0.91
     if ($el eq 'rss') {
         if (exists($attribs{version})) {
@@ -743,7 +752,10 @@ sub _handle_start {
             croak "Malformed RSS: invalid version\n";
         }
 
-        # beginning of RSS 1.0 or RSS 0.9
+        # handle xml:base
+        $self->{'xml:base'} = $attribs{'base'} if exists $attribs{'base'};
+
+    # beginning of RSS 1.0 or RSS 0.9
     }
     elsif ($el eq 'RDF') {
         my @prefixes = $parser->new_ns_prefixes;
@@ -782,7 +794,10 @@ sub _handle_start {
         #    croak "Malformed RSS: invalid version\n";
         #}
 
-        # beginning of item element
+        # handle xml:base
+        $self->{'xml:base'} = $attribs{'base'} if exists $attribs{'base'};
+
+    # beginning of item element
     }
     elsif ($el eq 'item') {
 
@@ -801,6 +816,9 @@ sub _handle_start {
                 $self->{_inside_item_elem} = $parser->depth();
             }
         }
+        # handle xml:base
+        $self->{'items'}->[$self->{num_items} - 1]->{'xml:base'} = $attribs{'base'} if exists $attribs{'base'};
+
 
         # guid element is a permanent link unless isPermaLink attribute is set to false
     }
@@ -895,7 +913,8 @@ sub _handle_start {
         }
     }
     elsif ($empty_ok_elements{$el} and $self->_current_element eq 'item') {
-        $self->{items}->[$self->{num_items} - 1]->{$el} = \%attribs;
+        $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
+        $self->{items}->[$self->{num_items} - 1]->{$el} = \%attribs if keys %attribs;
     }
 }
 
@@ -1361,7 +1380,7 @@ including news headlines, threaded measages, products catalogs, etc.
 =over 4
 
 =item new XML::RSS (version=>$version, encoding=>$encoding,
-output=>$output, stylesheet=>$stylesheet_url)
+output=>$output, stylesheet=>$stylesheet_url, 'xml:base'=>$base)
 
 Constructor for XML::RSS. It returns a reference to an XML::RSS object.
 You may also pass the RSS version and the XML encoding to use. The default
@@ -1382,6 +1401,10 @@ a reference to the C<XML::RSS::Private::Output::Base>-derived object (which
 should normally not concern you) and the text to encode. It should return
 the text to encode. If not set, then the module will encode using its
 custom encoding routine.
+
+xml:base will set an C<xml:base> property as per
+
+    http://www.w3.org/TR/xmlbase/
 
 Note that in order to encode properly, you need to handle "CDATA" sections
 properly. Look at L<XML::RSS::Private::Output::Base>'s C<_default_encode()>
