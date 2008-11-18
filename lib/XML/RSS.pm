@@ -250,7 +250,8 @@ sub _rdf_resource_fields {
     };
 }
 
-my %empty_ok_elements = (enclosure => 1, description => 1);
+my %empty_ok_elements = (enclosure => 1);
+my %hashref_ok_elements = (description => 1);
 
 sub _get_default_modules {
     return {
@@ -734,7 +735,17 @@ sub _handle_dec {
     #print "ENCODING: $encoding\n";
 }
 
+sub _should_be_hashref {
+    my ($self, $el) = @_;
 
+    return
+    (
+        $empty_ok_elements{$el}
+        || ($self->_parse_options()->{'hashrefs_instead_of_strings'}
+            && $hashref_ok_elements{$el}
+        )
+    );
+}
 
 sub _handle_start {
     my $self    = shift;
@@ -912,7 +923,7 @@ sub _handle_start {
             }
         }
     }
-    elsif ($empty_ok_elements{$el} and $self->_current_element eq 'item') {
+    elsif ($self->_should_be_hashref($el) and $self->_current_element eq 'item') {
         $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
         $self->{items}->[$self->{num_items} - 1]->{$el} = \%attribs if keys %attribs;
     }
@@ -993,13 +1004,25 @@ sub _get_parser {
     );    
 }
 
+sub _parse_options {
+    my $self = shift;
+
+    if (@_) {
+        $self->{_parse_options} = shift;
+    }
+
+    return $self->{_parse_options};
+}
 
 sub _generic_parse {
     my $self = shift;
     my $method = shift;
     my $arg = shift;
+    my $options = shift;
 
     $self->_reset;
+
+    $self->_parse_options($options || {});
 
     # Workaround to make sure that if we were defined with version => "2.0"
     # then we can still parse 1.0 and 0.9.x feeds correctly.
@@ -1018,15 +1041,17 @@ sub _generic_parse {
 sub parse {
     my $self = shift;
     my $text_to_parse = shift;
+    my $options = shift;
 
-    return $self->_generic_parse("parse", $text_to_parse);
+    return $self->_generic_parse("parse", $text_to_parse, $options);
 }
 
 sub parsefile {
     my $self = shift;
     my $file_to_parse = shift;
+    my $options = shift;
 
-    return $self->_generic_parse("parsefile", $file_to_parse);
+    return $self->_generic_parse("parsefile", $file_to_parse, $options);
 }
 
 # Check if Perl supports the :encoding layer in File I/O.
@@ -1450,7 +1475,7 @@ in RSS 0.91 or optionally imported into RSS 1.0 via the rss091 namespace.
 The method for retrieving the values for the image is the same as it
 is for B<channel()>.
 
-=item parse ($string)
+=item parse ($string, \%options)
 
 Parses an RDF Site Summary which is passed into B<parse()> as the first 
 parameter. Returns the instance of the object so one can say 
@@ -1459,7 +1484,22 @@ C<<$rss->parse($string)->other_method()>>.
 See the add_module() method for instructions on automatically adding
 modules as a string is parsed.
 
-=item parsefile ($file)
+%options is a list of options that specify how parsing is to be done. The
+available options are:
+
+=over 4
+
+=item * hashrefs_instead_of_strings
+
+If true, then some items (so far "C<description>") will become hash-references
+instead of strings (with a B<content> key containing their content , B<if>
+they have XML attributes. Without this key, the attributes will be ignored
+and there will only be a string. Thus, specifying this option may break
+compatibility.
+
+=back
+
+=item parsefile ($file, \%options)
 
 Same as B<parse()> except it parses a file rather than a string.
 

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 180;
+use Test::More tests => 185;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4013,8 +4013,40 @@ EOF
         my $item = $rss->{items}->[0];
 
         # TEST        
+        is($item->{'xml:base'}, 'http://foo.com/archive/',
+            "Found parsed item base"
+        );
+
+        # TEST
+        is($item->{description}, "Bar",
+            "description is a string - not a hash ref with correct content"
+        );
+    }
+
+    {
+        my $rss = XML::RSS->new;
+
+        # TEST
+        ok($rss->parse($xml, {hashrefs_instead_of_strings => 1}),
+            "Reparsed xml"
+        );
+
+        # TEST
+        is(
+            $rss->{'xml:base'}, 
+            'http://foo.com/',
+            "Found parsed rss base"
+        );
+
+        # TEST
+        is (scalar(@{$rss->{items}}), 1, "Got 1 item");
+
+        my $item = $rss->{items}->[0];
+
+        # TEST        
         is($item->{'xml:base'}, 'http://foo.com/archive/',       "Found parsed item base");
         # TEST
         is($item->{description}->{'xml:base'}, 'http://foo.com/archive/1.html', "Found parsed description base");
     }
+    
 }

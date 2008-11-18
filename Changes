@@ -7,6 +7,8 @@ Revision history for Perl module XML::RSS
     - Renamed t/items-are-0.t into the more descriptive 
     t/test-generated-items.t , to highlight its significance and make
     it easier to notice.
+    - Enabled backwards-compatibility mode for the "description" item
+    to not become a hash-ref by default if xml:base is specified.
 
 1.36 - October 7, 2008
     - ->parse() now explicitly returns $self.
