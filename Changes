@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.37 - November 18, 2008
     - Extracted the common parts of parse() and parsefile() into one
     method (Refactoring - Shlomi Fish)
     - Incorporated a modified version of a patch from Simon Wistow to
