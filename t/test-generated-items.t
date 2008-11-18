@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 185;
+use Test::More tests => 190;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4049,4 +4049,42 @@ EOF
         is($item->{description}->{'xml:base'}, 'http://foo.com/archive/1.html', "Found parsed description base");
     }
     
+}
+
+{
+    my $xml;
+
+    {
+        my $rss = XML::RSS->new( 'xml:base' => 'http://example.com/' );
+        
+        # TEST
+        ok($rss, "Created new rss");
+
+        # TEST
+        is($rss->{'xml:base'}, 'http://example.com/', 'Got base');
+
+        $rss->{'xml:base'} = 'http://foo.com/';
+
+        # TEST
+        ok($rss->add_item(
+            title => 'foo',
+            'xml:base' => "http://foo.com/archive/",
+            description => {
+                content    => "Bar",
+                'xml:base' => "<H&G>",
+            }
+        ), "Added item");
+
+        $xml = $rss->as_rss_2_0();
+
+        # TEST
+        ok($xml, "Got xml");
+
+        # TEST
+        output_contains (
+            $xml,
+            qq{<description xml:base="&#x3C;H&#x26;G&#x3E;"},
+            "description was properly encoded"
+        );
+    }
 }

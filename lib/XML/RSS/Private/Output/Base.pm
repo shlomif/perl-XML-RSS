@@ -111,10 +111,15 @@ sub _out_tag {
     my $content = $inner;
     my $attr    = "";
     if (ref($inner) eq 'HASH') {
-        $content = delete $inner->{content}; 
-        foreach my $key (keys %$inner) {
-          my $value = $inner->{$key};
-          $attr .= qq{ $key="$value"} if defined $value;
+        my %inner_copy = %$inner;
+        $content = delete $inner_copy{content}; 
+        foreach my $key (keys %inner_copy) {
+            my $value = $inner->{$key};
+            if (defined($value)) {
+                $attr .= " " . $self->_encode($key) . qq{="}
+                    . $self->_encode($value) . '"'
+                    ;
+            }
         }
     }
     return $self->_out("<$tag$attr>" . $self->_encode($content) . "</$tag>\n");
