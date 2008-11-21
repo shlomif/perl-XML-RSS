@@ -614,6 +614,28 @@ sub _out_dc_elements {
     return;
 }
 
+sub _out_module_prefix_elements
+{
+    my ($self, $args) = @_;
+
+    my $prefix = $args->{prefix};
+    my $data = $args->{data};
+    my $url = $args->{url};
+
+    while (my ($el, $value) = each %{$data || {}}) {
+        if ($self->_main->_is_rdf_resource($el,$url))
+        {
+            $self->_out(
+                qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
+        }
+        else {
+            $self->_out_ns_tag($prefix, $el, $value);
+        }
+    }
+
+    return;
+}
+
 # Output the Ad-hoc modules
 sub _out_modules_elements {
     my ($self, $super_elem) = @_;
@@ -621,16 +643,15 @@ sub _out_modules_elements {
     # Ad-hoc modules
     while (my ($url, $prefix) = each %{$self->_modules}) {
         next if $prefix =~ /^(dc|syn|taxo)$/;
-        while (my ($el, $value) = each %{$super_elem->{$prefix} || {}}) {
-            if ($self->_main->_is_rdf_resource($el,$url))
+        
+        $self->_out_module_prefix_elements(
             {
-                $self->_out(
-                    qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
+                prefix => $prefix,
+                url => $url,
+                data => $super_elem->{$prefix},
             }
-            else {
-                $self->_out_ns_tag($prefix, $el, $value);
-            }
-        }
+        );
+
     }
 
     return;
