@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 190;
+use Test::More tests => 191;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4087,4 +4087,34 @@ EOF
             "description was properly encoded"
         );
     }
+}
+
+{
+    my $rss = create_rss_1({
+        version => "1.0",
+        image_params => 
+        [
+            eloq =>
+            [
+                { 'el' => 'grow', 'val' => "There" },
+                { 'el' => 'grow', 'val' => "Position", },
+                { 'el' => 'show', 'val' => "and tell", },
+                { 'el' => 'show', 'val' => "must go on", },
+            ],
+        ],
+    });
+
+    $rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+    # TEST
+    contains($rss, "<image rdf:about=\"0\">\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<url>0</url>\n" .
+        "<link>http://freshmeat.net/</link>\n" .
+        "<eloq:grow>There</eloq:grow>\n" .
+        "<eloq:grow>Position</eloq:grow>\n" .
+        "<eloq:show>and tell</eloq:show>\n" .
+        "<eloq:show>must go on</eloq:show>\n" .
+        "</image>",
+        'Multiple values for the same key in a module, usign an array ref'
+    );
 }

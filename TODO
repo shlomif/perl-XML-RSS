@@ -1,10 +1,10 @@
 
 http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
---- before the next release-ish
+Add a way (and an option) to parse module items with duplicate keys into
+an array reference.
 
-- Make sure the xml:base parsing into-hash-refs with an "xml:base" key
-is triggered only with a special option to parse.
+--- before the next release-ish
 
 - wrong handling enclosure subelement of item
   http://rt.cpan.org/Ticket/Display.html?id=21740

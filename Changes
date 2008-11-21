@@ -1,4 +1,7 @@
 Revision history for Perl module XML::RSS
+    
+    - Added support for duplicate items of RSS modules.
+        - http://rt.cpan.org/Public/Bug/Display.html?id=4495
 
 1.37 - November 18, 2008
     - Extracted the common parts of parse() and parsefile() into one

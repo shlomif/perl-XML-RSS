@@ -614,7 +614,49 @@ sub _out_dc_elements {
     return;
 }
 
-sub _out_module_prefix_elements
+sub _out_module_prefix_elements_hash
+{
+    my ($self, $args) = @_;
+
+    my $prefix = $args->{prefix};
+    my $data = $args->{data};
+    my $url = $args->{url};
+    
+    while (my ($el, $value) = each(%$data)) {
+        $self->_out_module_prefix_pair(
+            {
+                %$args,
+                el => $el,
+                val => $value,
+            }
+        );
+    }
+
+    return;
+}
+
+sub _out_module_prefix_pair
+{
+    my ($self, $args) = @_;
+
+    my $prefix = $args->{prefix};
+    my $url = $args->{url};
+    
+    my $el = $args->{el};
+    my $value = $args->{val};
+
+    if ($self->_main->_is_rdf_resource($el,$url)) {
+        $self->_out(
+            qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
+    }
+    else {
+        $self->_out_ns_tag($prefix, $el, $value);
+    }
+
+    return;
+}
+
+sub _out_module_prefix_elements_array
 {
     my ($self, $args) = @_;
 
@@ -622,18 +664,39 @@ sub _out_module_prefix_elements
     my $data = $args->{data};
     my $url = $args->{url};
 
-    while (my ($el, $value) = each %{$data || {}}) {
-        if ($self->_main->_is_rdf_resource($el,$url))
-        {
-            $self->_out(
-                qq{<${prefix}:${el} rdf:resource="} . $self->_encode($value) . qq{" />\n});
-        }
-        else {
-            $self->_out_ns_tag($prefix, $el, $value);
-        }
+    foreach my $element (@$data)
+    {
+        $self->_out_module_prefix_pair(
+            {
+                %$args,
+                el => $element->{'el'},
+                val => $element->{'val'},
+            }
+        )
     }
 
     return;
+}
+
+sub _out_module_prefix_elements
+{
+    my ($self, $args) = @_;
+
+    my $data = $args->{'data'};
+
+    if (! $data) {
+        # Do nothing - empty data
+        return;
+    }
+    elsif (ref($data) eq "HASH") {
+        return $self->_out_module_prefix_elements_hash($args);
+    }
+    elsif (ref($data) eq "ARRAY") {
+        return $self->_out_module_prefix_elements_array($args);
+    }
+    else {
+        die "Don't know how to handle module data of type " . ref($data) . "!";
+    }
 }
 
 # Output the Ad-hoc modules

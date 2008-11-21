@@ -1608,6 +1608,15 @@ Then proceed as usual:
 
   $rss->add_item (title=>$title, link=>$link, my=>{ rating=>$rating });
 
+You can also set the value of the module's prefix to an array reference 
+of C<<< { el => , val => } >>> hash-references, in which case duplicate 
+elements are possible:
+
+  $rss->add_item(title=>$title, link=>$link, my=> [
+    {el => "rating", value => $rating1, }
+    {el => "rating", value => $rating2, },
+  ]
+
 Non-standard namespaces are not, however, currently accessible via a simple
 prefix; access them via their namespace URL like so:
 
