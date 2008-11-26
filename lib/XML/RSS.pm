@@ -1579,6 +1579,20 @@ They are associated with appropriate URI-based namespaces:
   dc:   http://purl.org/dc/elements/1.1/
   taxo: http://purl.org/rss/1.0/modules/taxonomy/
 
+The Dublin Core ('dc') hash keys may be point to an array
+reference, which in turn will specify multiple such keys, and render them
+one after the other. For example:
+
+    $rss->add_item (
+        title => $title,
+        link => $link,
+        dc => { 
+            subject=> ["Jungle", "Desert", "Swamp"],
+            creator=>$creator,
+            date=>$date
+        },
+    );
+
 Dublin Core elements may occur in channel, image, item(s), and textinput
 -- albeit uncomming to find them under image and textinput.  Syndication
 elements are limited to the channel element. Taxonomy elements can occur

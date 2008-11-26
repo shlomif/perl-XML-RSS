@@ -4,6 +4,10 @@ http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 Add a way (and an option) to parse module items with duplicate keys into
 an array reference.
 
+Add a way (and an option) to parse multiple dc:items into an array reference:
+
+http://rt.cpan.org/Public/Bug/Display.html?id=6000
+
 --- before the next release-ish
 
 - wrong handling enclosure subelement of item

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 191;
+use Test::More tests => 192;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4116,5 +4116,32 @@ EOF
         "<eloq:show>must go on</eloq:show>\n" .
         "</image>",
         'Multiple values for the same key in a module, usign an array ref'
+    );
+}
+
+{
+    my $rss = create_channel_rss({
+        version => "1.0",
+    });
+
+    $rss->add_item(
+        title => "In the Dublin Core Jungle",
+        link => "http://jungle.tld/Enter/",
+        dc => {
+            subject => ['tiger', 'elephant', 'snake',],
+            language => "en-GB",
+        },
+    );
+
+    # TEST
+    contains($rss, "<item rdf:about=\"http://jungle.tld/Enter/\">\n" .
+        "<title>In the Dublin Core Jungle</title>\n" .
+        "<link>http://jungle.tld/Enter/</link>\n" .
+        "<dc:language>en-GB</dc:language>\n" .
+        "<dc:subject>tiger</dc:subject>\n" .
+        "<dc:subject>elephant</dc:subject>\n" .
+        "<dc:subject>snake</dc:subject>\n" .
+        "</item>\n",
+        "1.0 - item/multiple dc:subject's"
     );
 }

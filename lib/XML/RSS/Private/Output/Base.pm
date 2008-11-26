@@ -169,6 +169,22 @@ sub _out_defined_tag {
     return;
 }
 
+sub _out_array_tag {
+    my ($self, $tag, $inner) = @_;
+
+    if (ref($inner) eq "ARRAY") {
+        foreach my $elem (@$inner)
+        {
+            $self->_out_defined_tag($tag, $elem);
+        }
+    }
+    else {
+        $self->_out_defined_tag($tag, $inner);
+    }
+
+    return;
+}
+
 sub _out_inner_tag {
     my ($self, $params, $tag) = @_;
 
@@ -608,7 +624,7 @@ sub _out_dc_elements {
     foreach my $dc (@{$self->_get_dc_ok_fields()}) {
         next if $skip_hash->{$dc};
 
-        $self->_out_defined_tag("dc:$dc", $elem->{dc}->{$dc});
+        $self->_out_array_tag("dc:$dc", $elem->{dc}->{$dc});
     }
 
     return;
