@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 192;
+use Test::More tests => 194;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4143,5 +4143,36 @@ EOF
         "<dc:subject>snake</dc:subject>\n" .
         "</item>\n",
         "1.0 - item/multiple dc:subject's"
+    );
+}
+
+{
+    my $rss = create_skipDays_rss({
+            version => "2.0", 
+            skipDays_params => [ day => [qw(Sunday Thursday Saturday)] ],
+        });
+    # TEST
+    contains($rss, ("<skipDays>\n"
+        . "<day>Sunday</day>\n"
+        . "<day>Thursday</day>\n"
+        . "<day>Saturday</day>\n"
+        . "</skipDays>\n"),
+        "Generate skipDays with multiple values (array)."
+    );
+}
+
+
+{
+    my $rss = create_skipHours_rss({
+            version => "2.0", 
+            skipHours_params => [ hour => [qw(5 10 16)] ],
+        });
+    # TEST
+    contains($rss, ("<skipHours>\n"
+        . "<hour>5</hour>\n"
+        . "<hour>10</hour>\n"
+        . "<hour>16</hour>\n"
+        . "</skipHours>\n"),
+        "2.0 - skipHours/hour == 0"
     );
 }

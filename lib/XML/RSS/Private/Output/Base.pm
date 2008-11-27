@@ -743,7 +743,7 @@ sub _out_complete_outer_tag {
 
     if (defined($value)) {
         $self->_out("<$outer>\n");
-        $self->_out_tag($inner, $value);
+        $self->_out_array_tag($inner, $value);
         $self->_end_top_level_elem($outer);
     }
 }
