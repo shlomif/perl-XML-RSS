@@ -15,6 +15,7 @@ examples/1.0/create_rss_1.0.pl
 examples/1.0/rss1.0.rdf
 examples/1.0/slash.rdf
 examples/1.0/update_rss_1.0.pl
+examples/2.0/rss-2.0-sample-from-rssboard-multiple-skip-days-and-hours.xml
 examples/convert.pl
 examples/create_rss_multiple.pl
 examples/README
@@ -72,7 +73,7 @@ TODO
 t/pod-coverage.t
 t/pod.t
 t/rss2-gt-encoding.t
-t/test_manifest
 t/test-generated-items.t
+t/test_manifest
 t/version.t
 t/xml-header.t

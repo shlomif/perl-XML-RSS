@@ -5,6 +5,9 @@ Revision history for Perl module XML::RSS
     - Added support for multiple Dublin Core elements. One can point
     the field to an array and it will create multiple elements:
         - http://rt.cpan.org/Public/Bug/Display.html?id=6000
+    - Now parsing several <skipDays>/<day>s and <skipHours>/<hour>s into
+    an array reference instead of concatenating them together.
+        - http://rt.cpan.org/Public/Bug/Display.html?id=40978
 
 1.37 - November 18, 2008
     - Extracted the common parts of parse() and parsefile() into one

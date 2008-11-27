@@ -690,6 +690,27 @@ sub _append_text_to_item {
         \&_return_item_elem,
     );
 }
+
+sub _append_to_array_elem {
+    my ($self, $category, $cdata) = @_;
+
+    if (! $self->_my_in_element($category))
+    {
+        return;
+    }
+
+    my $el = $self->_current_element;
+
+    if (ref($self->{$category}->{$el}) eq "ARRAY") {
+        $self->{$category}->{$el}->[-1] .= $cdata;
+    }
+    else {
+        $self->{$category}->{$el} .= $cdata;
+    }
+
+    return 1;
+}
+
 sub _handle_char {
     my ($self, $cdata) = (@_);
 
@@ -711,14 +732,11 @@ sub _handle_char {
         $self->_append_text_to_elem("textinput", $cdata);
     }
     # skipHours element
-    elsif ($self->_my_in_element("skipHours")) {
-        $self->{'skipHours'}->{$self->_current_element} .= $cdata;
-
+    elsif ($self->_append_to_array_elem("skipHours", $cdata)) {
+        # Do nothing - already done in the predicate.
     }
-    # skipDays element
-    elsif ($self->_my_in_element("skipDays")) {
-        $self->{'skipDays'}->{$self->_current_element} .= $cdata;
-
+    elsif ($self->_append_to_array_elem("skipDays", $cdata)) {
+        # Do nothing - already done in the predicate.
     }
     # channel element
     elsif ($self->_my_in_element("channel")) {
@@ -810,6 +828,33 @@ sub _handle_start {
 
     # beginning of item element
     }
+    # TODO : Merge skipHours and skipDays
+    elsif ($self->_my_in_element("skipHours")) {
+        # If it's an array - append a new empty element because a new one
+        # was started.
+        if (ref($self->{'skipHours'}->{$el}) eq "ARRAY") {
+            push @{$self->{'skipHours'}->{$el}}, "";
+        }
+        # If it's not an array but still full (i.e: it's only the second
+        # element), then turn it into an array
+        elsif (defined($self->{'skipHours'}->{$el}) && length($self->{'skipHours'}->{$el})) {
+            $self->{'skipHours'}->{$el} = [$self->{'skipHours'}->{$el}, ""];
+        }
+        # Else - do nothing and let the function append to the new array.
+    }
+    elsif ($self->_my_in_element("skipDays")) {
+        # If it's an array - append a new empty element because a new one
+        # was started.
+        if (ref($self->{'skipDays'}->{$el}) eq "ARRAY") {
+            push @{$self->{'skipDays'}->{$el}}, "";
+        }
+        # If it's not an array but still full (i.e: it's only the second
+        # element), then turn it into an array
+        elsif (defined($self->{'skipDays'}->{$el}) && length($self->{'skipDays'}->{$el})) {
+            $self->{'skipDays'}->{$el} = [$self->{'skipDays'}->{$el}, ""];
+        }
+        # Else - do nothing and let the function append to the new array.
+    }    
     elsif ($el eq 'item') {
 
         # deal with trouble makers who use mod_content :)

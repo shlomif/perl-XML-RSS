@@ -3,13 +3,15 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 4;
 
 use XML::RSS;
+use File::Spec;
 
-my $rss = XML::RSS->new();
+{
+    my $rss = XML::RSS->new();
 
-$rss->parse(<<"EOF");
+    $rss->parse(<<"EOF");
 <?xml version="1.0" encoding="UTF-8" ?>
 <?xml-stylesheet href="/rss/news/journalism.xsl" type="text/xsl"?>
 <rss version="2.0">
@@ -40,12 +42,40 @@ $rss->parse(<<"EOF");
 </rss>
 EOF
 
-# TEST
-is ($rss->{textinput}->{link}, "http://www.topix.net/search/", 
-    "Testing for textinput link"
-);
+    # TEST
+    is ($rss->{textinput}->{link}, "http://www.topix.net/search/", 
+        "Testing for textinput link"
+    );
 
-# TEST
-is ($rss->{channel}->{link}, "http://www.topix.net/news/journalism",
-    "Testing for channel link"
-);
+    # TEST
+    is ($rss->{channel}->{link}, "http://www.topix.net/news/journalism",
+        "Testing for channel link"
+    );
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(
+        File::Spec->catfile(
+            File::Spec->curdir(), 
+            "examples",
+            "2.0",
+            "rss-2.0-sample-from-rssboard-multiple-skip-days-and-hours.xml"
+        )
+    );
+
+    # TEST
+    is_deeply(
+        $rss->{'skipHours'}->{'hour'}, 
+        [qw(0 1 2 22 23)],
+        "skipHours/hour is parsed into an array with the individual elements",
+    );
+
+    # TEST
+    is_deeply(
+        $rss->{'skipDays'}->{'day'},
+        [qw(Saturday Sunday)],
+        "skipDays/day is parsed into an array with indiv elements",
+    );
+}

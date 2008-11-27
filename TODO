@@ -1,12 +1,15 @@
 
 http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
-Add a way (and an option) to parse module items with duplicate keys into
+- Add a way (and an option) to parse module items with duplicate keys into
 an array reference.
 
-Add a way (and an option) to parse multiple dc:items into an array reference:
+- Add a way (and an option) to parse multiple dc:items into an array reference:
+    - http://rt.cpan.org/Public/Bug/Display.html?id=6000
 
-http://rt.cpan.org/Public/Bug/Display.html?id=6000
+- Convert an array of skipDays/day's or skipHours/hour's to multiple tags,
+when converting to text.
+    - http://rt.cpan.org/Public/Bug/Display.html?id=40978 
 
 --- before the next release-ish
 
