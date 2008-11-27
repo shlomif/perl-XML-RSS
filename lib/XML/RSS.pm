@@ -685,7 +685,7 @@ sub _append_text_to_item {
     }
 
     $self->_append_text_to_elem_struct(
-        $self->{'items'}->[$self->{num_items} - 1],
+        $self->_last_item,
         $cdata,
         \&_return_item_elem,
     );
@@ -787,6 +787,12 @@ sub _start_array_element {
     return 1;
 }
 
+sub _last_item {
+    my $self = shift;
+
+    return ($self->{'items'}->[$self->{num_items} - 1] ||= {});
+}
+
 sub _handle_start {
     my $self    = shift;
     my $el      = shift;
@@ -875,13 +881,13 @@ sub _handle_start {
             }
         }
         # handle xml:base
-        $self->{'items'}->[$self->{num_items} - 1]->{'xml:base'} = $attribs{'base'} if exists $attribs{'base'};
+        $self->_last_item->{'xml:base'} = $attribs{'base'} if exists $attribs{'base'};
 
 
         # guid element is a permanent link unless isPermaLink attribute is set to false
     }
     elsif ($el eq 'guid') {
-        $self->{'items'}->[$self->{num_items} - 1]->{'isPermaLink'} =
+        $self->_last_item->{'isPermaLink'} =
           (exists($attribs{'isPermaLink'}) && 
               (lc($attribs{'isPermaLink'}) eq 'true')
           );
@@ -900,7 +906,7 @@ sub _handle_start {
     {
 
         #print "taxo: ", $attribs{'resource'},"\n";
-        push(@{$self->{'items'}->[$self->{num_items} - 1]->{'taxo'}}, $attribs{'resource'});
+        push(@{$self->_last_item->{'taxo'}}, $attribs{'resource'});
         $self->{'modules'}->{'http://purl.org/rss/1.0/modules/taxonomy/'} = 'taxo';
 
         # beginning of taxo li in channel element
@@ -956,23 +962,23 @@ sub _handle_start {
         # in the 'rdf_resource_fields' so this condition always evaluates
         # to false.
         # if ( $ns eq $self->{rss_namespace} ) {
-        #   $self->{'items'}->[$self->{num_items}-1]->{ $el } = $attribs{resource};
+        #   $self->_last_item->{ $el } = $attribs{resource};
         # }
         # else
         {
-            $self->{'items'}->[$self->{num_items} - 1]->{$ns}->{$el} = $attribs{resource};
+            $self->_last_item->{$ns}->{$el} = $attribs{resource};
 
             # add short cut
             #
             if (exists($self->{modules}->{$ns})) {
                 $ns = $self->{modules}->{$ns};
-                $self->{'items'}->[$self->{num_items} - 1]->{$ns}->{$el} = $attribs{resource};
+                $self->_last_item->{$ns}->{$el} = $attribs{resource};
             }
         }
     }
     elsif ($self->_should_be_hashref($el) and $self->_current_element eq 'item') {
         $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
-        $self->{items}->[$self->{num_items} - 1]->{$el} = \%attribs if keys %attribs;
+        $self->_last_item->{$el} = \%attribs if keys %attribs;
     }
 }
 
