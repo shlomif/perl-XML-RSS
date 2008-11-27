@@ -765,6 +765,28 @@ sub _should_be_hashref {
     );
 }
 
+sub _start_array_element {
+    my ($self, $cat, $el) = @_;
+
+    if (!$self->_my_in_element($cat)) {
+        return;
+    }
+
+    # If it's an array - append a new empty element because a new one
+    # was started.
+    if (ref($self->{$cat}->{$el}) eq "ARRAY") {
+        push @{$self->{$cat}->{$el}}, "";
+    }
+    # If it's not an array but still full (i.e: it's only the second
+    # element), then turn it into an array
+    elsif (defined($self->{$cat}->{$el}) && length($self->{$cat}->{$el})) {
+        $self->{$cat}->{$el} = [$self->{$cat}->{$el}, ""];
+    }
+    # Else - do nothing and let the function append to the new array.
+    
+    return 1;
+}
+
 sub _handle_start {
     my $self    = shift;
     my $el      = shift;
@@ -829,32 +851,12 @@ sub _handle_start {
     # beginning of item element
     }
     # TODO : Merge skipHours and skipDays
-    elsif ($self->_my_in_element("skipHours")) {
-        # If it's an array - append a new empty element because a new one
-        # was started.
-        if (ref($self->{'skipHours'}->{$el}) eq "ARRAY") {
-            push @{$self->{'skipHours'}->{$el}}, "";
-        }
-        # If it's not an array but still full (i.e: it's only the second
-        # element), then turn it into an array
-        elsif (defined($self->{'skipHours'}->{$el}) && length($self->{'skipHours'}->{$el})) {
-            $self->{'skipHours'}->{$el} = [$self->{'skipHours'}->{$el}, ""];
-        }
-        # Else - do nothing and let the function append to the new array.
+    elsif ($self->_start_array_element("skipHours", $el)) {
+        # Do nothing - already done in the predicate.
     }
-    elsif ($self->_my_in_element("skipDays")) {
-        # If it's an array - append a new empty element because a new one
-        # was started.
-        if (ref($self->{'skipDays'}->{$el}) eq "ARRAY") {
-            push @{$self->{'skipDays'}->{$el}}, "";
-        }
-        # If it's not an array but still full (i.e: it's only the second
-        # element), then turn it into an array
-        elsif (defined($self->{'skipDays'}->{$el}) && length($self->{'skipDays'}->{$el})) {
-            $self->{'skipDays'}->{$el} = [$self->{'skipDays'}->{$el}, ""];
-        }
-        # Else - do nothing and let the function append to the new array.
-    }    
+    elsif ($self->_start_array_element("skipDays", $el)) {
+        # Do nothing - already done in the predicate.
+    }
     elsif ($el eq 'item') {
 
         # deal with trouble makers who use mod_content :)
