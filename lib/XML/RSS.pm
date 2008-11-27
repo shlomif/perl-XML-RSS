@@ -17,7 +17,7 @@ use XML::RSS::Private::Output::V2_0;
 
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
-$VERSION = '1.37';
+$VERSION = '1.38';
 
 $AUTO_ADD = 0;
 

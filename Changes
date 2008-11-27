@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
     
+1.38 - November 27, 2008
     - Added support for duplicate items of RSS modules.
         - http://rt.cpan.org/Public/Bug/Display.html?id=4495
     - Added support for multiple Dublin Core elements. One can point
