@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 195;
+use Test::More tests => 196;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4201,6 +4201,30 @@ EOF
          "</item>"
          ),
         "2.0 - item/multiple-category's",
+    );
+}
+
+{
+    # Here we create an RSS 2.0 object and render it as the output
+    # version "3.5" in order to test that version 1.0 is the default
+    # version for output.
+    my $rss = create_channel_rss({
+            version => "2.0", 
+            channel_params =>
+            [category => [qw(OneCat TooManyCats KittensGalore)]],
+            omit_date => 1,
+        });
+    # TEST
+    contains($rss, ("<channel>\n" .
+        "<title>freshmeat.net</title>\n" .
+        "<link>http://freshmeat.net</link>\n" .
+        "<description>Linux software</description>\n" .
+        "<category>OneCat</category>\n" .
+        "<category>TooManyCats</category>\n" .
+        "<category>KittensGalore</category>\n" .
+        "\n" .
+        "<item>\n"),
+        "Multiple channel/category elements"
     );
 }
 

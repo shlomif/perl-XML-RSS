@@ -550,13 +550,29 @@ sub _prefer_dc {
     return $self->{_prefer_dc};
 }
 
+sub _calc_channel_dc_field_params {
+    my ($self, $dc_key, $non_dc_key) = @_;
+
+    return
+    (
+        $self->_prefer_dc() ? "dc:$dc_key" : $non_dc_key,
+        $self->_calc_channel_dc_field($dc_key, $non_dc_key)
+    );
+}
 
 sub _out_channel_dc_field {
     my ($self, $dc_key, $non_dc_key) = @_;
 
     return $self->_out_defined_tag(
-        ($self->_prefer_dc() ? "dc:$dc_key" : $non_dc_key),
-        $self->_calc_channel_dc_field($dc_key, $non_dc_key)
+        $self->_calc_channel_dc_field_params($dc_key, $non_dc_key),
+    );
+}
+
+sub _out_channel_array_self_dc_field {
+    my ($self, $key) = @_;
+
+    $self->_out_array_tag(
+        $self->_calc_channel_dc_field_params($key, $key),
     );
 }
 

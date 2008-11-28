@@ -67,7 +67,7 @@ sub _output_rss_middle {
 
     $self->_out_editors;
 
-    $self->_out_channel_self_dc_field("category");
+    $self->_out_channel_array_self_dc_field("category");
     $self->_out_channel_self_dc_field("generator");
 
     # Insert cloud support here
