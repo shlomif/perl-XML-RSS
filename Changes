@@ -3,6 +3,10 @@ Revision history for Perl module XML::RSS
     - Now outputting an arrayref of <skipDays>/<day>'s and <skipHours>/<hours>
     properly.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40978
+    - Now parsing multiple <category>'ies inside an <item> into an
+    array-reference.
+        - http://rt.cpan.org/Ticket/Display.html?id=38296
+
 
 1.38 - November 27, 2008
     - Added support for duplicate items of RSS modules.

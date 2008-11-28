@@ -1,3 +1,5 @@
+- Add a way to generate an array ref of <item>-><category>'s as such:
+    - http://rt.cpan.org/Ticket/Display.html?id=38296
 
 http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
@@ -6,6 +8,7 @@ an array reference.
 
 - Add a way (and an option) to parse multiple dc:items into an array reference:
     - http://rt.cpan.org/Public/Bug/Display.html?id=6000
+
 
 --- before the next release-ish
 
