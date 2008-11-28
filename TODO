@@ -1,6 +1,3 @@
-- Add a way to generate an array ref of <item>-><category>'s as such:
-    - http://rt.cpan.org/Ticket/Display.html?id=38296
-
 http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
 - Add a way (and an option) to parse module items with duplicate keys into

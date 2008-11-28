@@ -464,6 +464,15 @@ sub _end_channel {
     shift->_end_top_level_elem("channel");
 }
 
+sub _output_array_item_tag {
+    my ($self, $item, $tag) = @_;
+
+    if (defined($item->{$tag})) {
+        $self->_out_array_tag($tag, $item->{$tag});
+    }
+
+    return;
+}
 
 sub _output_def_item_tag {
     my ($self, $item, $tag) = @_;

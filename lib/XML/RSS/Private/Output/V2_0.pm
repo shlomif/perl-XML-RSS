@@ -28,9 +28,9 @@ sub _get_filtered_items {
 sub _out_item_2_0_tags {
     my ($self, $item) = @_;
 
-    foreach my $tag (qw(author category comments)) {
-        $self->_output_def_item_tag($item, $tag);
-    }
+    $self->_output_def_item_tag($item, "author");
+    $self->_output_array_item_tag($item, "category");
+    $self->_output_def_item_tag($item, "comments");
 
     $self->_out_guid($item);
 

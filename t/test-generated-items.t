@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 194;
+use Test::More tests => 195;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4176,3 +4176,31 @@ EOF
         "2.0 - skipHours/hour == 0"
     );
 }
+
+
+{
+    my $rss = create_item_with_0_rss({version => "2.0", 
+            item_params => 
+            [
+                title => "Foo&Bar",
+                link => "http://www.mytld/",
+                category => ["OneCat", "TooCat", "3Kitties"],
+            ],
+        }
+    );
+
+    # TEST
+    contains(
+        $rss,
+        ("<item>\n" .
+         "<title>Foo&#x26;Bar</title>\n" .
+         "<link>http://www.mytld/</link>\n" .
+         "<category>OneCat</category>\n" .
+         "<category>TooCat</category>\n" .
+         "<category>3Kitties</category>\n" .
+         "</item>"
+         ),
+        "2.0 - item/multiple-category's",
+    );
+}
+

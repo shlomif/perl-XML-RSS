@@ -6,7 +6,8 @@ Revision history for Perl module XML::RSS
     - Now parsing multiple <category>'ies inside an <item> into an
     array-reference.
         - http://rt.cpan.org/Ticket/Display.html?id=38296
-
+    - Now outputting an arayref of <item>/<category> prpoerly.
+        - http://rt.cpan.org/Ticket/Display.html?id=38296
 
 1.38 - November 27, 2008
     - Added support for duplicate items of RSS modules.
