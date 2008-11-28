@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 
 use XML::RSS;
 use File::Spec;
@@ -77,6 +77,13 @@ EOF
         $rss->{'skipDays'}->{'day'},
         [qw(Saturday Sunday)],
         "skipDays/day is parsed into an array with indiv elements",
+    );
+
+    # TEST
+    is_deeply(
+        $rss->{'channel'}->{'category'},
+        [qw(Media Texas)],
+        "Multiple categories",
     );
 }
 

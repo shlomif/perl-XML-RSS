@@ -770,7 +770,12 @@ sub _handle_char {
     elsif ($self->_my_in_element("channel")) {
         return if $self->_within_topics;
 
-        $self->_append_text_to_elem("channel", $cdata);
+        if ($self->_current_element eq "category") {
+            $self->_append_to_array_elem("channel", $cdata);
+        }
+        else {
+            $self->_append_text_to_elem("channel", $cdata);
+        }
     }
 }
 
@@ -806,7 +811,7 @@ sub _start_array_element_in_struct {
     elsif (defined($struct->{$el}) && length($struct->{$el})) {
         $struct->{$el} = [$struct->{$el}, ""];
     }
-    # Else - do nothing and let the function append to the new array.
+    # Else - do nothing and let the function append to the new value
     #
     return 1;
 }
@@ -891,7 +896,6 @@ sub _handle_start {
 
     # beginning of item element
     }
-    # TODO : Merge skipHours and skipDays
     elsif ($self->_start_array_element("skipHours", $el)) {
         # Do nothing - already done in the predicate.
     }
@@ -1020,6 +1024,11 @@ sub _handle_start {
     elsif ($self->_should_be_hashref($el) and $self->_current_element eq 'item') {
         $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
         $self->_last_item->{$el} = \%attribs if keys %attribs;
+    }
+    elsif (($el eq "category") && 
+        (!$parser->within_element("item")) &&
+        $self->_start_array_element("channel", $el)) {
+        # Do nothing - already done in the predicate.
     }
 }
 
