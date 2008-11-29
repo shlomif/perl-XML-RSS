@@ -624,12 +624,22 @@ sub _append_text_to_elem_struct {
         );
     }
     else {
-        # If it's in another namespace
-        $struct->{$ns}->{$elem} .= $cdata;
+        my $prefix = $self->{modules}->{$ns};
+        $self->_append_struct(
+            ($struct->{$ns} ||= {}),
+            $elem,
+            (defined($prefix) && $prefix eq "dc"),
+            $cdata
+        );
 
         # If it's in a module namespace, provide a friendlier prefix duplicate
-        if ($self->{modules}->{$ns}) {
-            $struct->{$self->{modules}->{$ns}}->{$elem} .= $cdata;
+        if ($prefix) {
+            $self->_append_struct(
+                ($struct->{$prefix} ||= {}),
+                $elem,
+                ($prefix eq "dc"),
+                $cdata
+            );
         }
     }
 
@@ -799,20 +809,36 @@ sub _should_be_hashref {
 }
 
 sub _start_array_element_in_struct {
-    my ($self, $struct, $el) = @_;
+    my ($self, $input_struct, $el, $prefix) = @_;
 
-    # If it's an array - append a new empty element because a new one
-    # was started.
-    if (ref($struct->{$el}) eq "ARRAY") {
-        push @{$struct->{$el}}, "";
+    my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
+
+    my @structs = (!$el_verdict)
+        ? (
+            (exists($self->{modules}->{$el_ns})
+                ? ($input_struct->{$self->{modules}->{$el_ns}} ||= {})
+                : ()
+            ),
+            ($input_struct->{$el_ns} ||= {}),
+        )
+        : ($input_struct)
+        ;
+
+    foreach my $struct (@structs)
+    {
+        # If it's an array - append a new empty element because a new one
+        # was started.
+        if (ref($struct->{$el}) eq "ARRAY") {
+            push @{$struct->{$el}}, "";
+        }
+        # If it's not an array but still full (i.e: it's only the second
+        # element), then turn it into an array
+        elsif (defined($struct->{$el}) && length($struct->{$el})) {
+            $struct->{$el} = [$struct->{$el}, ""];
+        }
+        # Else - do nothing and let the function append to the new value
+        #
     }
-    # If it's not an array but still full (i.e: it's only the second
-    # element), then turn it into an array
-    elsif (defined($struct->{$el}) && length($struct->{$el})) {
-        $struct->{$el} = [$struct->{$el}, ""];
-    }
-    # Else - do nothing and let the function append to the new value
-    #
     return 1;
 }
 
@@ -839,6 +865,8 @@ sub _handle_start {
     my %attribs = @_;
 
     my $parser = $self->_parser;
+
+    my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
     
     # beginning of RSS 0.91
     if ($el eq 'rss') {
@@ -936,7 +964,12 @@ sub _handle_start {
     }
     elsif (
            $self->_current_element eq "item"
-        && $el eq "category"
+        && (($el eq "category") || 
+            (
+                   exists($self->{modules}->{$el_ns})
+                && ($self->{modules}->{$el_ns} eq "dc")
+            )
+        )
     ) {
         $self->_start_array_element_in_struct($self->_last_item, $el);
     }

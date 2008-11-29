@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 196;
+use Test::More tests => 198;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4143,6 +4143,24 @@ EOF
         "<dc:subject>snake</dc:subject>\n" .
         "</item>\n",
         "1.0 - item/multiple dc:subject's"
+    );
+
+    my $parsed_rss = XML::RSS->new(version => '1.0');
+
+    $parsed_rss->parse($rss->as_string());
+
+    # TEST
+    is_deeply (
+        $parsed_rss->{'items'}->[1]->{'dc'}->{'subject'},
+        [qw(tiger elephant snake)],
+        "Properly parsed dc:subject into an array.",
+    );
+
+    # TEST
+    is(
+        $parsed_rss->{'items'}->[1]->{'dc'}->{'language'},
+        "en-GB",
+        "Properly parsed dc:language.",
     );
 }
 

@@ -12,6 +12,10 @@ Revision history for Perl module XML::RSS
         - http://rt.cpan.org/Public/Bug/Display.html?id=9729
     - Rendering multiple <channel>/<category> elements from array refs.
         - http://rt.cpan.org/Public/Bug/Display.html?id=9729
+    - Now parsing multiple dc:items into an array 
+      reference (at least inside an <item>):
+        - http://rt.cpan.org/Public/Bug/Display.html?id=6000
+        
 
 1.38 - November 27, 2008
     - Added support for duplicate items of RSS modules.
