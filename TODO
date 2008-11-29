@@ -14,7 +14,7 @@ an array reference.
 
 --- soon-ish
 
-- Make all the date/time interfaces accept and omit DateTime dates (maybe unix
+- Make all the date/time interfaces accept and emit DateTime dates (maybe unix
   timestamps too?) instead of strings
 
 --- eventually
