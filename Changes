@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
  
+1.40 - December 1, 2008
     - Now outputting an arrayref of <skipDays>/<day>'s and <skipHours>/<hours>
     properly.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40978
