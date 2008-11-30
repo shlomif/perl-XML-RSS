@@ -607,6 +607,21 @@ sub _is_rdf_resource {
     );
 }
 
+sub _get_ns_arrayity {
+    my ($self, $ns) = @_;
+
+    my $is_array =
+           $self->_parse_options()->{'modules_as_arrays'}
+        && (!exists($self->_get_default_modules()->{$ns}))
+        # RDF
+        && ($ns ne "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+        ;
+
+    my $default_ref = sub { $is_array ? [] : {} };
+
+    return ($is_array, $default_ref);
+}
+
 sub _append_text_to_elem_struct {
     my ($self, $struct, $cdata, $mapping_sub, $is_array_sub) = @_;
 
@@ -625,8 +640,11 @@ sub _append_text_to_elem_struct {
     }
     else {
         my $prefix = $self->{modules}->{$ns};
+
+        my ($is_array, $default_ref) = $self->_get_ns_arrayity($ns);
+
         $self->_append_struct(
-            ($struct->{$ns} ||= {}),
+            ($struct->{$ns} ||= $default_ref->()),
             $elem,
             (defined($prefix) && $prefix eq "dc"),
             $cdata
@@ -635,7 +653,7 @@ sub _append_text_to_elem_struct {
         # If it's in a module namespace, provide a friendlier prefix duplicate
         if ($prefix) {
             $self->_append_struct(
-                ($struct->{$prefix} ||= {}),
+                ($struct->{$prefix} ||= $default_ref->()),
                 $elem,
                 ($prefix eq "dc"),
                 $cdata
@@ -648,7 +666,12 @@ sub _append_text_to_elem_struct {
 
 sub _append_struct {
     my ($self, $struct, $key, $can_be_array, $cdata) = @_;
-    if (defined $struct->{$key}) {
+
+    if (ref($struct) eq 'ARRAY') {
+        $struct->[-1]->{'val'} .= $cdata;
+        return;
+    }
+    elsif (defined $struct->{$key}) {
         if (ref($struct->{$key}) eq 'HASH') {
             $struct->{$key}->{content} .= $cdata;
             return;
@@ -778,7 +801,9 @@ sub _handle_char {
     }
     # channel element
     elsif ($self->_my_in_element("channel")) {
-        return if $self->_within_topics;
+        if ($self->_within_topics() || $self->_my_in_element("items")) {
+            return;
+        }
 
         if ($self->_current_element eq "category") {
             $self->_append_to_array_elem("channel", $cdata);
@@ -813,22 +838,27 @@ sub _start_array_element_in_struct {
 
     my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
 
+    my ($is_array, $default_ref) = $self->_get_ns_arrayity($el_ns);
+
     my @structs = (!$el_verdict)
         ? (
             (exists($self->{modules}->{$el_ns})
-                ? ($input_struct->{$self->{modules}->{$el_ns}} ||= {})
+                ? ($input_struct->{$self->{modules}->{$el_ns}} ||= $default_ref->())
                 : ()
             ),
-            ($input_struct->{$el_ns} ||= {}),
+            ($input_struct->{$el_ns} ||= $default_ref->()),
         )
         : ($input_struct)
         ;
 
     foreach my $struct (@structs)
     {
+        if (ref($struct) eq 'ARRAY') {
+            push @$struct, { el => $el, val => "", };
+        }
         # If it's an array - append a new empty element because a new one
         # was started.
-        if (ref($struct->{$el}) eq "ARRAY") {
+        elsif (ref($struct->{$el}) eq "ARRAY") {
             push @{$struct->{$el}}, "";
         }
         # If it's not an array but still full (i.e: it's only the second
@@ -1058,6 +1088,9 @@ sub _handle_start {
         $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
         $self->_last_item->{$el} = \%attribs if keys %attribs;
     }
+    elsif ($self->_start_array_element("image", $el)) {
+        # Do nothing - already done in the predicate.
+    }    
     elsif (($el eq "category") && 
         (!$parser->within_element("item")) &&
         $self->_start_array_element("channel", $el)) {
@@ -1632,6 +1665,13 @@ instead of strings (with a B<content> key containing their content , B<if>
 they have XML attributes. Without this key, the attributes will be ignored
 and there will only be a string. Thus, specifying this option may break
 compatibility.
+
+=item * modules_as_arrays
+
+This option when true, will parse the modules key-value-pairs as an arrayref of 
+C<<< { el => $key_name, value => $value, } >>> hash-refs to gracefully
+handle duplicate items (see below). It will not affect the known modules such 
+as dc ("Dublin Core").
 
 =back
 

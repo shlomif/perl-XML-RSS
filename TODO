@@ -1,7 +1,5 @@
 http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
-- Add a way (and an option) to parse module items with duplicate keys into
-an array reference.
 
 --- before the next release-ish
 
@@ -28,3 +26,6 @@ an array reference.
 inside other elements besides an <item>:
     - http://rt.cpan.org/Public/Bug/Display.html?id=6000
 
+- Add a way (and an option) to parse module items with duplicate keys into
+an array reference.
+    - check more edge cases with other than <image> elements.

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 198;
+use Test::More tests => 199;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -4116,6 +4116,22 @@ EOF
         "<eloq:show>must go on</eloq:show>\n" .
         "</image>",
         'Multiple values for the same key in a module, usign an array ref'
+    );
+
+    my $parsed_rss = XML::RSS->new(version => '1.0');
+    $parsed_rss->add_module(prefix => "eloq", uri => "http://eloq.tld2/Gorj/");
+    $parsed_rss->parse($rss->as_string(), { modules_as_arrays => 1, });
+
+    # TEST
+    is_deeply(
+        $parsed_rss->{'image'}->{'eloq'},
+        [
+            { 'el' => 'grow', 'val' => "There" },
+            { 'el' => 'grow', 'val' => "Position", },
+            { 'el' => 'show', 'val' => "and tell", },
+            { 'el' => 'show', 'val' => "must go on", },
+        ],
+        "modules_as_arrays parsed the namespace into an array."
     );
 }
 
