@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 8;
 
 use XML::RSS;
 
@@ -73,4 +73,21 @@ use XML::RSS;
         is ($item->{content}->{encoded}, "<p>Hello!</p>",
             "Testing the \"content\" namespace");
     }
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(
+        File::Spec->catfile(
+            File::Spec->curdir(), "examples", "1.0", "rss1.0.rdf",
+        )
+    );
+    
+    # TEST
+    is (
+        $rss->image("rdf:resource"),
+        "http://freshmeat.net/images/fm.mini.jpg",
+        "rdf:resource for image was read correctly.",
+    );
 }

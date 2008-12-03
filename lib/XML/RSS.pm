@@ -898,6 +898,14 @@ sub _handle_start {
 
     my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
     
+    if ($el eq "image")
+    {
+        if (exists($attribs{'resource'}))
+        {
+            $self->image("rdf:resource", $attribs{'resource'});
+        }
+    }
+
     # beginning of RSS 0.91
     if ($el eq 'rss') {
         if (exists($attribs{version})) {

@@ -3,6 +3,8 @@ Revision history for Perl module XML::RSS
     - Made the default keys for the channel link, description and title undef 
     instead of ''. They become '' once they are opened.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40686
+    - Now keeping track of rdf:resource of <image> in RSS 1.0:
+        - http://rt.cpan.org/Ticket/Display.html?id=3978
 
 1.40 - December 1, 2008
     - Now outputting an arrayref of <skipDays>/<day>'s and <skipHours>/<hours>
