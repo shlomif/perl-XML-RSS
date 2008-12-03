@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 199;
+use Test::More tests => 198;
 
 use XML::RSS;
 use HTML::Entities qw(encode_entities);
@@ -2136,25 +2136,6 @@ sub named_encode
         "Testing encode_cb with named encodings",
     );
 }
-{
-    my $rss = create_channel_rss({
-            version => "0.91",
-            image_link => undef,
-            channel_params => [ title => undef ],
-        });
-
-    my $output;
-
-    eval
-    {
-        $output = $rss->as_string();
-    };
-
-    # TEST
-    ok ($@ =~ m{\A\$text is undefined in XML::RSS::_encode},
-        "Undefined string throws an exception"
-    );
-}
 
 {
     my $rss = create_channel_rss({
@@ -3957,6 +3938,12 @@ EOF
 
         $rss->{'xml:base'} = 'http://foo.com/';
 
+        $rss->channel(
+            description => "Foo",
+            title => "Hi",
+            link => "http://www.tld/",
+        );
+
         # TEST
         ok($rss->add_item(
             title => 'foo',
@@ -4064,6 +4051,12 @@ EOF
         is($rss->{'xml:base'}, 'http://example.com/', 'Got base');
 
         $rss->{'xml:base'} = 'http://foo.com/';
+
+        $rss->channel(
+            title => "freshmeat.net",
+            link  => "http://freshmeat.net",
+            description => "the one-stop-shop for all your Linux software needs",
+            );
 
         # TEST
         ok($rss->add_item(

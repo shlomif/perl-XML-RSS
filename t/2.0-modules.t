@@ -7,6 +7,11 @@ use XML::RSS;
 
 {
     my $rss = XML::RSS->new( version => '2.0' );
+    $rss->channel(
+        link => "http://www.homesite.tld/",
+        description => "My homesite",
+        title => "With content",
+    );
     $rss->add_module(
             prefix => 'content',
             uri => 'http://purl.org/rss/1.0/modules/content/'

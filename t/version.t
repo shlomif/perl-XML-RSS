@@ -43,6 +43,7 @@ sub make_rss
     $rss->channel(
         title => 'Test RSS',
         link  => 'http://www.example.com',
+        description => '',
         );
         
 }

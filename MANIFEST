@@ -56,6 +56,8 @@ t/auto_add_modules.t
 t/charset1.t
 t/data/1.0/rss1.0.exotic.rdf
 t/data/1.0/with_content.rdf
+t/data/2.0/empty-desc.rss
+t/data/2.0/no-desc.rss
 t/data/2.0/sf-hs-with-lastBuildDate.rss
 t/data/2.0/sf-hs-with-pubDate.rss
 t/data/freshmeat.rdf

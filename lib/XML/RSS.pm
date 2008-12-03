@@ -25,9 +25,9 @@ sub _get_ok_fields {
     return {
         "0.9" => {
             channel => {
-                title       => '',
-                description => '',
-                link        => '',
+                title       => undef,
+                description => undef,
+                link        => undef,
             },
             image => {
                 title => undef,
@@ -43,13 +43,13 @@ sub _get_ok_fields {
         },
         "0.91" => {
             channel => {
-                title          => '',
+                title          => undef,
                 copyright      => undef,
-                description    => '',
+                description    => undef,
                 docs           => undef,
                 language       => undef,
                 lastBuildDate  => undef,
-                'link'         => '',
+                'link'         => undef,
                 managingEditor => undef,
                 pubDate        => undef,
                 rating         => undef,
@@ -74,9 +74,9 @@ sub _get_ok_fields {
         },
         "2.0" => {
             channel => {
-                title          => '',
-                'link'         => '',
-                description    => '',
+                title          => undef,
+                'link'         => undef,
+                description    => undef,
                 language       => undef,
                 copyright      => undef,
                 managingEditor => undef,
@@ -112,9 +112,9 @@ sub _get_ok_fields {
         },
         'default' => {
             channel => {
-                title       => '',
-                description => '',
-                link        => '',
+                title       => undef,
+                description => undef,
+                link        => undef,
             },
             image => {
                 title => undef,
@@ -1058,7 +1058,6 @@ sub _handle_start {
             }
         }
     }
-
     # beginning of an item element that stores its info in rdf:resource
     elsif ( $parser->namespace($el)
         && $self->_is_rdf_resource($el)
@@ -1091,10 +1090,21 @@ sub _handle_start {
     elsif ($self->_start_array_element("image", $el)) {
         # Do nothing - already done in the predicate.
     }    
-    elsif (($el eq "category") && 
+    elsif (($el eq "category") &&
         (!$parser->within_element("item")) &&
         $self->_start_array_element("channel", $el)) {
         # Do nothing - already done in the predicate.
+    }
+    elsif (($self->_current_element eq 'channel') &&
+           ($el_verdict))
+           {
+        # Make sure an opening tag signifies that the element has been
+        # encountered.
+        if (   exists($self->{'channel'}->{$el}) 
+            && (!defined($self->{'channel'}->{$el})))
+        {
+            $self->{'channel'}->{$el} = "";
+        }
     }
 }
 

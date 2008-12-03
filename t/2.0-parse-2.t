@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 10;
 
 use XML::RSS;
 use File::Spec;
@@ -113,5 +113,52 @@ EOF
             unixdoc
         )],
         "items/category is an array-ref",
+    );
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(
+        File::Spec->catfile(
+            File::Spec->curdir(), 
+            "t", "data", "2.0",
+            "no-desc.rss",
+        ),
+    );
+
+    # TEST
+    ok (!defined($rss->channel("description")),
+        "description is undefined if not present"
+    );
+
+    # TEST
+    ok (!defined($rss->channel("title")),
+        "title is undefined if not present",
+    );
+}
+
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(
+        File::Spec->catfile(
+            File::Spec->curdir(), 
+            "t", "data", "2.0",
+            "empty-desc.rss",
+        ),
+    );
+
+    # TEST
+    is ($rss->channel("description"),
+        "",
+        "description is an empty string if an empty tag"
+    );
+
+    # TEST
+    is ($rss->channel("title"),
+        "",
+        "title is an empty string if an empty tasg",
     );
 }
