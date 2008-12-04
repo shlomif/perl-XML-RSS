@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
  
+1.41 - December 4, 2008    
     - Made the default keys for the channel link, description and title undef 
     instead of ''. They become '' once they are opened.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40686
