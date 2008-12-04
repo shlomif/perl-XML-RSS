@@ -74,6 +74,7 @@ t/load.t
 TODO
 t/pod-coverage.t
 t/pod.t
+t/render-upon-init.t
 t/rss2-gt-encoding.t
 t/test-generated-items.t
 t/test_manifest

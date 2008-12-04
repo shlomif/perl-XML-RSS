@@ -5,6 +5,10 @@ Revision history for Perl module XML::RSS
         - http://rt.cpan.org/Public/Bug/Display.html?id=40686
     - Now keeping track of rdf:resource of <image> in RSS 1.0:
         - http://rt.cpan.org/Ticket/Display.html?id=3978
+    - Made sure that channel/{link,description,title} are localized to
+    the empty string before rendering, to allow for better backwards
+    compatibility.
+        - http://rt.cpan.org/Public/Bug/Display.html?id=40686    
 
 1.40 - December 1, 2008
     - Now outputting an arrayref of <skipDays>/<day>'s and <skipHours>/<hours>

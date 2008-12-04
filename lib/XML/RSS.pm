@@ -534,6 +534,28 @@ sub _get_output_version {
     return ($self->{output} =~ /\d/) ? $self->{output} : $self->{version};
 }
 
+# This is done to preserve backwards compatibility with older versions
+# of XML-RSS that had the channel/{link,description,title} as the empty
+# string by default.
+sub _output_env {
+    my $self = shift;
+    my $callback = shift;
+
+    local $self->{channel}->{'link'} = $self->{channel}->{'link'};
+    local $self->{channel}->{'description'} = $self->{channel}->{'description'};
+    local $self->{channel}->{'title'} = $self->{channel}->{'title'};
+
+    foreach my $field (qw(link description title))
+    {
+        if (!defined($self->{channel}->{$field}))
+        {
+            $self->{channel}->{$field} = '';
+        }
+    }
+
+    return $callback->();
+}
+
 sub as_string {
     my $self = shift;
 
@@ -541,7 +563,9 @@ sub as_string {
 
     my $output_method = $self->_get_output_method($version);
 
-    return $self->$output_method();
+    return $self->_output_env(
+        sub { return $self->$output_method(); }
+    );
 }
 
 # Checks if inside a possibly namespaced element

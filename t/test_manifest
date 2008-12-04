@@ -1,6 +1,7 @@
 load.t
 pod.t
 version.t
+render-upon-init.t
 encoding.t
 0.9-generate.t
 0.9-parse.t
