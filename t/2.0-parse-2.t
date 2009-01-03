@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 13;
 
 use XML::RSS;
 use File::Spec;
@@ -138,7 +138,6 @@ EOF
     );
 }
 
-
 {
     my $rss = XML::RSS->new();
 
@@ -160,5 +159,39 @@ EOF
     is ($rss->channel("title"),
         "",
         "title is an empty string if an empty tasg",
+    );
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parsefile(
+        File::Spec->catfile(
+            File::Spec->curdir(), 
+            qw(examples 2.0 flickr-rss-with-both-desc-and-media-desc.xml)
+        ),
+        { hashrefs_instead_of_strings => 1 },
+    );
+
+    # TEST
+    like ($rss->{'items'}->[0]->{'description'},
+        qr{\A\Q<p><a href="http://www.flickr.com/people/shlomif/"\E},
+        "Regular description and was not over-rided by media:description",
+    );
+
+    # TEST
+    like ($rss->{'items'}->[0]
+              ->{'http://search.yahoo.com/mrss/'}->{'description'}
+              ->{'content'},
+        qr{\A<p>No active bugs},
+        "media:desc content is OK.",
+    );
+
+    # TEST
+    is ($rss->{'items'}->[0]
+              ->{'http://search.yahoo.com/mrss/'}->{'description'}
+              ->{'type'},
+        "html",
+        "media:desc type is OK.",
     );
 }

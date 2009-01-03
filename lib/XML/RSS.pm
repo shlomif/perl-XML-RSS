@@ -1116,8 +1116,23 @@ sub _handle_start {
         }
     }
     elsif ($self->_should_be_hashref($el) and $self->_current_element eq 'item') {
-        $attribs{'xml:base'} = delete $attribs{base} if defined $attribs{base};
-        $self->_last_item->{$el} = \%attribs if keys %attribs;
+        if (defined $attribs{base}) {
+            $attribs{'xml:base'} = delete $attribs{base};
+        }
+        if (keys(%attribs)) {
+            if ($el_verdict) {
+                $self->_last_item->{$el} = \%attribs if keys %attribs;
+            }
+            else {
+                $self->_last_item->{$el_ns}->{$el} = \%attribs;
+
+                my $prefix = $self->{modules}->{$el_ns};
+
+                if ($prefix) {
+                    $self->_last_item->{$prefix}->{$el} = \%attribs;
+                }
+            }
+        }
     }
     elsif ($self->_start_array_element("image", $el)) {
         # Do nothing - already done in the predicate.
@@ -1225,6 +1240,8 @@ sub _parse_options {
     return $self->{_parse_options};
 }
 
+sub _empty {}
+
 sub _generic_parse {
     my $self = shift;
     my $method = shift;
@@ -1241,7 +1258,28 @@ sub _generic_parse {
         $self->{modules} = +{%{$self->_get_default_modules()}, %{$self->{modules}}};
     }
 
-    $self->_get_parser()->$method($arg);
+    {
+        my $parser = $self->_get_parser();
+
+        eval {
+            $parser->$method($arg);
+        };
+
+        if ($@)
+        {
+            my $err = $@;
+
+            # Cleanup so perl-5.6.2 will be happy.
+            $parser->setHandlers(
+                map { ($_ => \&_empty) } (qw(Char XMLDecl Start End))
+            );
+            $self->_parser(0);
+
+            undef($parser);
+
+            die $err;
+        }
+    }
 
     $self->_auto_add_modules if $AUTO_ADD;
     $self->{version} = $self->{_internal}->{version};
