@@ -1,6 +1,6 @@
 Revision history for Perl module XML::RSS
  
-1.42 - January 3, 2008
+1.42 - January 3, 2009
     - When transforming elements with attributes into hash-refs - make
     sure they are placed in the correct namespace. Previously 
     <media:description> over-rided the plain <description>. (as in Flickr).
