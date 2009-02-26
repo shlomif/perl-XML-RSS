@@ -934,7 +934,7 @@ sub _out_guid {
 
 sub _out_item_source {
     my ($self, $item) = @_;
-    
+
     if (defined $item->{source} && defined $item->{sourceUrl}) {
         $self->_out('<source url="'
           . $self->_encode($item->{sourceUrl}) . '">'
@@ -943,17 +943,29 @@ sub _out_item_source {
     }
 }
 
-sub _out_item_enclosure {
-    my ($self, $item) = @_;
+sub _out_single_item_enclosure {
+    my ($self, $item, $enc) = @_;
 
-    if (my $e = $item->{enclosure}) {
+    return
         $self->_out(
             "<enclosure " .
-            join(' ', 
-                map { "$_=\"" . $self->_encode($e->{$_}) . '"' } keys(%$e)
+            join(' ',
+                map { "$_=\"" . $self->_encode($enc->{$_}) . '"' } keys(%$enc)
             ) .
             " />\n"
         );
+}
+
+sub _out_item_enclosure {
+    my ($self, $item) = @_;
+
+    if (my $enc = $item->{enclosure}) {
+        foreach my $sub (
+            (ref($enc) eq "ARRAY") ? @$enc : ($enc)
+        )
+        {
+            $self->_out_single_item_enclosure($item, $sub)
+        }
     }
 }
 

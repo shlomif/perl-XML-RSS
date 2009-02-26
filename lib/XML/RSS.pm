@@ -329,6 +329,8 @@ sub _reset {
     # initialize items
     $self->{items} = [];
 
+    delete $self->{_allow_multiple};
+
     my $ok_fields = $self->_get_ok_fields();
 
     my $ver_ok_fields =
@@ -1121,15 +1123,18 @@ sub _handle_start {
         }
         if (keys(%attribs)) {
             if ($el_verdict) {
-                $self->_last_item->{$el} = \%attribs if keys %attribs;
+                $self->_last_item->{$el} =
+                  $self->_make_array($el, $self->_last_item->{$el}, \%attribs);
             }
             else {
-                $self->_last_item->{$el_ns}->{$el} = \%attribs;
+                $self->_last_item->{$el_ns}->{$el} =
+                  $self->_make_array($el, $self->_last_item->{$el_ns}->{$el}, \%attribs);
 
                 my $prefix = $self->{modules}->{$el_ns};
 
                 if ($prefix) {
-                    $self->_last_item->{$prefix}->{$el} = \%attribs;
+                    $self->_last_item->{$prefix}->{$el} =
+                      $self->_make_array($el, $self->_last_item->{$prefix}->{$el}, \%attribs);
                 }
             }
         }
@@ -1153,6 +1158,38 @@ sub _handle_start {
             $self->{'channel'}->{$el} = "";
         }
     }
+}
+
+sub _make_array {
+    my $self = shift;
+    my $el   = shift;
+    my $old  = shift;
+    my $new  = shift;
+
+    if (!$self->_allow_multiple($el)) {
+      return $new;
+    }
+
+    if (!defined $old) {
+        $old = [];
+    } elsif (ref($old) ne 'ARRAY') {
+        $old = [$old];
+    }
+    push @$old, $new;
+    return $old;
+}
+
+sub _allow_multiple {
+    my $self = shift;
+    my $el   = shift;
+
+    $self->{_allow_multiple} ||=
+        {
+            map { $_ => 1 }
+            @{$self->_parse_options->{allow_multiple} || []}
+        };
+
+    return $self->{_allow_multiple}->{$el};
 }
 
 sub _handle_end {
@@ -1737,6 +1774,14 @@ modules as a string is parsed.
 available options are:
 
 =over 4
+
+=item * allow_multiple
+
+Takes an array ref of names which indicates which elements should
+be allowed to have multiple occurrences. So, for example, to parse
+feeds with multiple enclosures
+
+   $rss->parse($xml, { allow_multiple => ['enclosure'] });
 
 =item * hashrefs_instead_of_strings
 

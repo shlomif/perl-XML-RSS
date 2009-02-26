@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+    - Applied a patch from Simon Wistow (after some modifications) to
+    add support for multiple enclosures.
+
 1.43 - January 12, 2009
     - Fixed the date on the last entry on this changelog, to say "2009"
     instead of "2008".

@@ -66,6 +66,7 @@ t/data/merlyn1.rss
 t/data/rss-permalink.xml
 t/enclosures2.t
 t/enclosures.t
+t/enclosures-multi.t
 t/encode-output.t
 t/encoding.t
 testlib/Test/Run/CmdLine/WithTestManifest.pm

@@ -22,6 +22,7 @@ encoding.t
 auto_add_modules.t
 enclosures.t
 enclosures2.t
+enclosures-multi.t
 encode-output.t
 test-generated-items.t
 pod-coverage.t
