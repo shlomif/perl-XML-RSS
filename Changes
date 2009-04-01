@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.44 - April 1, 2009
     - Applied a patch from Simon Wistow (after some modifications) to
     add support for multiple enclosures.
     - Added the t/xml-base.t test file from Simon Wistow to test for
