@@ -2,7 +2,8 @@ Revision history for Perl module XML::RSS
 
     - Applied a patch from Simon Wistow (after some modifications) to
     add support for multiple enclosures.
-    - Added the t/xml-base.t test file from Simon Wistow to test for xml:base.
+    - Added the t/xml-base.t test file from Simon Wistow to test for
+    xml:base. Corrected for style.
 
 1.43 - January 12, 2009
     - Fixed the date on the last entry on this changelog, to say "2009"
