@@ -65,8 +65,8 @@ t/data/freshmeat.rdf
 t/data/merlyn1.rss
 t/data/rss-permalink.xml
 t/enclosures2.t
-t/enclosures.t
 t/enclosures-multi.t
+t/enclosures.t
 t/encode-output.t
 t/encoding.t
 testlib/Test/Run/CmdLine/WithTestManifest.pm
@@ -81,4 +81,5 @@ t/rss2-gt-encoding.t
 t/test-generated-items.t
 t/test_manifest
 t/version.t
+t/xml-base.t
 t/xml-header.t
