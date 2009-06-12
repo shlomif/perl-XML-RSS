@@ -1683,6 +1683,11 @@ adopted it as a simple syndication format. With the advent of RSS 1.0,
 users are now able to syndication many different kinds of content
 including news headlines, threaded measages, products catalogs, etc.
 
+B<Note:> In order to parse and generate dates (such as C<pubDate>
+and C<dc:date>) it is recommended to use L<DateTime::Format::Mail> and 
+L<DateTime::Format::W3CDTF> , which is what L<XML::RSS> uses internally
+and requires.
+
 =head1 METHODS
 
 =over 4
