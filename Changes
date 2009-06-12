@@ -1,5 +1,7 @@
 Revision history for Perl module XML::RSS
 
+    - Removed some unused module requirements statements from lib/**.pm.
+
 1.44 - April 1, 2009
     - Applied a patch from Simon Wistow (after some modifications) to
     add support for multiple enclosures.

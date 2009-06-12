@@ -5,9 +5,6 @@ use warnings;
 
 use Carp;
 use XML::Parser;
-use HTML::Entities qw(encode_entities_numeric encode_entities);
-use DateTime::Format::Mail;
-use DateTime::Format::W3CDTF;
 
 use XML::RSS::Private::Output::Base;
 use XML::RSS::Private::Output::V0_9;
