@@ -22,6 +22,29 @@ my $build = Test::Run::Builder::Manifest->new(
         'Test::Manifest' => '0.9',
         'Test::More' => 0,
     },
-    'license' => "perl", 
+    'license' => "perl",
+    dist_author => 'Shlomi Fish <shlomif@cpan.org>',
+    meta_merge =>
+    {
+        resources =>
+        {
+            repository => "https://svn.perl.org/modules/XML-RSS/trunk",
+            homepage => "http://perl-rss.sourceforge.net/",
+        },
+        keywords =>
+        [
+            "feed",
+            "feeds",
+            "generate",
+            "generating",
+            "parse",
+            "parsing",
+            "rss",
+            "RSS",
+            "web-feed",
+            "web-feeds",
+            "xml",
+        ],
+    },    
 );
 $build->create_build_script;
