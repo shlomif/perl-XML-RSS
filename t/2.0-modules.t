@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use XML::RSS;
 
 {
@@ -48,4 +48,10 @@ use XML::RSS;
     # TEST
     like ($@, qr{\Aa URI must be provided},
         "Testing for exception upon an unspecified URI.");
+}
+
+{
+    my $rss = XML::RSS->new( version => '2.0' );
+    # TEST
+    ok($rss->add_module(prefix=>'creativeCommons', uri=>'http://backend.userland.com/creativeCommonsRssModule'),"Added namespace with uppercase letters in prefix");
 }

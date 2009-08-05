@@ -2,9 +2,9 @@ use strict;
 use warnings;
 
 use Test::More;
-plan tests => 24;
+plan tests => 25;
 
-# 1-2
+# 1
 use_ok("XML::RSS");
 use POSIX;
 
@@ -31,17 +31,18 @@ use constant RSS_ITEM_LINK  => "http://example.com/$short_date";
 use constant RSS_ITEM_DESC  => "Yadda & yadda & yadda";
 use constant RSS_XML_BASE   => "http://example.com/";
 
-# 3
+# 2
 ok($current_date,"Current date:$current_date");
 
-# 4
+# 3
 my $rss = XML::RSS->new(version => RSS_VERSION, 'xml:base' => RSS_XML_BASE);
 isa_ok($rss,"XML::RSS");
 
-# 5-6
+# 4-5
 cmp_ok($rss->{'version'},"eq",RSS_VERSION,"Version is ".RSS_VERSION);
 cmp_ok($rss->{'xml:base'},"eq",RSS_XML_BASE,"Base is ".RSS_XML_BASE);
 
+# 6-16
 ok($rss->channel(
 		 'title'          => "Test 1.0 Feed",
 		 'link'           => "http://example.com/",
@@ -82,6 +83,9 @@ ok($rss->add_item(
 
 ok($rss->add_module(prefix=>RSS_MOD_PREFIX,uri=>RSS_MOD_URI),
    "Added namespace:".RSS_MOD_PREFIX);
+
+ok($rss->add_module(prefix=>'creativeCommons',uri=>'http://backend.userland.com/creativeCommonsRssModule'),
+   "Added namespace with uppercase letters in prefix");
 
 # Dunno - some degree of weirdness
 # with the constant that I don't

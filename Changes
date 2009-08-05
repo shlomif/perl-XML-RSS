@@ -3,6 +3,9 @@ Revision history for Perl module XML::RSS
     - Removed some unused module requirements statements from lib/**.pm.
     - Added a note about date parsing/generation (thanks to an email
     correspondent).
+    - Applied a patch by "David White" to have uppercase letter in 
+    namespace/module identifiers.
+        - https://rt.cpan.org/Ticket/Display.html?id=48405
 
 1.44 - April 1, 2009
     - Applied a patch from Simon Wistow (after some modifications) to
