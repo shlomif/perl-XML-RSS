@@ -2055,7 +2055,7 @@ modify it under the same terms as Perl itself.
  rjp@browser.org
  Kellan Elliott-McCrea <kellan@protest.net>
  Rafe Colburn <rafe@rafe.us>
- Adam Trickett <adam.trickett@btinternet.com>
+ Adam Trickett <atrickett@cpan.org>
  Aaron Straup Cope <asc@vineyard.net>
  Ian Davis <iand@internetalchemy.org>
  rayg@varchars.com
