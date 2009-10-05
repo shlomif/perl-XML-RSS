@@ -13,7 +13,7 @@ use XML::RSS;
 my ($file,$version) = @ARGV;
 
 # create new instance
-my $rss = new XML::RSS;
+my $rss = XML::RSS->new;
 
 # set output version
 $rss->{output} = $version unless $version eq 'default';

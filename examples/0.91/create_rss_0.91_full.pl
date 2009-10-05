@@ -10,7 +10,7 @@ use warnings;
 
 use XML::RSS;
 
-my $rss = new XML::RSS (version => '0.91',
+my $rss = XML::RSS->new (version => '0.91',
 			encoding => 'ISO-8859-1');
 
 $rss->strict("1");

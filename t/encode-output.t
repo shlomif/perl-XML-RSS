@@ -7,7 +7,7 @@ use File::Spec;
 $|++;
 
 my $file = File::Spec->catfile(File::Spec->curdir(), "t", "data", "1.0", "rss1.0.exotic.rdf");
-my $rss = new XML::RSS(encode_output => 1);
+my $rss = XML::RSS->new(encode_output => 1);
 
 eval {
 	$rss->parsefile( $file );
@@ -18,7 +18,7 @@ eval {
 # Encode illegal characters (e.g. &) when outputting RSS
 #
 my $rss_str = $rss->as_string();
-my $rss2 = new XML::RSS();
+my $rss2 = XML::RSS->new();
 eval {
 	$rss2->parse( $rss_str );
 };

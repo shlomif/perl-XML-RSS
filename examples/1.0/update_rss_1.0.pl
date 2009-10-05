@@ -5,7 +5,7 @@
 use XML::RSS;
 
 # create a new instance of the XML::RSS
-my $rss = new XML::RSS;
+my $rss = XML::RSS->new;
 
 # parse the local file
 $rss->parsefile("rss1.0.rdf");

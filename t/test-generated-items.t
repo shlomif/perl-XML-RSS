@@ -46,8 +46,7 @@ sub create_rss_1
     my $args = shift;
 
     my $extra_rss_args = $args->{rss_args} || [];
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version}, @$extra_rss_args);
+    my $rss = XML::RSS->new (version => $args->{version}, @$extra_rss_args);
     my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
         "http://freshmeat.net/";
 
@@ -78,8 +77,7 @@ sub create_rss_1
 sub create_no_image_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     $rss->channel(
         title => "freshmeat.net",
@@ -98,8 +96,7 @@ sub create_no_image_rss
 sub create_item_with_0_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
     my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
         "http://freshmeat.net/";
 
@@ -131,8 +128,7 @@ sub create_item_with_0_rss
 sub create_textinput_with_0_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
     my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
         "http://freshmeat.net/";
 
@@ -170,8 +166,7 @@ sub create_textinput_with_0_rss
 sub create_channel_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     my $extra_channel_params = $args->{channel_params} || [];
     my @build_date =
@@ -198,8 +193,7 @@ sub create_channel_rss
 sub create_skipHours_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     my $extra_channel_params = $args->{channel_params} || [];
     my $extra_skipHours_params = $args->{skipHours_params} || [];
@@ -229,8 +223,7 @@ sub create_skipHours_rss
 sub create_skipDays_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     my $extra_channel_params = $args->{channel_params} || [];
     my $extra_skipDays_params = $args->{skipDays_params} || [];
@@ -260,8 +253,7 @@ sub create_skipDays_rss
 sub create_rss_with_image_w_undef_link
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     my $extra_image_params = $args->{image_params} || [];
 
@@ -288,8 +280,7 @@ sub create_rss_with_image_w_undef_link
 sub create_item_rss
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     my $extra_item_params = $args->{item_params} || [];
 
@@ -311,8 +302,7 @@ sub create_item_rss
 sub create_rss_without_item
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
-    my $rss = new XML::RSS (version => $args->{version});
+    my $rss = XML::RSS->new (version => $args->{version});
 
     $rss->channel(
         title => "freshmeat.net",

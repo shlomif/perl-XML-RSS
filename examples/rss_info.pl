@@ -10,7 +10,7 @@ use warnings;
 
 use XML::RSS;
 
-my $rss = new XML::RSS;
+my $rss = XML::RSS->new;
 $rss->parsefile(shift);
 
 print "XML encoding: ".$rss->encoding."\n";

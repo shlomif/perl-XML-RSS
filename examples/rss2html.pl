@@ -24,7 +24,7 @@ die "Usage: rss2html.pl (<RSS file> | <URL>)\n" unless @ARGV == 1;
 my $arg = shift;
 
 # create new instance of XML::RSS
-my $rss = new XML::RSS;
+my $rss = XML::RSS->new;
 
 # argument is a URL
 if ($arg=~ /http:/i) {

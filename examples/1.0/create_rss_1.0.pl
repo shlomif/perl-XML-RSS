@@ -9,7 +9,7 @@ use strict;
 use warnings;
 
 use XML::RSS;
-my $rss = new XML::RSS (version => '1.0');
+my $rss = XML::RSS->new (version => '1.0');
 
  $rss->channel(
    title        => "freshmeat.net",

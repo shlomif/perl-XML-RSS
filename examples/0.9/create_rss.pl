@@ -7,7 +7,7 @@ use warnings;
 
 use XML::RSS;
 
-my $rss = new XML::RSS(version => '0.9');
+my $rss = XML::RSS->new(version => '0.9');
 $rss->channel(title => "freshmeat.net",
 	      link  => "http://freshmeat.net",
 	      description => "the one-stop-shop for all your Linux software needs"

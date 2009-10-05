@@ -7,6 +7,8 @@ Revision history for Perl module XML::RSS
         - avoid various test failures due to a problem with XML-Parser
         on 5.6.x .
         - encourage people using ancient versions of perl in production.
+    - Convert all occurences of "new XML::RSS" to "XML::RSS->new()" everywhere.
+        - a best practice.
 
 1.45 - August 5, 2009
     - Removed some unused module requirements statements from lib/**.pm.

@@ -5,7 +5,7 @@ use File::Spec;
 $|++;
 
 my $file = File::Spec->catfile(File::Spec->curdir(), "t", "data", "1.0", "rss1.0.exotic.rdf");
-my $rss = new XML::RSS(encode_output => 1);
+my $rss = XML::RSS->new(encode_output => 1);
 
 eval {
 	$rss->parsefile( $file );

@@ -79,7 +79,7 @@ else {
     # And read it back in again.
     #
 
-    $rss = new XML::RSS;
+    $rss = XML::RSS->new;
     $rss->parsefile($rss_file);
 
     # Check that no exception was thrown along the way.

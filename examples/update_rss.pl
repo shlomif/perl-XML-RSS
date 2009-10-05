@@ -9,7 +9,7 @@ use XML::RSS;
 die "Syntax: update_rss.pl source.rdf destination.rdf\n\n"
 	unless @ARGV == 2;
 
-my $rss = new XML::RSS;
+my $rss = XML::RSS->new;
 $rss->parsefile(shift);
 
 $rss->add_item(title => "MpegTV Player (mtv) 1.0.9.7",

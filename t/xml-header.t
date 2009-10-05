@@ -23,7 +23,6 @@ sub starts_with
 sub create_rss_1
 {
     my $args = shift;
-    # my $rss = new XML::RSS (version => '0.9');
     my @style =
         exists($args->{stylesheet}) ? 
             (stylesheet => $args->{stylesheet}) :
