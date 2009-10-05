@@ -14,7 +14,7 @@ my $build = Test::Run::Builder::Manifest->new(
         'DateTime::Format::Mail' => 0,
         'DateTime::Format::W3CDTF' => 0,
         'HTML::Entities' => 0,
-        'perl' => '5.006',
+        'perl' => '5.008',
         'XML::Parser' => '2.23',
     },
     build_requires =>

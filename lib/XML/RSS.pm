@@ -14,6 +14,8 @@ use XML::RSS::Private::Output::V2_0;
 
 use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
+require 5.008;
+
 $VERSION = '1.45';
 
 $AUTO_ADD = 0;
@@ -1337,20 +1339,10 @@ sub parsefile {
     return $self->_generic_parse("parsefile", $file_to_parse, $options);
 }
 
-# Check if Perl supports the :encoding layer in File I/O.
-sub _perl_supports_encoding {
-    my $self = shift;
-
-    return $] > 5.007;
-}
-
 sub _get_save_output_mode {
     my $self = shift;
 
-    return $self->_perl_supports_encoding()
-        ? (">:encoding(" . $self->_encoding() . ")")
-        : ">"
-        ;
+    return (">:encoding(" . $self->_encoding() . ")");
 }
 
 sub save {
