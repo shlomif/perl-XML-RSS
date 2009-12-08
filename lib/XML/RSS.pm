@@ -1339,10 +1339,20 @@ sub parsefile {
     return $self->_generic_parse("parsefile", $file_to_parse, $options);
 }
 
+sub _untaint {
+    my $self = shift;
+
+    my $value = shift;
+    
+    my ($untainted) = ($value =~ m{(.*)}s);
+
+    return $untainted;
+}
+
 sub _get_save_output_mode {
     my $self = shift;
 
-    return (">:encoding(" . $self->_encoding() . ")");
+    return (">:encoding(" . $self->_untaint($self->_encoding()) . ")");
 }
 
 sub save {

@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+    - Made sure XML::RSS::save() can do its thing when in taint mode:
+        - http://rt.cpan.org/Public/Bug/Display.html?id=52334
+
 1.46 - October 8, 2009
     - Updated the E-mail address of Adam Trickett.
     - Removed the perl-5.6.x-specific workarounds and made perl-5.8.x as

@@ -32,3 +32,4 @@ xml-header.t
 add-item-insert-vs-append.t
 guid.t
 xml-base.t
+save-while-in-taint-mode.t
