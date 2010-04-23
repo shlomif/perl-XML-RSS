@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+    - Fix the $rss->parse($string)->other_method() display (had to add
+    spaces between the << and >>). See:
+        - https://rt.cpan.org/Public/Bug/Display.html?id=56848
+        - Thanks to Slaven_Rezic for the report.
+
 1.47 - December 8, 2009
     - Made sure XML::RSS::save() can do its thing when in taint mode:
         - http://rt.cpan.org/Public/Bug/Display.html?id=52334
