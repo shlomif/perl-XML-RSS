@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.48 - April 23, 2010
     - Fix the $rss->parse($string)->other_method() display (had to add
     spaces between the << and >>). See:
         - https://rt.cpan.org/Public/Bug/Display.html?id=56848
