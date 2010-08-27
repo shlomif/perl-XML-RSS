@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+    - Some correctness and Modern Perl changes to the rss2html.pl
+    script (it still appears to be very hairy.)
+
 1.48 - April 23, 2010
     - Fix the $rss->parse($string)->other_method() display (had to add
     spaces between the << and >>). See:

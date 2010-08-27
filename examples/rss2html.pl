@@ -16,6 +16,8 @@ use LWP::Simple;
 my $content;
 my $file;
 
+binmode STDOUT, ":encoding(utf8)";
+
 # MAIN
 # check for command-line argument
 die "Usage: rss2html.pl (<RSS file> | <URL>)\n" unless @ARGV == 1;
@@ -42,12 +44,12 @@ if ($arg=~ /http:/i) {
 }
 
 # print the HTML channel
-&print_html($rss);
+print_html($rss);
 
 # SUBROUTINES
 sub print_html {
     my $rss = shift;
-    print <<HTML;
+    print <<"HTML";
 <table bgcolor="#000000" border="0" width="200"><tr><td>
 <TABLE CELLSPACING="1" CELLPADDING="4" BGCOLOR="#FFFFFF" BORDER=0 width="100%">
   <tr>
@@ -57,7 +59,7 @@ HTML
 
     # print channel image
     if ($rss->{'image'}->{'link'}) {
-	print <<HTML;
+	print <<"HTML";
 <center>
 <p><a href="$rss->{'image'}->{'link'}"><img src="$rss->{'image'}->{'url'}" alt="$rss->{'image'}->{'title'}" border="0"
 HTML
@@ -76,7 +78,7 @@ HTML
 
     # if there's a textinput element
     if ($rss->{'textinput'}->{'title'}) {
-	print <<HTML;
+	print <<"HTML";
 <form method="get" action="$rss->{'textinput'}->{'link'}">
 $rss->{'textinput'}->{'description'}<BR> 
 <input type="text" name="$rss->{'textinput'}->{'name'}"><BR>
@@ -87,21 +89,16 @@ HTML
 
     # if there's a copyright element
     if ($rss->{'channel'}->{'copyright'}) {
-	print <<HTML;
+	print <<"HTML";
 <p><sub>$rss->{'channel'}->{'copyright'}</sub></p>
 HTML
     }
 
-    print <<HTML;
+    print <<"HTML";
 </td>
 </TR>
 </TABLE>
 </td></tr></table>
 HTML
 }
-
-
-
-
-
 
