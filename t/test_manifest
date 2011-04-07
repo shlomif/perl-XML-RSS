@@ -15,6 +15,7 @@ encoding.t
 2.0-modules.t
 2.0-permalink.t
 2.0-parse.t
+2.0-parse-cloud.t
 2.0-parse-2.t
 2.0-parse-self.t
 2.0-wo-title.t

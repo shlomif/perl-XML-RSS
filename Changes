@@ -1,7 +1,11 @@
 Revision history for Perl module XML::RSS
 
+1.49 - April 7, 2011
     - Some correctness and Modern Perl changes to the rss2html.pl
     script (it still appears to be very hairy.)
+    - Add support for parsing rssCloud:
+        - https://rt.cpan.org/Ticket/Display.html?id=67241
+        - Thanks to STUIFZAND for the patch.
 
 1.48 - April 23, 2010
     - Fix the $rss->parse($string)->other_method() display (had to add

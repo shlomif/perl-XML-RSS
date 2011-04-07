@@ -993,6 +993,11 @@ sub _handle_start {
     elsif ($self->_start_array_element("skipDays", $el)) {
         # Do nothing - already done in the predicate.
     }
+    elsif ($el eq 'cloud') {
+        if (keys %attribs) {
+            $self->{channel}{cloud} = \%attribs;
+        }
+    }
     elsif ($el eq 'item') {
 
         # deal with trouble makers who use mod_content :)
