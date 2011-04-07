@@ -22,6 +22,10 @@ my $build = Test::Run::Builder::Manifest->new(
         'Test::Manifest' => '0.9',
         'Test::More' => 0,
     },
+    configure_requires =>
+    { 
+        'Module::Build' => '0.36',
+    },
     'license' => "perl",
     dist_author => 'Shlomi Fish <shlomif@cpan.org>',
     meta_merge =>
