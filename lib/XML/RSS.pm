@@ -1648,7 +1648,7 @@ XML::RSS - creates and updates RSS files
 
  while (@{$rss->{'items'}} >= 15)
  {
-     pop(@{$rss->{'items'});
+     pop (@{ $rss->{'items'} });
  }
 
  $rss->add_item(title => "MpegTV Player (mtv) 1.0.9.7",
