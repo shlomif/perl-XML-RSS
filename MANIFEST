@@ -34,6 +34,7 @@ lib/XML/RSS/Private/Output/V1_0.pm
 lib/XML/RSS/Private/Output/V2_0.pm
 Makefile.PL
 MANIFEST
+META.json
 META.yml
 README
 t/0.91-parse.t
