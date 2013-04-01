@@ -1,0 +1,8 @@
+Build
+MYMETA.json
+MYMETA.yml
+_build
+blib
+t/generated/1.0-generated.xml
+t/generated/2.0-generated.xml
+t/generated/charset1-generated.xml
