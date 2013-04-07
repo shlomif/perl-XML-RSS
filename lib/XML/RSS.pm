@@ -16,7 +16,7 @@ use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
 require 5.008;
 
-$VERSION = '1.49';
+$VERSION = '1.50';
 
 $AUTO_ADD = 0;
 
