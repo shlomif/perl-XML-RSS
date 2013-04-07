@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+1.50 - April 7, 2013
+    - Update the repository URL to its new location on GitHub.
+
 1.49 - April 7, 2011
     - Some correctness and Modern Perl changes to the rss2html.pl
     script (it still appears to be very hairy.)
