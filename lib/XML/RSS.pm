@@ -2036,10 +2036,9 @@ parameter to diff.
 
 =head1 SOURCE AVAILABILITY
 
-The source is available from the perl.org Subversion server:
+The source is available from the GitHub repository:
 
-L<http://svn.perl.org/modules/XML-RSS/>
-
+L<https://github.com/shlomif/perl-XML-RSS>
 
 =head1 AUTHOR
 

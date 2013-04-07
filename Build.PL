@@ -32,7 +32,7 @@ my $build = Test::Run::Builder::Manifest->new(
     {
         resources =>
         {
-            repository => "https://svn.perl.org/modules/XML-RSS/trunk",
+            repository => "https://github.com/shlomif/perl-XML-RSS",
             homepage => "http://perl-rss.sourceforge.net/",
         },
         keywords =>
