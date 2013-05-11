@@ -1,5 +1,6 @@
 Revision history for Perl module XML::RSS
 
+1.51 - May 11, 2013
     - Sort the XML namespaces before outputting.
         - became broken in perl-5.18.0-RC1.
 
