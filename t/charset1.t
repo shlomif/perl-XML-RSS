@@ -46,7 +46,7 @@ else {
     # Save RSS content to file.
     #
 
-    open (RSS, ">", $rss_file) || 
+    open (RSS, ">", $rss_file) ||
         die "Unable to open $rss_file.";
 
 
@@ -73,7 +73,7 @@ else {
 
     close (RSS);
 
-    eq_or_diff($rss1, $rss2, 'got the same RSS both times'); 
+    eq_or_diff($rss1, $rss2, 'got the same RSS both times');
 
     #
     # And read it back in again.
