@@ -871,7 +871,7 @@ sub _get_rdf_decl_mappings
     return
     [
         $self->_get_first_rdf_decl_mappings(),
-        map { [$modules->{$_}, $_] } keys(%$modules)
+        sort { $a->[0] cmp $b->[0] } map { [$modules->{$_}, $_] } keys(%$modules)
     ];
 }
 
