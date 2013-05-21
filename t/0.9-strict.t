@@ -32,36 +32,36 @@ sub item_throws_like
         );
 
     # TEST
-    item_throws_like($rss, [link => "http://foobar.tld/from/"], 
+    item_throws_like($rss, [link => "http://foobar.tld/from/"],
         qr{\Atitle and link elements are required},
         "strict - checking for exception on non-specified title"
     );
 
     # TEST
-    item_throws_like($rss, [title => "From Foobar"], 
+    item_throws_like($rss, [title => "From Foobar"],
         qr{\Atitle and link elements are required},
         "strict - checking for exception on non-specified link"
     );
 
     # TEST
-    item_throws_like($rss, [link => "http://foobar.tld/", 
-        title => ("Very long title indeed" x 50)], 
+    item_throws_like($rss, [link => "http://foobar.tld/",
+        title => ("Very long title indeed" x 50)],
         qr{\Atitle cannot exceed},
         "strict - checking for long title"
     );
 
     # TEST
     item_throws_like($rss, [
-        link => "http://" . ("foobarminimoni" x 200) . ".tld/", 
+        link => "http://" . ("foobarminimoni" x 200) . ".tld/",
         title => "Short Title"
-        ], 
+        ],
         qr{\Alink cannot exceed},
         "strict - checking for long link"
     );
 
     # TEST
     item_throws_like($rss, [
-        link => "http://foobar.tld/from/", 
+        link => "http://foobar.tld/from/",
         title => "Short Title",
         description => ("This description is way too long!" x 100),
         ],
@@ -91,7 +91,7 @@ sub item_throws_like
 
     # TEST
     item_throws_like($rss, [
-        link => "http://foobar.tld/from/", 
+        link => "http://foobar.tld/from/",
         title => "Short Title",
         description => "Good description",
         ],
@@ -167,7 +167,7 @@ sub item_throws_like
         "freshmeat.net",
         "Testing for an AUTOLOAD accessor with 0 arguments"
     );
-    
+
     # TEST
     is ($rss->channel('title'),
         "freshmeat.net",

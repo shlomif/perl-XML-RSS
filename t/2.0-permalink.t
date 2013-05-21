@@ -15,7 +15,7 @@ my $item_with_guid_missing = $rss->{'items'}->[1];
 my $item_with_guid_false = $rss->{'items'}->[2];
 
 # TEST
-is ($item_with_guid_true->{"permaLink"}, 
+is ($item_with_guid_true->{"permaLink"},
     "http://community.livejournal.com/lj_dev/714037.html",
     "guid's isPermaLink is set to true, so the item permalink property should be set to the value of the guid tag"
 );
@@ -26,9 +26,9 @@ ok ((!$item_with_guid_missing->{"permaLink"}),
 );
 
 # TEST
-is ($item_with_guid_missing->{"guid"}, 
+is ($item_with_guid_missing->{"guid"},
     "http://community.livejournal.com/lj_dev/713810.html",
-    "guid's isPermaLink is missing (implicitly false), so item->{guid}" . 
+    "guid's isPermaLink is missing (implicitly false), so item->{guid}" .
     " should be equal to the contents of the guid element",
 );
 
@@ -38,7 +38,7 @@ ok ((!$item_with_guid_false->{"permaLink"}),
 );
 
 # TEST
-is ($item_with_guid_false->{"guid"}, 
+is ($item_with_guid_false->{"guid"},
     "http://community.livejournal.com/lj_dev/713549.html",
     "guid's isPermaLink is false so item->{guid} should be equal to" .
     " the contents of the guid element"

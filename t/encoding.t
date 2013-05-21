@@ -16,7 +16,7 @@ foreach my $version ( @versions )
 	make_rss( $rss );
 	like( $rss->as_string, qr/^<\?xml version="1.0" encoding="UTF-8"\?>/,
 		"Default encoding for version $version" );
-		
+
 	# UTF-8
 	$rss = XML::RSS->new( version => $version,
 		encoding => 'UTF-8' );
@@ -24,7 +24,7 @@ foreach my $version ( @versions )
 	make_rss( $rss );
 	like( $rss->as_string, qr/^<\?xml version="1.0" encoding="UTF-8"\?>/,
 		"Default encoding for version $version" );
-	
+
 	# home brew
 	$rss = XML::RSS->new( version => $version,
 		encoding => 'Fooey' );
@@ -33,15 +33,15 @@ foreach my $version ( @versions )
 	like( $rss->as_string, qr/^<\?xml version="1.0" encoding="Fooey"\?>/,
 		"Default encoding for version $version" );
 	}
-	
+
 sub make_rss
 	{
 	my $rss = shift;
-	
+
 	$rss->channel(
 		title => 'Test RSS',
 		link  => 'http://www.example.com',
         description => "Hello",
 		);
-		
+
 	}

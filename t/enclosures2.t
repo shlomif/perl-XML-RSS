@@ -14,8 +14,8 @@ use constant RSS_DOCUMENT      		=> qq(<?xml version="1.0"?>
   <link>http://example.com/</link>
   <description>To lead by example</description>
   <language>en-us</language>
-  <copyright>All content Public Domain, except comments which remains copyright the author</copyright> 
-  <managingEditor>editor\@example.com</managingEditor> 
+  <copyright>All content Public Domain, except comments which remains copyright the author</copyright>
+  <managingEditor>editor\@example.com</managingEditor>
   <webMaster>webmaster\@example.com</webMaster>
   <docs>http://backend.userland.com/rss</docs>
   <category  domain="http://www.dmoz.org">Reference/Libraries/Library_and_Information_Science/Technical_Services/Cataloguing/Metadata/RDF/Applications/RSS/</category>
@@ -62,13 +62,13 @@ if($xml->{items} && ref($xml->{items}) eq 'ARRAY'){
 	cmp_ok($encl->{'url'},"eq",RSS_ENCLOSURE_URL, "ENCLOSURE URL is ".RSS_ENCLOSURE_URL);
 	cmp_ok($encl->{'length'},"eq",RSS_ENCLOSURE_LENGTH, "ENCLOSURE URL is ".RSS_ENCLOSURE_LENGTH);
 	cmp_ok($encl->{'type'},"eq",RSS_ENCLOSURE_TYPE, "ENCLOSURE URL is ".RSS_ENCLOSURE_TYPE);
-    
+
     }else{
-	
+
 	ok(0,"Parsing Enclosure element, sub-element of Item");
     }
 
-    
+
 }
 
 

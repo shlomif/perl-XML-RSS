@@ -12,7 +12,7 @@ use constant DATE_TEMPLATE_LONG  => "%Y-%m-%dT%H:%M:%S%z";
 use constant DATE_TEMPLATE_SHORT => "%Y/%m/%d";
 use constant DATE_TEMPLATE_PUB   => "%c GMT";
 
-my ($current_date, $short_date, $pub_date); 
+my ($current_date, $short_date, $pub_date);
 
 BEGIN {
   $current_date = &POSIX::strftime(DATE_TEMPLATE_LONG, gmtime);
@@ -135,7 +135,7 @@ cmp_ok($rss->{'xml:base'}, "eq", RSS_XML_BASE, "Base is still ".RSS_XML_BASE);
 # 20
 cmp_ok(ref($rss->{'items'}),"eq","ARRAY","RSS object has an array of objects");
 
-# 21 
+# 21
 cmp_ok(scalar(@{$rss->{'items'}}),"==",1,"RSS object has one item");
 
 # 22
@@ -144,7 +144,7 @@ cmp_ok($rss->{items}->[0]->{title},"eq",RSS_ITEM_TITLE,RSS_ITEM_TITLE);
 # 23
 cmp_ok($rss->{items}->[0]->{link},"eq",RSS_ITEM_LINK,RSS_ITEM_LINK);
 
-# 24 
+# 24
 cmp_ok($rss->{items}->[0]->{description},"eq",RSS_ITEM_DESC,RSS_ITEM_DESC);
 
 # 25

@@ -43,7 +43,7 @@ EOF
 
     # TEST
     is ($rss->parse($text)->{textinput}->{link},
-        "http://www.topix.net/search/", 
+        "http://www.topix.net/search/",
         "->parse() returns the object again"
     );
 

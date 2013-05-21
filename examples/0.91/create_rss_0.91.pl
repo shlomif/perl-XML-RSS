@@ -9,7 +9,7 @@ use XML::RSS;
 my $rss = XML::RSS->new (version => "0.91") ;
 $rss->channel(title       => "freshmeat.net",
 	      link        => "http://freshmeat.net",
-	      language    => "en", 
+	      language    => "en",
 	      description => "the one-stop-shop for all your Linux software needs",
 	      );
 

@@ -16,7 +16,7 @@ my $TAG = 'fm';
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 't', 'data', 'freshmeat.rdf' 
+            File::Spec->curdir(), 't', 'data', 'freshmeat.rdf'
         )
     );
 
@@ -38,7 +38,7 @@ my $TAG = 'fm';
         local $/;
         local *I;
         open I, "<", File::Spec->catfile(
-            File::Spec->curdir(), 't', 'data', 'freshmeat.rdf' 
+            File::Spec->curdir(), 't', 'data', 'freshmeat.rdf'
         );
         $text = <I>;
         close(I);

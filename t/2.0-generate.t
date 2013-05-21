@@ -38,7 +38,7 @@ isa_ok( $rss, "XML::RSS" );
 is( $rss->{'version'},  RSS_VERSION,  'Version is ' . RSS_VERSION );
 is( $rss->{'xml:base'}, RSS_XML_BASE, 'Base is ' . RSS_XML_BASE );
 
-# This includes all fields, only title, link, and description 
+# This includes all fields, only title, link, and description
 # are required.
 
 ok( $rss->channel(
@@ -110,7 +110,7 @@ my $file_contents;
     $file_contents = <I>;
     close(I);
 }
- 
+
 is($file_contents,$as_string,RSS_SAVEAS." contains the as_string() result");
 
 

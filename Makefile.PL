@@ -25,7 +25,7 @@ if ($ExtUtils::MakeMaker::Version >= 6.36)
 
     sub test_via_harness {
         my($self, $perl, $tests) = @_;
-        
+
         return qq|\t$perl "-MTest::Manifest" | .
           qq|"-e" "run_t_manifest(\$(TEST_VERBOSE), '\$(INST_LIB)', | .
             qq|'\$(INST_ARCHLIB)')"\n|;
@@ -49,11 +49,11 @@ MAKE_FRAG
 WriteMakefile(
               'NAME'         => 'XML::RSS',
               'VERSION_FROM' => 'lib/XML/RSS.pm', # finds $VERSION,
-              'PREREQ_PM'    => { 
+              'PREREQ_PM'    => {
                                  'Test::Manifest'   => '0.9',
                                  'Test::More'       => '0',
-                                 'XML::Parser'      => '2.23', 
-                                 'HTML::Entities'   => 0, 
+                                 'XML::Parser'      => '2.23',
+                                 'HTML::Entities'   => 0,
                                  'DateTime' => 0,
                                  'DateTime::Format::Mail' => 0,
                                  'DateTime::Format::W3CDTF' => 0,

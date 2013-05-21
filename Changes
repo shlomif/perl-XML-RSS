@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+    - Add t/style-trailing-space.t.
+        - Got rid of trailing space.
+
 1.51 - May 11, 2013
     - Sort the XML namespaces before outputting.
         - became broken in perl-5.18.0-RC1.

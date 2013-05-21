@@ -21,7 +21,7 @@ sub output_contains
     {
         diag("Could not find the substring [$sub_string] in:{{{{\n$rss_output\n}}}}\n");
     }
-    return $ok;    
+    return $ok;
 }
 
 sub contains
@@ -47,7 +47,7 @@ sub create_rss_1
 
     my $extra_rss_args = $args->{rss_args} || [];
     my $rss = XML::RSS->new (version => $args->{version}, @$extra_rss_args);
-    my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
+    my $image_link = exists($args->{image_link}) ? $args->{image_link} :
         "http://freshmeat.net/";
 
     my $extra_image_params = $args->{image_params} || [];
@@ -97,7 +97,7 @@ sub create_item_with_0_rss
 {
     my $args = shift;
     my $rss = XML::RSS->new (version => $args->{version});
-    my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
+    my $image_link = exists($args->{image_link}) ? $args->{image_link} :
         "http://freshmeat.net/";
 
     my $extra_image_params = $args->{image_params} || [];
@@ -129,7 +129,7 @@ sub create_textinput_with_0_rss
 {
     my $args = shift;
     my $rss = XML::RSS->new (version => $args->{version});
-    my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
+    my $image_link = exists($args->{image_link}) ? $args->{image_link} :
         "http://freshmeat.net/";
 
     my $extra_image_params = $args->{image_params} || [];
@@ -339,7 +339,7 @@ sub create_rss_without_item
     not_contains($rss, "<image rdf:resource=\"",
         "1.0 - if an image was not specified it isn't there."
     );
-    
+
 }
 
 {
@@ -370,7 +370,7 @@ sub create_rss_without_item
     ok ($rss->as_string =~ m{<image rdf:about="0">.*?<title>freshmeat.net</title>.*?<url>0</url>.*?<link>http://freshmeat.net/</link>.*?</image>}s,
          "Checking for image in RSS 1.0");
     # TEST
-    contains ($rss, 
+    contains ($rss,
         "</items>\n<image rdf:resource=\"0\" />\n",
         "1.0 - contains image rdf:resource."
     );
@@ -425,12 +425,12 @@ sub create_rss_without_item
 {
     my $version = "0.91";
     my $rss = create_rss_1({
-            version => $version, 
+            version => $version,
             image_params => [width => 0, height => 0, description => 0],
         }
     );
     # TEST
-    contains($rss, 
+    contains($rss,
             "<image>\n<title>freshmeat.net</title>\n<url>0</url>\n"
             . "<link>http://freshmeat.net/</link>\n"
             . "<width>0</width>\n<height>0</height>\n"
@@ -441,12 +441,12 @@ sub create_rss_without_item
 
 {
     my $rss = create_rss_1({
-            version => "2.0", 
+            version => "2.0",
             image_params => [width => 0, height => 0, description => 0],
         }
     );
     # TEST
-    contains($rss, 
+    contains($rss,
             "<image>\n<title>freshmeat.net</title>\n<url>0</url>\n"
             . "<link>http://freshmeat.net/</link>\n"
             . "<width>0</width>\n<height>0</height>\n"
@@ -466,7 +466,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "0.91", 
+    my $rss = create_item_with_0_rss({version => "0.91",
             item_params => [description => "Hello There"],
         });
     # TEST
@@ -478,7 +478,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "0.91", 
+    my $rss = create_item_with_0_rss({version => "0.91",
             item_params => [description => "0"],
         });
     # TEST
@@ -490,7 +490,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "1.0", 
+    my $rss = create_item_with_0_rss({version => "1.0",
             item_params => [description => "Hello There", about => "Yowza"],
         });
     # TEST
@@ -502,7 +502,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "1.0", 
+    my $rss = create_item_with_0_rss({version => "1.0",
             item_params => [description => "0", about => "Yowza"],
         });
     # TEST
@@ -516,8 +516,8 @@ sub create_rss_without_item
 
 {
     my @subs = (qw(title link description author category comments pubDate));
-    my $rss = create_item_with_0_rss({version => "2.0", 
-            item_params => 
+    my $rss = create_item_with_0_rss({version => "2.0",
+            item_params =>
             [
                 map { $_ => 0 } @subs
             ],
@@ -528,15 +528,15 @@ sub create_rss_without_item
     contains(
         $rss,
         ("<item>\n"
-        . join("", map { "<$_>0</$_>\n" } @subs) 
+        . join("", map { "<$_>0</$_>\n" } @subs)
         . "</item>"),
         "2.0 - item/* == 0 - 1",
     );
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "2.0", 
-            item_params => 
+    my $rss = create_item_with_0_rss({version => "2.0",
+            item_params =>
             [
                 title => "Foo&Bar",
                 link => "http://www.mytld/",
@@ -559,8 +559,8 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "2.0", 
-            item_params => 
+    my $rss = create_item_with_0_rss({version => "2.0",
+            item_params =>
             [
                 title => "Foo&Bar",
                 link => "http://www.mytld/",
@@ -592,7 +592,7 @@ sub create_rss_without_item
         )
     {
         my $rss = create_item_with_0_rss({version => "2.0",
-                item_params => 
+                item_params =>
                 [
                     title => "Foo&Bar",
                     link => "http://www.mytld/",
@@ -662,7 +662,7 @@ sub create_rss_without_item
     not_contains($rss, "<textinput rdf:resource=",
         "1.0 - if a textinput was not specified it isn't there."
     );
-    
+
 }
 
 {
@@ -678,7 +678,7 @@ sub create_rss_without_item
         $rss,
         "<textinput rdf:resource=\"0\" />\n</channel>\n",
         "1.0 - textinput/link == 0 and textinput rdf:resource",
-    );    
+    );
 }
 
 
@@ -715,7 +715,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [dc => { language => "0",},],
         });
     # TEST
@@ -732,7 +732,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [language => "0",],
         });
     # TEST
@@ -761,7 +761,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
+            version => "1.0",
             channel_params => [dc => { language => "0",},],
         });
     # TEST
@@ -777,7 +777,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
+            version => "1.0",
             channel_params => [language => "0",],
         });
     # TEST
@@ -799,7 +799,7 @@ sub create_rss_without_item
         "<title>freshmeat.net</title>\n" .
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
         "<item>\n",
         "2.0 - if a channel/dc/language was not specified it isn't there."
@@ -808,7 +808,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params => [dc => { language => "0",},],
         });
     # TEST
@@ -817,7 +817,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
         "<item>\n",
         "2.0 - channel/dc/language == 0"
@@ -826,7 +826,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params => [language => "0",],
         });
     # TEST
@@ -835,7 +835,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
         "<item>\n",
         "2.0 - channel/language == 0"
@@ -844,7 +844,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [rating => "0",],
         });
     # TEST
@@ -861,7 +861,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [rating => "Hello", dc => {rights => "0"},],
         });
     # TEST
@@ -880,7 +880,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [rating => "Hello", copyright => "0",],
         });
     # TEST
@@ -898,7 +898,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params => [dc => {rights => "0"},],
         });
     # TEST
@@ -907,7 +907,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>0</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
         "<item>\n",
         "2.0 - channel/dc/rights == 0"
@@ -916,7 +916,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params => [copyright=> "0",],
         });
     # TEST
@@ -925,7 +925,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>0</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
         "<item>\n",
         "2.0 - channel/copyright == 0"
@@ -934,8 +934,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
-            channel_params => 
+            version => "0.91",
+            channel_params =>
             [rating => "Hello", copyright => "Martha",docs => "0",],
         });
     # TEST
@@ -954,7 +954,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params => [copyright => "Martha", docs => "0",],
         });
     # TEST
@@ -963,7 +963,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<docs>0</docs>\n" .
         "\n" .
         "<item>\n",
@@ -973,8 +973,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
-            channel_params => 
+            version => "0.91",
+            channel_params =>
             [rating => "Hello", copyright => "Martha",
             docs => "MyDr. docs",dc => {publisher => 0}],
         });
@@ -995,8 +995,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
-            channel_params => 
+            version => "0.91",
+            channel_params =>
             [rating => "Hello", copyright => "Martha",
             docs => "MyDr. docs",managingEditor => 0],
         });
@@ -1017,8 +1017,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
-            channel_params => 
+            version => "2.0",
+            channel_params =>
             [copyright => "Martha",
             docs => "MyDr. docs",managingEditor => 0],
         });
@@ -1028,7 +1028,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<docs>MyDr. docs</docs>\n" .
         "<managingEditor>0</managingEditor>\n" .
         "\n" .
@@ -1039,8 +1039,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
-            channel_params => 
+            version => "2.0",
+            channel_params =>
             [copyright => "Martha", docs => "MyDr. docs",
             dc => {publisher => 0}],
         });
@@ -1050,7 +1050,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<docs>MyDr. docs</docs>\n" .
         "<managingEditor>0</managingEditor>\n" .
         "\n" .
@@ -1061,8 +1061,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [copyright => "Martha", dc => {publisher => 0}],
         });
     # TEST
@@ -1081,7 +1081,7 @@ sub create_rss_without_item
     # Here we create an RSS 2.0 object and render it as 1.0 to get the
     # "managingEditor" field acknowledged.
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params =>
             [copyright => "Martha", managingEditor => 0,],
             omit_date => 1,
@@ -1101,8 +1101,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
-            channel_params => 
+            version => "0.91",
+            channel_params =>
             [rating => "Hello", copyright => "Martha",
             docs => "MyDr. docs",dc => {creator => 0}],
         });
@@ -1123,8 +1123,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
-            channel_params => 
+            version => "0.91",
+            channel_params =>
             [rating => "Hello", copyright => "Martha",
             docs => "MyDr. docs",webMaster => 0],
         });
@@ -1145,8 +1145,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [copyright => "Martha", dc => {creator => 0}],
         });
     # TEST
@@ -1165,7 +1165,7 @@ sub create_rss_without_item
     # Here we create an RSS 2.0 object and render it as 1.0 to get the
     # "managingEditor" field acknowledged.
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params =>
             [copyright => "Martha", webMaster => 0,],
             omit_date => 1,
@@ -1185,8 +1185,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
-            channel_params => 
+            version => "2.0",
+            channel_params =>
             [copyright => "Martha",
             docs => "MyDr. docs",webMaster => 0],
         });
@@ -1196,7 +1196,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<docs>MyDr. docs</docs>\n" .
         "<webMaster>0</webMaster>\n" .
         "\n" .
@@ -1207,8 +1207,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "2.0", 
-            channel_params => 
+            version => "2.0",
+            channel_params =>
             [copyright => "Martha", docs => "MyDr. docs",
             dc => {creator => 0}],
         });
@@ -1218,7 +1218,7 @@ sub create_rss_without_item
         "<link>http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
-        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+        "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<docs>MyDr. docs</docs>\n" .
         "<webMaster>0</webMaster>\n" .
         "\n" .
@@ -1237,7 +1237,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_skipHours_rss({
-            version => "0.91", 
+            version => "0.91",
             skipHours_params => [ hour => "0" ],
         });
     # TEST
@@ -1256,7 +1256,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_skipHours_rss({
-            version => "2.0", 
+            version => "2.0",
             skipHours_params => [ hour => "0" ],
         });
     # TEST
@@ -1275,7 +1275,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_skipDays_rss({
-            version => "0.91", 
+            version => "0.91",
             skipDays_params => [ day => "0" ],
         });
     # TEST
@@ -1294,7 +1294,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_skipDays_rss({
-            version => "2.0", 
+            version => "2.0",
             skipDays_params => [ day => "0" ],
         });
     # TEST
@@ -1305,7 +1305,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
+            version => "1.0",
         });
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
@@ -1319,8 +1319,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [copyright => 0,],
         });
     # TEST
@@ -1336,8 +1336,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [dc => { rights => 0},],
         });
     # TEST
@@ -1353,8 +1353,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [dc => { title => 0},],
         });
     # TEST
@@ -1370,8 +1370,8 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
-            channel_params => 
+            version => "1.0",
+            channel_params =>
             [syn => { updateBase=> 0},],
         });
     # TEST
@@ -1386,20 +1386,20 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_rss_1({version => "1.0", 
+    my $rss = create_rss_1({version => "1.0",
             image_params => [ dc => { subject => 0, }]
         });
     # TEST
-    contains ($rss, 
+    contains ($rss,
         (qq{<image rdf:about="0">\n<title>freshmeat.net</title>\n} .
-        qq{<url>0</url>\n<link>http://freshmeat.net/</link>\n} . 
+        qq{<url>0</url>\n<link>http://freshmeat.net/</link>\n} .
         qq{<dc:subject>0</dc:subject>\n</image>}),
          "1.0 - Checking for image/dc/subject == 0");
 }
 
 {
-    my $rss = create_item_with_0_rss({version => "1.0", 
-            item_params => 
+    my $rss = create_item_with_0_rss({version => "1.0",
+            item_params =>
             [
                 description => "Hello There",
                 about => "Yowza",
@@ -1436,7 +1436,7 @@ sub create_rss_without_item
             my $rss = create_channel_rss({
                     version => "2.0",
                     channel_params =>
-                    [$dc ? 
+                    [$dc ?
                         (dc => {$field => 0 }) :
                         ($field => 0)
                     ],
@@ -1446,7 +1446,7 @@ sub create_rss_without_item
                 "<title>freshmeat.net</title>\n" .
                 "<link>http://freshmeat.net</link>\n" .
                 "<description>Linux software</description>\n" .
-                "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" . 
+                "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
                 "<$field>0</$field>\n" .
                 "\n" .
                 "<item>\n",
@@ -1458,7 +1458,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [pubDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
         });
     # TEST
@@ -1475,7 +1475,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "0.91", 
+            version => "0.91",
             channel_params => [lastBuildDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
         });
     # TEST
@@ -1493,9 +1493,9 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "1.0",
-        channel_params => 
+        channel_params =>
         [
-            dc => 
+            dc =>
             {
                 date => "</pubDate><hello>There&amp;Everywhere</hello>"
             },
@@ -1513,7 +1513,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_channel_rss({version => "2.0", 
+    my $rss = create_channel_rss({version => "2.0",
             channel_params => [pubDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
             omit_date => 1,
         });
@@ -1530,7 +1530,7 @@ sub create_rss_without_item
 }
 
 {
-    my $rss = create_channel_rss({version => "2.0", 
+    my $rss = create_channel_rss({version => "2.0",
             channel_params => [lastBuildDate => "</pubDate><hello>There&amp;Everywhere</hello>"],
             omit_date => 1,
         });
@@ -1558,8 +1558,8 @@ sub create_rss_without_item
 {
     my $rss = create_rss_with_image_w_undef_link({version => "1.0"});
     # TEST
-    contains ($rss, 
-        qq{<image rdf:about="0">\n<title>freshmeat.net</title>\n} . 
+    contains ($rss,
+        qq{<image rdf:about="0">\n<title>freshmeat.net</title>\n} .
         qq{<url>0</url>\n</image>\n},
         "Image with undefined link does not render the Image - RSS version 1.0"
     );
@@ -1567,7 +1567,7 @@ sub create_rss_without_item
 
 {
     my $rss = create_channel_rss({
-            version => "1.0", 
+            version => "1.0",
             channel_params => [about => "http://xml-rss-hackers.tld/"],
         });
     # TEST
@@ -1583,7 +1583,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "1.0",
-        channel_params => 
+        channel_params =>
         [
             taxo => ["Foo", "Bar", "QuGof", "Lambda&Delta"],
         ],
@@ -1607,7 +1607,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "1.0",
-        channel_params => 
+        channel_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1626,7 +1626,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "1.0",
-        channel_params => 
+        channel_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1647,7 +1647,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "1.0",
-        image_params => 
+        image_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1666,7 +1666,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "1.0",
-        image_params => 
+        image_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1687,7 +1687,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "1.0",
-        image_params => 
+        image_params =>
         [
             admin => { 'generatorAgent' => "Spozilla 5.5", },
         ],
@@ -1718,13 +1718,13 @@ sub create_rss_without_item
     contains($rss, "<item rdf:about=\"http://jungle.tld/Enter/\">\n" .
         "<title>In the Jungle</title>\n" .
         "<link>http://jungle.tld/Enter/</link>\n" .
-        qq{<taxo:topics>\n} . 
+        qq{<taxo:topics>\n} .
         qq{  <rdf:Bag>\n} .
         qq{    <rdf:li resource="Foo" />\n} .
         qq{    <rdf:li resource="Loom" />\n} .
         qq{    <rdf:li resource="&#x3C;Ard&#x3E;" />\n} .
         qq{    <rdf:li resource="Yok&#x26;Dol" />\n} .
-        qq{  </rdf:Bag>\n} . 
+        qq{  </rdf:Bag>\n} .
         qq{</taxo:topics>\n} .
         "</item>\n",
         "1.0 - item/taxo:topics (with escaping)"
@@ -1736,7 +1736,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "1.0",
-        item_params => 
+        item_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1755,7 +1755,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "1.0",
-        item_params => 
+        item_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1767,7 +1767,7 @@ sub create_rss_without_item
     contains($rss, "<item rdf:about=\"http://fc-solve.berlios.de/\">\n" .
         "<title>Freecell Solver</title>\n" .
         "<link>http://fc-solve.berlios.de/</link>\n" .
-        "<eloq:grow>There</eloq:grow>\n" .        
+        "<eloq:grow>There</eloq:grow>\n" .
         "</item>",
         '1.0 - item/[module] with new module'
     );
@@ -1776,7 +1776,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "1.0",
-        item_params => 
+        item_params =>
         [
             admin => { 'generatorAgent' => "Spozilla 5.5", },
         ],
@@ -1811,7 +1811,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "2.0",
-        channel_params => 
+        channel_params =>
         [
             admin => { 'generatorAgent' => "Spozilla 5.5", },
         ],
@@ -1826,7 +1826,7 @@ sub create_rss_without_item
         "<description>Linux software</description>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
-        "\n" . 
+        "\n" .
         "<item>\n",
         '2.0 - channel/[module] with known module and key'
     );
@@ -1836,7 +1836,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "2.0",
-        channel_params => 
+        channel_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1858,7 +1858,7 @@ sub create_rss_without_item
 {
     my $rss = create_channel_rss({
         version => "2.0",
-        channel_params => 
+        channel_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1884,7 +1884,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "2.0",
-        image_params => 
+        image_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1904,7 +1904,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "2.0",
-        image_params => 
+        image_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1925,7 +1925,7 @@ sub create_rss_without_item
 {
     my $rss = create_rss_1({
         version => "2.0",
-        image_params => 
+        image_params =>
         [
             admin => { 'generatorAgent' => "Spozilla 5.5", },
         ],
@@ -1947,7 +1947,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "2.0",
-        item_params => 
+        item_params =>
         [
             admin => { 'foobar' => "Quod", },
         ],
@@ -1967,7 +1967,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "2.0",
-        item_params => 
+        item_params =>
         [
             eloq => { 'grow' => "There", },
         ],
@@ -1979,7 +1979,7 @@ sub create_rss_without_item
     contains($rss, "<item>\n" .
         "<title>Freecell Solver</title>\n" .
         "<link>http://fc-solve.berlios.de/</link>\n" .
-        "<eloq:grow>There</eloq:grow>\n" .        
+        "<eloq:grow>There</eloq:grow>\n" .
         "</item>",
         '2.0 - item/[module] with new module'
     );
@@ -1988,7 +1988,7 @@ sub create_rss_without_item
 {
     my $rss = create_item_rss({
         version => "2.0",
-        item_params => 
+        item_params =>
         [
             admin => { 'generatorAgent' => "Spozilla 5.5", },
         ],
@@ -2031,7 +2031,7 @@ sub create_rss_without_item
         )
     {
         my $rss = create_item_with_0_rss({version => "2.0",
-                item_params => 
+                item_params =>
                 [
                     title => "Foo&Bar",
                     link => "http://www.mylongtldyeahbaby/",
@@ -2059,7 +2059,7 @@ sub create_rss_without_item
     # version "3.5" in order to test that version 1.0 is the default
     # version for output.
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params =>
             [copyright => "Martha", managingEditor => 0,],
             omit_date => 1,
@@ -2156,12 +2156,12 @@ sub parse_generated_rss
     $rss_generator->{output} = $args->{version};
 
     my $output = $rss_generator->as_string();
-    
+
     if ($args->{postproc})
     {
         $args->{postproc}->(\$output);
     }
-    
+
     my $parser = XML::RSS->new(version => $args->{version});
 
     $parser->parse($output);
@@ -2175,7 +2175,7 @@ sub parse_generated_rss
             func => \&create_textinput_with_0_rss,
             version => "0.9",
             textinput_params => [
-                description => "Welcome to the Jungle.", 
+                description => "Welcome to the Jungle.",
                 'link' => "http://fooque.tld/",
                 'title' => "The Jungle of the City",
                 'name' => "There's more than one way to do it.",
@@ -2221,7 +2221,7 @@ sub parse_generated_rss
                 func => \&create_textinput_with_0_rss,
                 version => "0.9",
                 textinput_params => [
-                    description => "Welcome to the Jungle.", 
+                    description => "Welcome to the Jungle.",
                     'link' => "http://fooque.tld/",
                     'title' => "The Jungle of the City",
                     'name' => "There's more than one way to do it.",
@@ -2232,7 +2232,7 @@ sub parse_generated_rss
                         s{(<rdf:RDF)[^>]*(>)}{<rss version="0.9">};
                         s{</rdf:RDF>}{</rss>};
                         s{<(/?)textinput>}{<$1textInput>}g;
-                    }   
+                    }
                 },
             }
         );
@@ -2269,7 +2269,7 @@ sub parse_generated_rss
                 func => \&create_textinput_with_0_rss,
                 version => "0.9",
                 textinput_params => [
-                    description => "Welcome to the Jungle.", 
+                    description => "Welcome to the Jungle.",
                     'link' => "http://fooque.tld/",
                     'title' => "The Jungle of the City",
                     'name' => "There's more than one way to do it.",
@@ -2313,7 +2313,7 @@ sub parse_generated_rss
         parse_generated_rss(
             {
                 func => \&create_skipHours_rss,
-                version => "0.91", 
+                version => "0.91",
                 skipHours_params => [ hour => "5" ],
             }
         );
@@ -2330,11 +2330,11 @@ sub parse_generated_rss
         parse_generated_rss(
             {
                 func => \&create_skipHours_rss,
-                version => "2.0", 
+                version => "2.0",
                 skipHours_params => [ hour => "5" ],
             }
         );
-    
+
     # TEST
     is ($rss_parser->{skipHours}->{hour},
         "5",
@@ -2349,7 +2349,7 @@ sub parse_generated_rss
         parse_generated_rss(
             {
                 func => \&create_skipDays_rss,
-                version => "0.91", 
+                version => "0.91",
                 skipDays_params => [ day => "5" ],
             }
         );
@@ -2366,11 +2366,11 @@ sub parse_generated_rss
         parse_generated_rss(
             {
                 func => \&create_skipDays_rss,
-                version => "2.0", 
+                version => "2.0",
                 skipDays_params => [ day => "5" ],
             }
         );
-    
+
     # TEST
     is ($rss_parser->{skipDays}->{day},
         "5",
@@ -3908,7 +3908,7 @@ EOF
     $rss->add_module(prefix=>'media', uri=>'http://search.yahoo.com/mrss/');
 
     # TEST
-    contains($rss, 
+    contains($rss,
         qq{<media:content height="100" type="image/jpeg" url="http://somrurl.org/img/foo.jpg" width="100"/>\n},
         "namespaces with attributes are rendered correctly. (bug #25336)"
     );
@@ -3919,7 +3919,7 @@ EOF
 
     {
         my $rss = XML::RSS->new( 'xml:base' => 'http://example.com/' );
-        
+
         # TEST
         ok($rss, "Created new rss");
 
@@ -3979,7 +3979,7 @@ EOF
 
         # TEST
         is(
-            $rss->{'xml:base'}, 
+            $rss->{'xml:base'},
             'http://foo.com/',
             "Found parsed rss base"
         );
@@ -3989,7 +3989,7 @@ EOF
 
         my $item = $rss->{items}->[0];
 
-        # TEST        
+        # TEST
         is($item->{'xml:base'}, 'http://foo.com/archive/',
             "Found parsed item base"
         );
@@ -4010,7 +4010,7 @@ EOF
 
         # TEST
         is(
-            $rss->{'xml:base'}, 
+            $rss->{'xml:base'},
             'http://foo.com/',
             "Found parsed rss base"
         );
@@ -4020,12 +4020,12 @@ EOF
 
         my $item = $rss->{items}->[0];
 
-        # TEST        
+        # TEST
         is($item->{'xml:base'}, 'http://foo.com/archive/',       "Found parsed item base");
         # TEST
         is($item->{description}->{'xml:base'}, 'http://foo.com/archive/1.html', "Found parsed description base");
     }
-    
+
 }
 
 {
@@ -4033,7 +4033,7 @@ EOF
 
     {
         my $rss = XML::RSS->new( 'xml:base' => 'http://example.com/' );
-        
+
         # TEST
         ok($rss, "Created new rss");
 
@@ -4075,7 +4075,7 @@ EOF
 {
     my $rss = create_rss_1({
         version => "1.0",
-        image_params => 
+        image_params =>
         [
             eloq =>
             [
@@ -4165,7 +4165,7 @@ EOF
 
 {
     my $rss = create_skipDays_rss({
-            version => "2.0", 
+            version => "2.0",
             skipDays_params => [ day => [qw(Sunday Thursday Saturday)] ],
         });
     # TEST
@@ -4181,7 +4181,7 @@ EOF
 
 {
     my $rss = create_skipHours_rss({
-            version => "2.0", 
+            version => "2.0",
             skipHours_params => [ hour => [qw(5 10 16)] ],
         });
     # TEST
@@ -4196,8 +4196,8 @@ EOF
 
 
 {
-    my $rss = create_item_with_0_rss({version => "2.0", 
-            item_params => 
+    my $rss = create_item_with_0_rss({version => "2.0",
+            item_params =>
             [
                 title => "Foo&Bar",
                 link => "http://www.mytld/",
@@ -4226,7 +4226,7 @@ EOF
     # version "3.5" in order to test that version 1.0 is the default
     # version for output.
     my $rss = create_channel_rss({
-            version => "2.0", 
+            version => "2.0",
             channel_params =>
             [category => [qw(OneCat TooManyCats KittensGalore)]],
             omit_date => 1,

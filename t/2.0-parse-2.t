@@ -43,7 +43,7 @@ use File::Spec;
 EOF
 
     # TEST
-    is ($rss->{textinput}->{link}, "http://www.topix.net/search/", 
+    is ($rss->{textinput}->{link}, "http://www.topix.net/search/",
         "Testing for textinput link"
     );
 
@@ -58,7 +58,7 @@ EOF
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             "examples",
             "2.0",
             "rss-2.0-sample-from-rssboard-multiple-skip-days-and-hours.xml"
@@ -67,7 +67,7 @@ EOF
 
     # TEST
     is_deeply(
-        $rss->{'skipHours'}->{'hour'}, 
+        $rss->{'skipHours'}->{'hour'},
         [qw(0 1 2 22 23)],
         "skipHours/hour is parsed into an array with the individual elements",
     );
@@ -92,7 +92,7 @@ EOF
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             "t", "data", "2.0",
             "sf-hs-with-pubDate.rss"
         ),
@@ -100,7 +100,7 @@ EOF
 
     # TEST
     is_deeply(
-        $rss->{'items'}->[0]->{'category'}, 
+        $rss->{'items'}->[0]->{'category'},
         [qw(
             mathml
             mathematics
@@ -121,7 +121,7 @@ EOF
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             "t", "data", "2.0",
             "no-desc.rss",
         ),
@@ -143,7 +143,7 @@ EOF
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             "t", "data", "2.0",
             "empty-desc.rss",
         ),
@@ -167,7 +167,7 @@ EOF
 
     $rss->parsefile(
         File::Spec->catfile(
-            File::Spec->curdir(), 
+            File::Spec->curdir(),
             qw(examples 2.0 flickr-rss-with-both-desc-and-media-desc.xml)
         ),
         { hashrefs_instead_of_strings => 1 },

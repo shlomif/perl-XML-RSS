@@ -37,7 +37,7 @@ my $string = $rss->as_string();
 
 # TEST
 ok (
-    (index($string, 
+    (index($string,
             '<description>My Life Changed Absolutely</description>'
         ) >= 0
     ),

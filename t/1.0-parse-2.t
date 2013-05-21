@@ -15,7 +15,7 @@ use XML::RSS;
         my $item = $rss->{items}->[0];
 
         # TEST
-        is ($item->{dc}->{creator}, "merlyn", 
+        is ($item->{dc}->{creator}, "merlyn",
             "item[0]/dc/creator in RSS 1.0"
         );
 
@@ -40,7 +40,7 @@ use XML::RSS;
         my $item = $rss->{items}->[0];
 
         # TEST
-        is ($item->{dc}->{creator}, "merlyn", 
+        is ($item->{dc}->{creator}, "merlyn",
             "item[0]/dc/creator in RSS 1.0"
         );
 
@@ -83,7 +83,7 @@ use XML::RSS;
             File::Spec->curdir(), "examples", "1.0", "rss1.0.rdf",
         )
     );
-    
+
     # TEST
     is (
         $rss->image("rdf:resource"),

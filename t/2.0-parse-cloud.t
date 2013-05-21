@@ -16,8 +16,8 @@ use constant RSS_DOCUMENT      => qq(<?xml version="1.0"?>
   <link>http://example.com/</link>
   <description>To lead by example</description>
   <language>en-us</language>
-  <copyright>All content Public Domain, except comments which remains copyright the author</copyright> 
-  <managingEditor>editor\@example.com</managingEditor> 
+  <copyright>All content Public Domain, except comments which remains copyright the author</copyright>
+  <managingEditor>editor\@example.com</managingEditor>
   <webMaster>webmaster\@example.com</webMaster>
   <docs>http://backend.userland.com/rss</docs>
   <category  domain="http://www.dmoz.org">Reference/Libraries/Library_and_Information_Science/Technical_Services/Cataloguing/Metadata/RDF/Applications/RSS/</category>
@@ -104,7 +104,7 @@ __END__
 
 =head1 NAME
 
-2.0-parse-cloud.t - parse rssCloud: 
+2.0-parse-cloud.t - parse rssCloud:
 https://rt.cpan.org/Ticket/Display.html?id=67241
 
 =head1 SYNOPSIS

@@ -17,7 +17,7 @@ http://rt.cpan.org/Public/Dist/Display.html?Name=XML-RSS
 
 - fix skipHour and skipDay methods (bdf: what's wrong with them?)
 
-- rewrite for extendability (base class with a derived one for 
+- rewrite for extendability (base class with a derived one for
   each version)
 
 - auto encode text?

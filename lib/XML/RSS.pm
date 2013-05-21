@@ -463,7 +463,7 @@ sub _get_encode_cb_params
 {
     my $self = shift;
 
-    return 
+    return
         defined($self->{encode_cb}) ?
             ("encode_cb" => $self->{encode_cb}) :
             ()
@@ -625,7 +625,7 @@ sub _is_rdf_resource {
     {
         $ns = $self->_parser->namespace($el);
     }
-    
+
     return (
            exists($self->_rdf_resource_fields->{ $ns })
         && exists($self->_rdf_resource_fields->{ $ns }{ $el })
@@ -922,7 +922,7 @@ sub _handle_start {
     my $parser = $self->_parser;
 
     my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
-    
+
     if ($el eq "image")
     {
         if (exists($attribs{'resource'}))
@@ -1023,7 +1023,7 @@ sub _handle_start {
     }
     elsif ($el eq 'guid') {
         $self->_last_item->{'isPermaLink'} =
-          (exists($attribs{'isPermaLink'}) && 
+          (exists($attribs{'isPermaLink'}) &&
               (lc($attribs{'isPermaLink'}) eq 'true')
           );
 
@@ -1032,7 +1032,7 @@ sub _handle_start {
     }
     elsif (
            $self->_current_element eq "item"
-        && (($el eq "category") || 
+        && (($el eq "category") ||
             (
                    exists($self->{modules}->{$el_ns})
                 && ($self->{modules}->{$el_ns} eq "dc")
@@ -1071,8 +1071,8 @@ sub _handle_start {
     }
 
     # beginning of a channel element that stores its info in rdf:resource
-    elsif ( $parser->namespace($el) 
-        && $self->_is_rdf_resource($el) 
+    elsif ( $parser->namespace($el)
+        && $self->_is_rdf_resource($el)
         && $self->_current_element eq 'channel')
     {
         my $ns = $parser->namespace($el);
@@ -1145,7 +1145,7 @@ sub _handle_start {
     }
     elsif ($self->_start_array_element("image", $el)) {
         # Do nothing - already done in the predicate.
-    }    
+    }
     elsif (($el eq "category") &&
         (!$parser->within_element("item")) &&
         $self->_start_array_element("channel", $el)) {
@@ -1156,7 +1156,7 @@ sub _handle_start {
            {
         # Make sure an opening tag signifies that the element has been
         # encountered.
-        if (   exists($self->{'channel'}->{$el}) 
+        if (   exists($self->{'channel'}->{$el})
             && (!defined($self->{'channel'}->{$el})))
         {
             $self->{'channel'}->{$el} = "";
@@ -1268,7 +1268,7 @@ sub _get_parser {
                 $self->_parser(undef);
             },
         }
-    );    
+    );
 }
 
 sub _parse_options {
@@ -1348,7 +1348,7 @@ sub _untaint {
     my $self = shift;
 
     my $value = shift;
-    
+
     my ($untainted) = ($value =~ m{(.*)}s);
 
     return $untainted;
@@ -1605,7 +1605,7 @@ XML::RSS - creates and updates RSS files
         enclosure   => { url=>$url, type=>"application/x-bittorrent" },
         description => 'blah blah'
 );
- 
+
  $rss->textinput(title => "quick finder",
                  description => "Use the text input below to search freshmeat",
                  name  => "query",
@@ -1680,7 +1680,7 @@ site from sources like Slashdot and Freshmeat or if you want to syndicate
 your own content.
 
 XML::RSS currently supports 0.9, 0.91, and 1.0 versions of RSS.
-See http://backend.userland.com/rss091 for information on RSS 0.91. 
+See http://backend.userland.com/rss091 for information on RSS 0.91.
 See http://www.purplepages.ie/RSS/netscape/rss0.90.html for RSS 0.9.
 See http://web.resource.org/rss/1.0/ for RSS 1.0.
 
@@ -1691,7 +1691,7 @@ users are now able to syndication many different kinds of content
 including news headlines, threaded measages, products catalogs, etc.
 
 B<Note:> In order to parse and generate dates (such as C<pubDate>
-and C<dc:date>) it is recommended to use L<DateTime::Format::Mail> and 
+and C<dc:date>) it is recommended to use L<DateTime::Format::Mail> and
 L<DateTime::Format::W3CDTF> , which is what L<XML::RSS> uses internally
 and requires.
 
@@ -1780,8 +1780,8 @@ is for B<channel()>.
 
 =item parse ($string, \%options)
 
-Parses an RDF Site Summary which is passed into B<parse()> as the first 
-parameter. Returns the instance of the object so one can say 
+Parses an RDF Site Summary which is passed into B<parse()> as the first
+parameter. Returns the instance of the object so one can say
 C<< $rss->parse($string)->other_method() >>.
 
 See the add_module() method for instructions on automatically adding
@@ -1810,9 +1810,9 @@ compatibility.
 
 =item * modules_as_arrays
 
-This option when true, will parse the modules key-value-pairs as an arrayref of 
+This option when true, will parse the modules key-value-pairs as an arrayref of
 C<<< { el => $key_name, value => $value, } >>> hash-refs to gracefully
-handle duplicate items (see below). It will not affect the known modules such 
+handle duplicate items (see below). It will not affect the known modules such
 as dc ("Dublin Core").
 
 =back
@@ -1904,7 +1904,7 @@ one after the other. For example:
     $rss->add_item (
         title => $title,
         link => $link,
-        dc => { 
+        dc => {
             subject=> ["Jungle", "Desert", "Swamp"],
             creator=>$creator,
             date=>$date
@@ -1940,8 +1940,8 @@ Then proceed as usual:
 
   $rss->add_item (title=>$title, link=>$link, my=>{ rating=>$rating });
 
-You can also set the value of the module's prefix to an array reference 
-of C<<< { el => , val => } >>> hash-references, in which case duplicate 
+You can also set the value of the module's prefix to an array reference
+of C<<< { el => , val => } >>> hash-references, in which case duplicate
 elements are possible:
 
   $rss->add_item(title=>$title, link=>$link, my=> [
@@ -2044,8 +2044,8 @@ L<https://github.com/shlomif/perl-XML-RSS>
 
 Original code: Jonathan Eisenzopf <eisen@pobox.com>
 
-Further changes: Rael Dornfest <rael@oreilly.com>, Ask Bjoern Hansen 
-<ask@develooper.com> 
+Further changes: Rael Dornfest <rael@oreilly.com>, Ask Bjoern Hansen
+<ask@develooper.com>
 
 Currently: Shlomi Fish <shlomif@cpan.org>
 

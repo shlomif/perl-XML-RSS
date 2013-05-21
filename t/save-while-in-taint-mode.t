@@ -14,8 +14,8 @@ use XML::RSS;
             File::Spec->curdir(), "t", "data", "2.0", "sf-hs-with-pubDate.rss"
         )
     );
-    
-    my $target_fn = 
+
+    my $target_fn =
         File::Spec->catfile(
             File::Spec->curdir(), "t", "data", "2.0", "sf-hs-temp.rss"
         )

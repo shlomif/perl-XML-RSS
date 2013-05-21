@@ -80,7 +80,7 @@ HTML
     if ($rss->{'textinput'}->{'title'}) {
 	print <<"HTML";
 <form method="get" action="$rss->{'textinput'}->{'link'}">
-$rss->{'textinput'}->{'description'}<BR> 
+$rss->{'textinput'}->{'description'}<BR>
 <input type="text" name="$rss->{'textinput'}->{'name'}"><BR>
 <input type="submit" value="$rss->{'textinput'}->{'title'}">
 </form>

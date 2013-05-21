@@ -16,8 +16,8 @@ use XML::RSS;
       <link>http://example.com/</link>
       <description>To lead by example</description>
       <language>en-us</language>
-      <copyright>All content Public Domain, except comments which remains copyright the author</copyright> 
-      <managingEditor>editor\@example.com</managingEditor> 
+      <copyright>All content Public Domain, except comments which remains copyright the author</copyright>
+      <managingEditor>editor\@example.com</managingEditor>
       <webMaster>webmaster\@example.com</webMaster>
       <docs>http://backend.userland.com/rss</docs>
       <category  domain="http://www.dmoz.org">Reference/Libraries/Library_and_Information_Science/Technical_Services/Cataloguing/Metadata/RDF/Applications/RSS/</category>
@@ -45,7 +45,7 @@ use XML::RSS;
 
     # TEST
     ok (
-        (index($xml->as_string(), q{<guid isPermaLink="true">http://example.com/2002/09/02</guid>}) >= 0), 
+        (index($xml->as_string(), q{<guid isPermaLink="true">http://example.com/2002/09/02</guid>}) >= 0),
         "Checking for correct guid"
     );
 }

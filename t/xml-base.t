@@ -27,11 +27,11 @@ sub output_contains
 
 my $xml;
 
-{ 
+{
     my $rss;
 
     $rss  = XML::RSS->new( 'xml:base' => 'http://example.com' );
-    
+
     # TEST
     ok ($rss, "Created new rss");
 
@@ -41,8 +41,8 @@ my $xml;
     $rss->{'xml:base'} = 'http://foo.com/';
 
     # TEST
-    ok($rss->channel( 
-        title       => 'Test Feed', 
+    ok($rss->channel(
+        title       => 'Test Feed',
         link        => "http://example.com",
         description => "Foo",
     ), "Added channel");
@@ -89,7 +89,7 @@ my $xml;
 
     # TEST
     ok(
-        $rss->parse($xml, { hashrefs_instead_of_strings => 1 }), 
+        $rss->parse($xml, { hashrefs_instead_of_strings => 1 }),
         "Reparsed xml"
     );
 
@@ -106,7 +106,7 @@ my $xml;
         1,
         "Got 1 item"
     );
-    
+
     my $item = $rss->{items}->[0];
 
     # TEST
@@ -121,7 +121,7 @@ my $xml;
             # TEST
             is(
                 $item->{description}->{'xml:base'},
-                'http://foo.com/archive/1.html', 
+                'http://foo.com/archive/1.html',
                 "Found parsed description base"
             );
         } else {

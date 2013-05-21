@@ -12,7 +12,7 @@ my $rss = XML::RSS->new( version => '0.9' );
 isa_ok( $rss, 'XML::RSS' );
 make_rss( $rss );
 # TEST
-like( $rss->as_string, 
+like( $rss->as_string,
 	qr|<rdf:RDF[\d\D]+xmlns="http://my.netscape.com/rdf/simple/0.9/"[^>]*>|,
 	"rdf tag for version 0.9" );
 
@@ -31,7 +31,7 @@ isa_ok( $rss, 'XML::RSS' );
 make_rss( $rss );
 
 # TEST
-like( $rss->as_string, 
+like( $rss->as_string,
 	qr|<rdf:RDF[\d\D]+xmlns="http://purl.org/rss/1.0/"[^>]*>|,
 	"rdf tag for version 1.0" );
 }
@@ -45,7 +45,7 @@ sub make_rss
         link  => 'http://www.example.com',
         description => '',
         );
-        
+
 }
 
 {

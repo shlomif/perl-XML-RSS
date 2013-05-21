@@ -112,7 +112,7 @@ sub _out_tag {
     my $attr    = "";
     if (ref($inner) eq 'HASH') {
         my %inner_copy = %$inner;
-        $content = delete $inner_copy{content}; 
+        $content = delete $inner_copy{content};
         foreach my $key (keys %inner_copy) {
             my $value = $inner->{$key};
             if (defined($value)) {
@@ -144,7 +144,7 @@ sub _out_ns_tag {
         foreach my $attr (sort { $a cmp $b } keys(%{$inner}))
         {
             $self->_out(
-                  q{ } 
+                  q{ }
                 . $self->_sanitize($attr)
                 . q{="}
                 . $self->_encode($inner->{$attr})
@@ -242,9 +242,9 @@ sub _get_top_elem_about {
 
 sub _start_top_elem {
     my ($self, $tag, $about_sub) = @_;
-    
+
     my $about = $self->_get_top_elem_about($tag, $about_sub);
-    
+
     return $self->_out("<$tag$about>\n");
 }
 
@@ -261,7 +261,7 @@ sub _output_complete_textinput {
     my $master_tag = $self->_get_textinput_tag();
 
     if (defined(my $link = $self->textinput('link'))) {
-        $self->_start_top_elem($master_tag, 
+        $self->_start_top_elem($master_tag,
             sub { $link }
         );
 
@@ -662,7 +662,7 @@ sub _out_module_prefix_elements_hash
     my $prefix = $args->{prefix};
     my $data = $args->{data};
     my $url = $args->{url};
-    
+
     while (my ($el, $value) = each(%$data)) {
         $self->_out_module_prefix_pair(
             {
@@ -682,7 +682,7 @@ sub _out_module_prefix_pair
 
     my $prefix = $args->{prefix};
     my $url = $args->{url};
-    
+
     my $el = $args->{el};
     my $value = $args->{val};
 
@@ -747,7 +747,7 @@ sub _out_modules_elements {
     # Ad-hoc modules
     while (my ($url, $prefix) = each %{$self->_modules}) {
         next if $prefix =~ /^(dc|syn|taxo)$/;
-        
+
         $self->_out_module_prefix_elements(
             {
                 prefix => $prefix,
@@ -879,14 +879,14 @@ sub _render_xmlns {
     my ($self, $prefix, $url) = @_;
 
     my $pp = defined($prefix) ? ":$prefix" : "";
-    
+
     return qq{ xmlns$pp="$url"\n};
 }
 
 sub _get_rdf_xmlnses {
     my $self = shift;
 
-    return 
+    return
         join("",
             map { $self->_render_xmlns(@$_) }
             @{$self->_get_rdf_decl_mappings}
@@ -1087,7 +1087,7 @@ sub _out_dates {
 sub _out_def_chan_tag {
     my ($self, $tag) = @_;
     return $self->_output_multiple_tags(
-        {ext => "channel", 'defined' => 1}, 
+        {ext => "channel", 'defined' => 1},
         [ $tag ],
     );
 }

@@ -14,13 +14,13 @@ sub run_t_manifest
     require Test::Run::CmdLine::Iface;
     my ($test_verbose, $inst_lib, $inst_archlib, $test_level) = @_;
     local @INC = @INC;
-    unshift @INC, map { File::Spec->rel2abs($_) } ($inst_lib, $inst_archlib); 
-    
+    unshift @INC, map { File::Spec->rel2abs($_) } ($inst_lib, $inst_archlib);
+
     my $test_iface = Test::Run::CmdLine::Iface->new({
             test_files => [Test::Manifest::get_t_files()]
         }
     );
-    
+
     return $test_iface->run();
 }
 

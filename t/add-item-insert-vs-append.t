@@ -38,7 +38,7 @@ sub create_rss
         title => "GTKeyboard 0.85",
         link  => "http://freshmeat.net/news/1999/06/21/930003829.html"
         );
-    
+
     return $rss;
 }
 
@@ -96,7 +96,7 @@ sub create_rss
     contains($rss,
         qq{<item>\n<title>gcc 10.0.10</title>\n} .
         qq{<link>http://gcc-compiler.tld/</link>\n} .
-        qq{</item>\n} .        
+        qq{</item>\n} .
         qq{<item>\n<title>GTKeyboard 0.85</title>\n} .
         qq{<link>http://freshmeat.net/news/1999/06/21/930003829.html</link>\n} .
         qq{</item>\n},

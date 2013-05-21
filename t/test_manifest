@@ -1,5 +1,6 @@
 load.t
 pod.t
+style-trailing-space.t
 version.t
 render-upon-init.t
 encoding.t

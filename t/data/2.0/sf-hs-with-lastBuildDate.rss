@@ -20,19 +20,19 @@ added or improved. Read below for what&apos;s new.
 Two of the pages in &lt;a href=&quot;http://www.shlomifish.org/MathVentures/&quot;&gt;the
     MathVentures section&lt;/a&gt; were converted to use embedded
 &lt;a href=&quot;http://www.w3.org/Math/&quot;&gt;MathML&lt;/a&gt;. This should make viewing
-them with MathML-compliant browsers easier. The old ASCII-art based pages are 
+them with MathML-compliant browsers easier. The old ASCII-art based pages are
 still available.
 &lt;/p&gt;
 
 &lt;p&gt;
-The ideas 
+The ideas
 &lt;a href=&quot;http://www.shlomifish.org/philosophy/ideas/#tucan&quot;&gt;Tucan&lt;/a&gt; and
 &lt;a href=&quot;http://www.shlomifish.org/philosophy/ideas/#unixdoc&quot;&gt;Unixdoc&lt;/a&gt;
 were added to the Random Ideas page.
 &lt;/p&gt;
 
 &lt;p&gt;
-I&apos;ve placed &lt;a href=&quot;http://www.shlomifish.org/open-source/nostalgia/&quot;&gt;some of 
+I&apos;ve placed &lt;a href=&quot;http://www.shlomifish.org/open-source/nostalgia/&quot;&gt;some of
     my old DOS-era programs online&lt;/a&gt; for your amusement.
 &lt;/p&gt;
 
@@ -76,12 +76,12 @@ It&apos;s been about two weeks since my last update, and here&apos;s what&apos;s
     &lt;p&gt;
     &lt;a href=&quot;http://www.shlomifish.org/art/recommendations/music/&quot;&gt;A currently
         partial list&lt;/a&gt; of my favourite compact discs is now live. Creating
-    this list involved a large amount of 
+    this list involved a large amount of
     &lt;a href=&quot;http://en.wikipedia.org/wiki/Document_Type_Definition&quot;&gt;DTD&lt;/a&gt;,
-    &lt;a href=&quot;http://www.w3.org/TR/xslt&quot;&gt;XSLT&lt;/a&gt;, &lt;a href=&quot;http://perl-begin.berlios.de/&quot;&gt;Perl&lt;/a&gt;, and CSS hacking on the 
-    &lt;a href=&quot;http://search.cpan.org/dist/XML-Grammar-ProductsSyndication/&quot;&gt;XML-Grammar-ProductsSyndication&lt;/a&gt; 
-    framework, that was written from scratch to facilitate making construction 
-    of such lists possible by and others. 
+    &lt;a href=&quot;http://www.w3.org/TR/xslt&quot;&gt;XSLT&lt;/a&gt;, &lt;a href=&quot;http://perl-begin.berlios.de/&quot;&gt;Perl&lt;/a&gt;, and CSS hacking on the
+    &lt;a href=&quot;http://search.cpan.org/dist/XML-Grammar-ProductsSyndication/&quot;&gt;XML-Grammar-ProductsSyndication&lt;/a&gt;
+    framework, that was written from scratch to facilitate making construction
+    of such lists possible by and others.
     &lt;/p&gt;
     &lt;p&gt;
     I will add the missing CDs as time goes by, and will also later on add
@@ -92,15 +92,15 @@ It&apos;s been about two weeks since my last update, and here&apos;s what&apos;s
     &lt;/li&gt;
     &lt;li&gt;
     &lt;p&gt;
-    More pages on the site were made to validate according to the 
+    More pages on the site were made to validate according to the
     &lt;a href=&quot;http://www.w3.org/&quot;&gt;World-wide-web consortium&lt;/a&gt; standards, and
     some ancient leftovers that were no longer important were removed.
     &lt;/p&gt;
     &lt;/li&gt;
     &lt;li&gt;
     &lt;p&gt;
-    &lt;a href=&quot;http://www.shlomifish.org/open-source/favourite/&quot;&gt;My list of 
-        favourite open source software&lt;/a&gt; was updated, with many corrections, 
+    &lt;a href=&quot;http://www.shlomifish.org/open-source/favourite/&quot;&gt;My list of
+        favourite open source software&lt;/a&gt; was updated, with many corrections,
     added programs and a new navigation menu.
     &lt;/p&gt;
     &lt;/li&gt;

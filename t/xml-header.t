@@ -11,7 +11,7 @@ sub starts_with
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     my ($rss, $prefix, $msg) = @_;
-    
+
     my $rss_output = $rss->as_string();
     my $ok = is (
         substr($rss_output, 0, length($prefix)-1),
@@ -24,7 +24,7 @@ sub create_rss_1
 {
     my $args = shift;
     my @style =
-        exists($args->{stylesheet}) ? 
+        exists($args->{stylesheet}) ?
             (stylesheet => $args->{stylesheet}) :
             ()
             ;
@@ -32,7 +32,7 @@ sub create_rss_1
         version => $args->{version},
         @style
     );
-    my $image_link = exists($args->{image_link}) ? $args->{image_link} : 
+    my $image_link = exists($args->{image_link}) ? $args->{image_link} :
         "http://freshmeat.net/";
 
     my $extra_image_params = $args->{image_params} || [];

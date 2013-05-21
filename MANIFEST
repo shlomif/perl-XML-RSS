@@ -81,6 +81,7 @@ t/pod.t
 t/render-upon-init.t
 t/rss2-gt-encoding.t
 t/save-while-in-taint-mode.t
+t/style-trailing-space.t
 t/test-generated-items.t
 t/test_manifest
 t/version.t

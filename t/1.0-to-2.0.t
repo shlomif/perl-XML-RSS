@@ -24,7 +24,7 @@ use XML::RSS;
     # TEST
     ok (index($string, q{<pubDate>Sat, 14 Oct 2006 21:15:36 -0000</pubDate>}) >= 0,
         "Correct pubDate was found",
-    );    
+    );
 }
 
 {

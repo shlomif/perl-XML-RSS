@@ -26,5 +26,5 @@ print $rss->as_string;
 
 sub syntax {
     die "Syntax: convert.pl <file.rss> <version>\n    ex: convert.pl fm.rdf 1.0\n\n";
-}   
+}
 

@@ -37,10 +37,10 @@ my $rss = XML::RSS->new (version => '1.0');
    dc => {
      creator  => "G. Raphics (graphics at freshmeat.net)",
    },
- ); 
+ );
 
 $rss->add_item(
-   title       => "GTKeyboard 0.85",  
+   title       => "GTKeyboard 0.85",
    link        => "http://freshmeat.net/news/1999/06/21/930003829.html",
    description => "GTKeyboard is a graphical keyboard that ...",
    dc => {

@@ -1,23 +1,23 @@
 <!--
 
   RDF Site Summary (RSS) 0.9 official DTD, proposed.
-  
+
   RSS is an XML/RDF vocabulary for describing
   metadata about websites, and enabling the display of
   "channels" on the "My Netscape" website.
-  
+
   RSS Info can be found at http://my.netscape.com/publish/
-  XML Info can be found at http://www.w3.org/XML/ 
+  XML Info can be found at http://www.w3.org/XML/
   RDF Info can be found at http://www.w3.org/RDF/
-  
+
   copyright Netscape Communications, 1999
 
   Dan Libby - danda@netscape.com
-  
+
   Based on RSS DTD originally created by
   Lars Marius Garshol - larsga@ifi.uio.no.
   $Id: rss-0.9.dtd,v 1.1.1.1 2002/11/12 07:48:15 comdog Exp $
-  
+
 -->
 
 <!ELEMENT rdf:RDF (channel | image? | item+ | textinput?)*>
@@ -40,9 +40,9 @@
      http://www.w3.org/TR/REC-html32.html#dtd
      =============== BEGIN ===================
 -->
-<!-- 
+<!--
      Character Entities for ISO Latin-1
-     
+
      (C) International Organization for Standardization 1986
      Permission to copy in any form is granted for use with
      conforming SGML systems and applications as defined in
@@ -151,7 +151,7 @@
     <!ENTITY yacute "&#253;"> <!-- small y, acute accent -->
     <!ENTITY thorn  "&#254;"> <!-- small thorn, Icelandic -->
     <!ENTITY yuml   "&#255;"> <!-- small y, dieresis or umlaut mark -->
-    
+
 <!--
      Copied from HTML 3.2 DTD, with modifications (removed CDATA)
      http://www.w3.org/TR/REC-html32.html#dtd

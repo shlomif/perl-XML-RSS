@@ -17,7 +17,7 @@ $rss->strict("1");
 
 $rss->channel(title          => 'freshmeat.net',
 	      link           => 'http://freshmeat.net',
-	      language       => 'en', 
+	      language       => 'en',
 	      description    => 'the one-stop-shop for all your Linux software needs',
 	      rating         => '(PICS-1.1 "http://www.classify.org/safesurf/" 1 r (SS~~000 1))',
 	      copyright      => 'Copyright 1999, Freshmeat.net',
