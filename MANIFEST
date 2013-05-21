@@ -57,6 +57,7 @@ t/2.0-wo-title.t
 t/add-item-insert-vs-append.t
 t/auto_add_modules.t
 t/charset1.t
+t/cpan-changes.t
 t/data/1.0/rss1.0.exotic.rdf
 t/data/1.0/with_content.rdf
 t/data/2.0/empty-desc.rss

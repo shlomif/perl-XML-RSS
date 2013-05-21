@@ -1,33 +1,34 @@
 Revision history for Perl module XML::RSS
 
+1.52    2013-05-21
     - Add t/style-trailing-space.t.
         - Got rid of trailing space.
 
-1.51 - May 11, 2013
+1.51    2013-05-11
     - Sort the XML namespaces before outputting.
         - became broken in perl-5.18.0-RC1.
 
-1.50 - April 7, 2013
+1.50    2013-04-07
     - Update the repository URL to its new location on GitHub.
 
-1.49 - April 7, 2011
+1.49    2011-04-07
     - Some correctness and Modern Perl changes to the rss2html.pl
     script (it still appears to be very hairy.)
     - Add support for parsing rssCloud:
         - https://rt.cpan.org/Ticket/Display.html?id=67241
         - Thanks to STUIFZAND for the patch.
 
-1.48 - April 23, 2010
+1.48    2010-04-23
     - Fix the $rss->parse($string)->other_method() display (had to add
     spaces between the << and >>). See:
         - https://rt.cpan.org/Public/Bug/Display.html?id=56848
         - Thanks to Slaven_Rezic for the report.
 
-1.47 - December 8, 2009
+1.47    2009-12-08
     - Made sure XML::RSS::save() can do its thing when in taint mode:
         - http://rt.cpan.org/Public/Bug/Display.html?id=52334
 
-1.46 - October 8, 2009
+1.46    2009-10-08
     - Updated the E-mail address of Adam Trickett.
     - Removed the perl-5.6.x-specific workarounds and made perl-5.8.x as
     a requirement. This was done in order to:
@@ -38,7 +39,7 @@ Revision history for Perl module XML::RSS
     - Convert all occurences of "new XML::RSS" to "XML::RSS->new()" everywhere.
         - a best practice.
 
-1.45 - August 5, 2009
+1.45    2009-08-05
     - Removed some unused module requirements statements from lib/**.pm.
     - Added a note about date parsing/generation (thanks to an email
     correspondent).
@@ -47,23 +48,23 @@ Revision history for Perl module XML::RSS
         - https://rt.cpan.org/Ticket/Display.html?id=48405
     - Added "resources" and "keywords" to the Build.PL.
 
-1.44 - April 1, 2009
+1.44    2009-04-01
     - Applied a patch from Simon Wistow (after some modifications) to
     add support for multiple enclosures.
     - Added the t/xml-base.t test file from Simon Wistow to test for
     xml:base. Corrected for style.
 
-1.43 - January 12, 2009
+1.43    2009-01-12
     - Fixed the date on the last entry on this changelog, to say "2009"
     instead of "2008".
         - http://rt.cpan.org/Ticket/Display.html?id=42304
 
-1.42 - January 3, 2009
+1.42    2009-01-03
     - When transforming elements with attributes into hash-refs - make
     sure they are placed in the correct namespace. Previously
     <media:description> over-rided the plain <description>. (as in Flickr).
 
-1.41 - December 4, 2008
+1.41    2008-12-04
     - Made the default keys for the channel link, description and title undef
     instead of ''. They become '' once they are opened.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40686
@@ -74,7 +75,7 @@ Revision history for Perl module XML::RSS
     compatibility.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40686
 
-1.40 - December 1, 2008
+1.40    2008-12-01
     - Now outputting an arrayref of <skipDays>/<day>'s and <skipHours>/<hours>
     properly.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40978
@@ -94,7 +95,7 @@ Revision history for Perl module XML::RSS
     into an array ref.
 
 
-1.38 - November 27, 2008
+1.38    2008-11-27
     - Added support for duplicate items of RSS modules.
         - http://rt.cpan.org/Public/Bug/Display.html?id=4495
     - Added support for multiple Dublin Core elements. One can point
@@ -104,7 +105,7 @@ Revision history for Perl module XML::RSS
     an array reference instead of concatenating them together.
         - http://rt.cpan.org/Public/Bug/Display.html?id=40978
 
-1.37 - November 18, 2008
+1.37    2008-11-18
     - Extracted the common parts of parse() and parsefile() into one
     method (Refactoring - Shlomi Fish)
     - Incorporated a modified version of a patch from Simon Wistow to
@@ -115,7 +116,7 @@ Revision history for Perl module XML::RSS
     - Enabled backwards-compatibility mode for the "description" item
     to not become a hash-ref by default if xml:base is specified.
 
-1.36 - October 7, 2008
+1.36    2008-10-07
     - ->parse() now explicitly returns $self.
         - http://rt.cpan.org/Public/Bug/Display.html?id=34914
     - ->parsefile() now explicitly returns $self.
@@ -127,7 +128,7 @@ Revision history for Perl module XML::RSS
     - Small documentation patch: (add_item with dc:date)
         - http://rt.cpan.org/Ticket/Display.html?id=39780
 
-1.35 - September 13, 2008
+1.35    2008-09-13
     - Added a Module::Build-based Build.PL so we'll have an easier time
     with the META.yml and the Kwalitee.
     - Kwalitee - added "use warnings" to all Perl files.
@@ -135,7 +136,7 @@ Revision history for Perl module XML::RSS
     - Kwalitee - fixed the "use" statement of
     "Test::Run::CmdLine::Iface" to a runtime require.
 
-1.34 - September 12, 2008
+1.34    2008-09-12
     - fixed a typo in the documentation of lib/XML/RSS.pm -
     "regardless" instead of "regarless".
         - http://rt.cpan.org/Public/Bug/Display.html?id=37916
@@ -145,12 +146,12 @@ Revision history for Perl module XML::RSS
         - http://rt.cpan.org/Public/Bug/Display.html?id=39231
         - (Reported by Dave, Fixed by Shlomif).
 
-1.33 - June 8, 2008
+1.33    2008-06-08
     - Allowed the end-user to customise the _encode() routine in
     XML::RSS::Private::Output::Base from XML::RSS using the
     encode_cb key.
 
-1.32 - February 8, 2008
+1.32    2008-02-08
     - Fixed http://rt.cpan.org/Public/Bug/Display.html?id=25336 :
         - made sure the namespace specified elements can have a hash
         as a value in which case they'll be outputted as a standalone tag
@@ -167,11 +168,11 @@ Revision history for Perl module XML::RSS
         attribute is "true". Not if it is non-existent, etc.
         - this modified the behaviour of the module.
 
-1.31 - June 29, 2007
+1.31    2007-06-29
     - Fixed the save() function to handle perl-5.6.x (and possibly below)
     where the ":encoding(...)" filehandle are not available (Shlomi Fish)
 
-1.30 - June 18, 2007
+1.30    2007-06-18
     - Same as 1.29_02 (from February 23, 2007)
     - Removed some methods that were not used.
     - Added more tests to increase the test coverage.
@@ -181,7 +182,8 @@ Revision history for Perl module XML::RSS
     - Many files were left in the distribution or Subversion repository
       that were executable but need not be. Made them non-executable.
     - Clean up examples/ directory and move generated files out of t/
-    - isPermaLink / guid fixes (RT#23983, Shlomi)
+    - isPerCould not parse Line '1.04 - Web Mar 03 20:49:43 2004' at /home/shlomif/bin/upgrade-to-CPAN-Changes line 40, <STDIN> line 271.
+maLink / guid fixes (RT#23983, Shlomi)
     - increased the test coverage of XML::RSS up to 100%. (Shlomif)
     - SECURITY BUG FIX: eliminated a markup injection vulnerability in the
       taxo:topics output of RSS 1.0. (Shlomif)
@@ -208,7 +210,7 @@ Revision history for Perl module XML::RSS
       http://www.nntp.perl.org/group/perl.qa/2006/11/msg7400.html
       (Shlomif)
 
-1.22 - December 17th, 2006
+1.22    2006-12-17
     - Fix XML::Feed compatability. Make sure $item->{content} is always setup
       (broke in 1.20, RT#23822, Shlomi, Andreas J. Koenig)
     - Fix the tests to work on Win32 (RT#23752, Shlomi, Kenichi Ishigaki)
@@ -221,7 +223,7 @@ Revision history for Perl module XML::RSS
     - Don't fail the tests if Test::Pod::Coverage is missing
       (reported by Andreas J. Koenig)
 
-1.21 - December 5th, 2006
+1.21    2006-12-05
     - Support inserting a XSL stylesheet URL into the XML output
       (RT#11569, Jason A. Smith, Shlomi Fish)
     - Remove empty lines in the test_manifest - some versions of
@@ -231,7 +233,7 @@ Revision history for Perl module XML::RSS
     - More Date Conversion (Shlomi)
     - Fix for a Markup Injection Vulnerability (RT#23435, Shlomi)
 
-1.20 - November 10th, 2006
+1.20    2006-11-10
     - Value for $XML::RSS::modules gets destroyed (RT#18755, Shlomi)
       - Note that YOU CAN NO LONGER USE $XML::RSS::modules, you
            have to use the add_modules call as documented!
@@ -246,13 +248,13 @@ Revision history for Perl module XML::RSS
     - Add test to test regression of CPAN RT#5438 (Shlomi)
     - More tests...
 
-1.12 - October 25, 2006
+1.12    2006-10-25
     - Add more tests
     - make sure META.yml is correctly generated
     - Fix enclosure parsing (RT#7920, Tatsuhiko Miyagawa)
     - Incorrect entity encoding in XML output (RT#22467, reported by Stephen Hall)
 
-1.11 - October 19, 2006
+1.11    2006-10-19
     - use HTML::Entities instead of the "homegrown" entity encoding code
     - Minor doc fix (David Steinbrunner)
     - Fix encoding of the > char, added tests (RT#19420, Shlomi Fish)
@@ -262,135 +264,14 @@ Revision history for Perl module XML::RSS
     - use base instead of @ISA
     - Thanks to Shlomi Fish for helping sorting through the RT queue!
 
-1.10 - March 11, 2006
+1.10    2006-03-11
     - Module (for now) maintained by Ask Bjoern Hansen
     - Fixed category output in RSS 2.0 (RT#17303, Yasuhiro Onishi)
     - Update documentation with new Subversion server and bug tracking
     - Clean up distribution (tests, Makefile.PL, file locations, ...)
 
-1.05 - Thu Aug 12 20:54:31 2004
+1.05    2004-08-12
     - fixed version number
     - improved RSS 2.0 generation support
     - typo and documentation fixes
 
-1.04 - Web Mar 03 20:49:43 2004
-    - update Changes to include changes for 1.03
-
-1.03 - Web Mar 03 00:24:07 2004
-    - quell warnings when parsing RSS 0.9x, RSS 2.0
-
-1.02 - Mon Feb 20 15:34:21 2003
-    - fixed bug in encode().  encode() did not respect CDATA
-      sections and would mangle them when encountered.  now behaves
-      properly (we hope) even when CDATA and #PCDATA are mixed
-      together liberally
-
-1.01 - Mon Feb  3 15:46:25 2003
-    * fixed bug with handle_char().  i (brian d foy) mis-diagnosed a
-    previous bug and broke handle_char() when what I should have done
-    was initialise the object for each call to parse*()
-
-    * if you have version 1.0, you should upgrade to this version, 1.01
-
-1.00 - Fri Jan 31 11:26:41 2003
-    * the as_string method now encodes special characters. valid output!
-    * a new "Auto Add" feature can add modules for namespaces found
-    while parsing (off by default)
-    * can output RSS 2.0, but not parse it yet
-    * this is the last major release in this track.  we are going to
-    completely rewrite XML::RSS as something more extendable.
-
-0.98_05 - Mon Jan 27 15:54:32 2003
-    * The auto add_feature is not controlled by the $AUTO_ADD variable
-    and is off by default
-    * removed the distribution tests now that it is ready to distribute
-
-0.98_04 - Fri Jan 17 20:00:29 2003
-    * the parse and parsefile routines now automatically add non-
-    standard namespace to the modules list
-
-0.98_03 - Fri Jan 17 19:22:20 2003
-    * changed the handle_char() routine to replace data rather than
-    append to existing data.  this takes care of the doubling problem
-    in the last issue.
-
-    * set the RSS 2.0 namespace in the _initializer routine
-
-    * all tests now pass.  if this works for people, it could turn into
-    a release candidate
-
-0.98_02 - Fri Jan 17 19:15:45 2003
-    * changed the handle_char() routine to replace data rather than
-    append to existing data.  this takes care of the doubling problem
-    in the last issue.
-
-    * set the RSS 2.0 namespace in the _initializer routine
-
-    * all tests now pass.  if this works for people, it could turn into
-    a release candidate
-
-0.98_02 - Fri Jan 17 15:47:29 2003
-    * added initial RSS 2.0 support
-    * first fix to properly encode special characters in output
-    * need to fix feature to add namespace (tests are TO DO)
-
-0.98 Tue Nov 12 05:45:36 CST 2002
-    - module taken over by brian d foy <bdfoy@cpan.org>
-    - module now in SourceForge (http://www.sourceforge.net/projects/perl-rss)
-    - added support for arbitrary namespaces (with defaults to the
-    usual suspects)
-    - fixed ommission of encoding with version 0.9 output
-
-0.97 Wed Mar 21 03:13:29 EST 2001
-    - added support for the Taxonomy module (taxo). It only works
-      inside the channel or item elements and only supports one
-      form of the module syntax. See the XML::RSS documentation
-      for examples.
-
-0.96 Sat Mar 17 17:21:27 EST 2001
-     - fixed RSS 0.91 output. When the source file that is parsed was
-    1.0, it did not properly translate all of the dc elements to
-    0.91 channel elements.
-
-0.95 Sat Dec 23 11:28:03 EST 2000
-     - added support for including external namespaces and elements
-
-0.94 Sat Dec 16 12:42:21 EST 2000
-     - added support for RSS1.0 RC1 release
-     - added support for Syndication and Dublin Core modules
-
-
-0.9 Mon Aug 14 17:05:00 EDT 2000
-    - fixed DESTROY() error when using Perl 5.6
-    - added support for RSS 1.0 and rss091 namespace
-
-0.8 Mon Dec 27 03:42:27 EST 1999
-    - fixed shallow copy problem when working with multiple instances
-
-0.7 Wed Oct 20 22:41:05 EDT 1999
-    - parameters were not getting set unless the strict parameter was set
-    - fixed spelling for managingEditor and webMaster
-
-0.6 - numerous minor bug fixes
-    - it no longer checks for size as specified by Netscape's RSS spec
-      unless otherwise specified
-
-0.5 - fixed handle_char method which croaked on cdata
-      that contained entities. Reported by
-      Wojciech Zwiefka <wojtekz@cnt.pl>
-    - prettied up the output from rss2html.pl. It's
-      now more suitable for including news feeds on
-      a Web site. Also added ability to give local
-      filename or http URL.
-
-0.4 - removed extraneous print
-    - added stuff in examples/rss2html.pl
-
-0.3  Tue Aug 24 05:14:18 EDT 1999
-     - added support for RSS 0.91
-
-0.2  Sat Jul 24 21:12:22 EDT 1999
-     - added documentation
-
-0.1  Wed Jul  7 16:22:25 1999
-    - original version; created by h2xs 1.19
