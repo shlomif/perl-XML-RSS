@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+1.53    2013-06-04
+    - Implement a more user-friendly error with XML::RSS->new(version=>1.0)
+    and a missing "link" and/or "title" field.
+        - Thanks to Gabor Szabo for reporting it.
+
 1.52    2013-05-21
     - Add t/style-trailing-space.t.
         - Got rid of trailing space.
