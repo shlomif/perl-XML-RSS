@@ -42,6 +42,7 @@ t/0.9-generate.t
 t/0.9-parse.t
 t/0.9-strict.t
 t/1.0-generate.t
+t/1.0-gen-errors-on-missing-fields.t
 t/1.0-parse-2.t
 t/1.0-parse-exotic.t
 t/1.0-parse.t

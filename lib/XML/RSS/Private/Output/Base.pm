@@ -44,6 +44,18 @@ sub _encode_cb {
     return $self->{_encode_cb};
 }
 
+sub _item_idx
+{
+    my $self = shift;
+
+    if (@_)
+    {
+        $self->{_item_idx} = shift;
+    }
+
+    return $self->{_item_idx};
+}
+
 sub _initialize {
     my $self = shift;
     my $args = shift;
@@ -58,6 +70,8 @@ sub _initialize {
     else {
         $self->_encode_cb(\&_default_encode);
     }
+
+    $self->_item_idx(-1);
 
     return 0;
 }
@@ -497,9 +511,22 @@ sub _out_item_desc {
 sub _output_common_item_tags {
     my ($self, $item) = @_;
 
+    my @fields = (qw( title link ));
+
+    my $defined = $self->_get_item_defined;
+
+    if (! $defined) {
+        foreach my $f (@fields)
+        {
+            if (!defined($item->{$f})) {
+                die qq/Item No. / . $self->_item_idx() . qq/ is missing the "$f" field./;
+            }
+        }
+    }
+
     $self->_output_multiple_tags(
-        {ext => $item, 'defined' => $self->_get_item_defined},
-        [qw(title link)],);
+        {ext => $item, type => 'item', idx => $self->_item_idx(), 'defined' => $defined,},
+        [@fields],);
 
     $self->_out_item_desc($item);
 
@@ -849,10 +876,21 @@ sub _out_seq_items {
     # Seq items
     $self->_out("<items>\n <rdf:Seq>\n");
 
+    my $idx = 0;
     foreach my $item (@{$self->_main->_get_items()}) {
+
+        my $about_text = $self->_get_item_about($item);
+
+        if (!defined($about_text)) {
+            die qq/Item No. $idx is missing "about" or "link" fields./;
+        }
+
         $self->_out('  <rdf:li rdf:resource="' .
-            $self->_encode($self->_get_item_about($item)) .
+            $self->_encode($about_text) .
             '" />' . "\n");
+    }
+    continue {
+        $idx++;
     }
 
     $self->_out(" </rdf:Seq>\n</items>\n");
@@ -1000,8 +1038,12 @@ sub _output_single_item {
 sub _output_items {
     my $self = shift;
 
+    $self->_item_idx(0);
     foreach my $item (@{$self->_get_filtered_items}) {
         $self->_output_single_item($item);
+    }
+    continue {
+        $self->_item_idx($self->_item_idx()+1);
     }
 }
 
