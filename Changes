@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+1.54    2013-06-05
+    - Apply a patch from Debian for correcting a typo.
+        - https://rt.cpan.org/Public/Bug/Display.html?id=85962
+        - Thanks to Gregor Herrmann
+
 1.53    2013-06-04
     - Implement a more user-friendly error with XML::RSS->new(version=>1.0)
     and a missing "link" and/or "title" field.

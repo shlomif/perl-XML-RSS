@@ -1761,7 +1761,7 @@ be more the 40 characters, the B<link> 500, and the B<description>
 are required for RSS 1.0. B<language> is required for RSS 0.91.
 The other parameters are optional for RSS 0.91 and 1.0.
 
-To retreive the values of the channel, pass the name of the value
+To retrieve the values of the channel, pass the name of the value
 (title, link, or description) as the first and only argument
 like so:
 
