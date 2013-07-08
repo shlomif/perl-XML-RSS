@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 4;
 
 use File::Spec;
 use XML::RSS;
@@ -21,15 +21,9 @@ is ($item_with_guid_true->{"permaLink"},
 );
 
 # TEST
-ok ((!$item_with_guid_missing->{"permaLink"}),
-    "guid's isPermaLink is missing (implicitly false), so the item permalink property should not be set"
-);
-
-# TEST
-is ($item_with_guid_missing->{"guid"},
+ok ($item_with_guid_missing->{"permaLink"},
     "http://community.livejournal.com/lj_dev/713810.html",
-    "guid's isPermaLink is missing (implicitly false), so item->{guid}" .
-    " should be equal to the contents of the guid element",
+    "guid's isPermaLink is missing (implicitly true), so the item permalink property should be set to the value of the guid tag"
 );
 
 # TEST
