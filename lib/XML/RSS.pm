@@ -1688,7 +1688,7 @@ RSS was originally developed by Netscape as the format for
 Netscape Netcenter channels, however, many Web sites have since
 adopted it as a simple syndication format. With the advent of RSS 1.0,
 users are now able to syndication many different kinds of content
-including news headlines, threaded measages, products catalogs, etc.
+including news headlines, threaded messages, products catalogs, etc.
 
 B<Note:> In order to parse and generate dates (such as C<pubDate>
 and C<dc:date>) it is recommended to use L<DateTime::Format::Mail> and
@@ -1851,13 +1851,13 @@ to a program on a Web server via an HTML form. B<name> is the HTML form name
 and B<link> is the URL to the program. Content is submitted using the GET
 method.
 
-Access to the B<textinput> values is the the same as B<channel()> and
+Access to the B<textinput> values is the same as B<channel()> and
 B<image()>.
 
 =item add_module(prefix=>$prefix, uri=>$uri)
 
 Adds a module namespace declaration to the XML::RSS object, allowing you
-to add modularity outside of the the standard RSS 1.0 modules.  At present,
+to add modularity outside of the standard RSS 1.0 modules.  At present,
 the standard modules Dublin Core (dc) and Syndication (syn) are predefined
 for your convenience. The Taxonomy (taxo) module is also internally supported.
 
