@@ -1,5 +1,8 @@
 Revision history for Perl module XML::RSS
 
+1.55    2014-04-15
+    - Fix the tests for DateTime-Format-Mail-0.400.
+
 1.54    2013-06-05
     - Apply a patch from Debian for correcting a typo.
         - https://rt.cpan.org/Public/Bug/Display.html?id=85962

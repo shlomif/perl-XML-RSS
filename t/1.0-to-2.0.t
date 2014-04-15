@@ -16,13 +16,18 @@ use XML::RSS;
     $rss->{output} = "2.0";
     my $string = $rss->as_string;
 
+    # DateTime::Format::Mail emits +0000 starting from version 0.400
+    # and -0000 on older versions so we need to accomodate for that.
+    #
     # TEST
-    ok (index($string, q{<lastBuildDate>Sat, 14 Oct 2006 21:15:36 -0000</lastBuildDate>}) >= 0,
+    like ($string,
+        qr{<lastBuildDate>Sat, 14 Oct 2006 21:15:36 [+-]0000</lastBuildDate>},
         "Correct date was found",
     );
 
     # TEST
-    ok (index($string, q{<pubDate>Sat, 14 Oct 2006 21:15:36 -0000</pubDate>}) >= 0,
+    like ($string,
+        qr{<pubDate>Sat, 14 Oct 2006 21:15:36 [+-]0000</pubDate>},
         "Correct pubDate was found",
     );
 }
@@ -34,9 +39,10 @@ use XML::RSS;
     $rss->{output} = "0.91";
     my $string = $rss->as_string;
 
-    my $index = index($string, qq{<pubDate>Sat, 14 Oct 2006 21:15:36 -0000</pubDate>\n<lastBuildDate>Sat, 14 Oct 2006 21:15:36 -0000</lastBuildDate>\n});
     # TEST
-    ok ($index >= 0,
+    like(
+        $string,
+        qr{<pubDate>Sat, 14 Oct 2006 21:15:36 [+-]0000</pubDate>\n<lastBuildDate>Sat, 14 Oct 2006 21:15:36 [+-]0000</lastBuildDate>\n},
         "Correct date was found in 1.0 -> 0.91 conversion",
     );
 }
