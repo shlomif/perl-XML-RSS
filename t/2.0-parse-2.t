@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 
 use XML::RSS;
 use File::Spec;
@@ -193,5 +193,35 @@ EOF
               ->{'type'},
         "html",
         "media:desc type is OK.",
+    );
+}
+
+{
+    my $rss = XML::RSS->new();
+
+    $rss->parse(<<'EOF');
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE title [ <!ELEMENT title ANY >
+<!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+    <title>The Blog</title>
+    <link>http://example.com/</link>
+    <description>A blog about things</description>
+    <lastBuildDate>Mon, 03 Feb 2014 00:00:00 -0000</lastBuildDate>
+    <item>
+        <title>Without&xxe;Entity</title>
+        <link>http://example.com</link>
+        <description>a post</description>
+        <author>author@example.com</author>
+        <pubDate>Mon, 03 Feb 2014 00:00:00 -0000</pubDate>
+    </item>
+</channel>
+</rss>
+EOF
+
+    # TEST
+    is ($rss->{items}->[0]->{title}, "WithoutEntity",
+        "Fix for RT #100660 - XML External Entities Exploit",
     );
 }

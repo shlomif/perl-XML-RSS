@@ -1,5 +1,11 @@
 Revision history for Perl module XML::RSS
 
+1.56    2014-12-04
+    - Fix https://rt.cpan.org/Ticket/Display.html?id=100660
+        - XML External Entities Exploit, as reported here:
+            - http://mikeknoop.com/lxml-xxe-exploit/
+        - Security.
+
 1.55    2014-04-15
     - Fix the tests for DateTime-Format-Mail-0.400.
 

@@ -1265,6 +1265,9 @@ sub _get_parser {
                 # Detach the parser to avoid reference loops.
                 $self->_parser(undef);
             },
+            ExternEnt => sub {
+                return '';
+            },
         }
     );
 }
