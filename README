@@ -9,8 +9,9 @@ This module was created to help those who need to manage
 RDF Site Summary (RSS) files. It makes quick work of
 creating, updating, and saving RSS files.
 
-   perldoc lib/XML/RSS.pm
-   http://search.cpan.org/dist/XML-RSS/lib/XML/RSS.pm
+    perldoc lib/XML/RSS.pm
+
+    https://metacpan.org/pod/XML::RSS
 
 for more details.
 
@@ -23,8 +24,8 @@ The latest version is available at any CPAN archive.
 
 INSTALLATION
 
-   perl Makefile.PL
-   make
-   make test  # (optional)
-   make install
+    perl Makefile.PL
+    make
+    make test  # (optional)
+    make install
 
