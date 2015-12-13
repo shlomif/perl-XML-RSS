@@ -2076,7 +2076,7 @@ modify it under the same terms as Perl itself.
  Aaron Straup Cope <asc@vineyard.net>
  Ian Davis <iand@internetalchemy.org>
  rayg@varchars.com
- Shlomi Fish <shlomif@iglu.org.il>
+ Shlomi Fish <shlomif@cpan.org>
 
 =head1 SEE ALSO
 
