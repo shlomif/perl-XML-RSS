@@ -21,7 +21,7 @@ is ($item_with_guid_true->{"permaLink"},
 );
 
 # TEST
-ok ($item_with_guid_missing->{"permaLink"},
+is ($item_with_guid_missing->{"permaLink"},
     "http://community.livejournal.com/lj_dev/713810.html",
     "guid's isPermaLink is missing (implicitly true), so the item permalink property should be set to the value of the guid tag"
 );
