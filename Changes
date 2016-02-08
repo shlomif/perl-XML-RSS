@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+1.58    2016-02-08
+    - Merge a pull-request regarding the handling of isPermaLink:
+        - https://github.com/shlomif/perl-XML-RSS/pull/2
+        - Thanks to @dwmc15873 for the changes.
+
 1.57    2015-12-13
     - Update an old E-mail address for Shlomi Fish.
 
