@@ -152,20 +152,51 @@ sub _sanitize {
 sub _out_ns_tag {
     my ($self, $prefix, $tag, $inner) = @_;
 
+    my @subtags;
+
     if (ref($inner) eq "HASH")
     {
         $self->_out("<${prefix}:${tag}");
         foreach my $attr (sort { $a cmp $b } keys(%{$inner}))
         {
-            $self->_out(
-                  q{ }
-                . $self->_sanitize($attr)
-                . q{="}
-                . $self->_encode($inner->{$attr})
-                . q{"}
-            );
+            if (ref($inner->{$attr}) eq '')
+            {
+              $self->_out(
+                    q{ }
+                  . $self->_sanitize($attr)
+                  . q{="}
+                  . $self->_encode($inner->{$attr})
+                  . q{"}
+              );
+            }
+            else
+            {
+              push(@subtags,$attr);
+            }
         }
-        $self->_out("/>\n");
+
+        if (scalar(@subtags) == 0)
+        {
+            $self->_out("/>\n");
+        }
+        else
+        {
+            $self->_out(">\n");
+
+            foreach my $attr (sort { $a cmp $b } @subtags)
+            {
+                if (ref($inner->{$attr}))
+                {
+                    _out_ns_tag($self, $prefix, $tag, $inner->{$attr});
+                }
+            }
+
+            $self->_out("</${prefix}:${tag}>\n");
+        }
+    }
+    elsif (ref($inner) eq 'ARRAY')
+    {
+        map { $self->_out_ns_tag($prefix, $tag, $_) } @{ $inner };
     }
     else
     {
