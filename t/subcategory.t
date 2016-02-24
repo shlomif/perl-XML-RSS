@@ -1,17 +1,84 @@
+use strict;
+use warnings;
+
 use XML::RSS;
 
-use Test::More tests => 3;
-use Test::Differences;
+use Test::More;
 
-my @expecting = split(
-    "---\n",
-    do { local $/; <DATA> }
-);
-my $output;
+if (eval "require Test::Differences") {
+    Test::Differences->import;
+    plan tests => 3;
+}
+else {
+    plan skip_all => 'Test::Differences required';
+}
 
-my $simple_rss  = new XML::RSS(version => '2.0');
-my $sub_rss     = new XML::RSS(version => '2.0');
-my $complex_rss = new XML::RSS(version => '2.0');
+my $simple_xml = <<EOF;
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+>
+
+<channel>
+<title></title>
+<link></link>
+<description></description>
+<itunes:category text="Technology"/>
+
+</channel>
+</rss>
+EOF
+
+my $sub_xml = <<EOF;
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+>
+
+<channel>
+<title></title>
+<link></link>
+<description></description>
+<itunes:category text="Technology">
+<itunes:category text="Computers"/>
+</itunes:category>
+
+</channel>
+</rss>
+EOF
+
+my $complex_xml = <<EOF;
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0"
+ xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
+ xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+>
+
+<channel>
+<title></title>
+<link></link>
+<description></description>
+<itunes:category text="Society &#x26; Culture">
+<itunes:category text="History"/>
+</itunes:category>
+<itunes:category text="Technology">
+<itunes:category text="Gadgets"/>
+<itunes:category text="Computers"/>
+<itunes:category text="News"/>
+</itunes:category>
+
+</channel>
+</rss>
+EOF
+
+my $simple_rss  = XML::RSS->new(version => '2.0');
+my $sub_rss     = XML::RSS->new(version => '2.0');
+my $complex_rss = XML::RSS->new(version => '2.0');
 
 foreach my $rss ($simple_rss, $sub_rss, $complex_rss) {
     $rss->add_module(
@@ -45,64 +112,12 @@ $complex_rss->channel(
 );
 
 
-foreach my $rss ($simple_rss, $sub_rss, $complex_rss) {
-    eq_or_diff($rss->as_string . "\n", shift @expecting, 'itunes tests');
-}
+# TEST
+eq_or_diff($simple_rss->as_string . "\n", $simple_xml, 'Single category');
 
-__DATA__
-<?xml version="1.0" encoding="UTF-8"?>
+# TEST
+eq_or_diff($sub_rss->as_string . "\n", $sub_xml, 'Subcategory');
 
-<rss version="2.0"
- xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
- xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
->
+# TEST
+eq_or_diff($complex_rss->as_string . "\n", $complex_xml, 'Multiple categories with subcategoris');
 
-<channel>
-<title></title>
-<link></link>
-<description></description>
-<itunes:category text="Technology"/>
-
-</channel>
-</rss>
----
-<?xml version="1.0" encoding="UTF-8"?>
-
-<rss version="2.0"
- xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
- xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
->
-
-<channel>
-<title></title>
-<link></link>
-<description></description>
-<itunes:category text="Technology">
-<itunes:category text="Computers"/>
-</itunes:category>
-
-</channel>
-</rss>
----
-<?xml version="1.0" encoding="UTF-8"?>
-
-<rss version="2.0"
- xmlns:blogChannel="http://backend.userland.com/blogChannelModule"
- xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
->
-
-<channel>
-<title></title>
-<link></link>
-<description></description>
-<itunes:category text="Society &#x26; Culture">
-<itunes:category text="History"/>
-</itunes:category>
-<itunes:category text="Technology">
-<itunes:category text="Gadgets"/>
-<itunes:category text="Computers"/>
-<itunes:category text="News"/>
-</itunes:category>
-
-</channel>
-</rss>
