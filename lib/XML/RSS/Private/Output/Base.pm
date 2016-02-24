@@ -161,21 +161,21 @@ sub _out_ns_tag {
         {
             if (ref($inner->{$attr}) eq '')
             {
-              $self->_out(
-                    q{ }
-                  . $self->_sanitize($attr)
-                  . q{="}
-                  . $self->_encode($inner->{$attr})
-                  . q{"}
-              );
+                $self->_out(
+                      q{ }
+                    . $self->_sanitize($attr)
+                    . q{="}
+                    . $self->_encode($inner->{$attr})
+                    . q{"}
+                );
             }
             else
             {
-              push(@subtags,$attr);
+                push(@subtags,$attr);
             }
         }
 
-        if (scalar(@subtags) == 0)
+        if (! @subtags)
         {
             $self->_out("/>\n");
         }
