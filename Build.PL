@@ -1,12 +1,9 @@
 use strict;
 use warnings;
 
-use File::Spec;
-use lib File::Spec->catdir(File::Spec->curdir(), "inc");
+use Module::Build;
 
-use Test::Run::Builder::Manifest;
-
-my $build = Test::Run::Builder::Manifest->new(
+my $build = Module::Build->new(
     'module_name' => "XML::RSS",
     'requires' =>
     {
@@ -19,7 +16,6 @@ my $build = Test::Run::Builder::Manifest->new(
     },
     build_requires =>
     {
-        'Test::Manifest' => '0.9',
         'Test::More' => 0,
     },
     configure_requires =>

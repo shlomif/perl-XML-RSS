@@ -23,7 +23,6 @@ examples/README
 examples/rss2html.pl
 examples/rss_info.pl
 examples/update_rss.pl
-inc/Test/Run/Builder/Manifest.pm
 lib/XML/RSS.pm
 lib/XML/RSS/Private/Output/Base.pm
 lib/XML/RSS/Private/Output/Roles/ImageDims.pm
@@ -73,7 +72,6 @@ t/enclosures-multi.t
 t/enclosures.t
 t/encode-output.t
 t/encoding.t
-testlib/Test/Run/CmdLine/WithTestManifest.pm
 t/generated/placeholder.txt
 t/guid.t
 t/load.t
@@ -86,7 +84,6 @@ t/save-while-in-taint-mode.t
 t/style-trailing-space.t
 t/subcategory.t
 t/test-generated-items.t
-t/test_manifest
 t/version.t
 t/xml-base.t
 t/xml-header.t
