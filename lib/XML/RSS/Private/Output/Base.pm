@@ -1207,3 +1207,22 @@ sub _modules {
 1;
 __END__
 
+=head1 METHODS
+
+=head2 channel
+
+Internal use.
+
+=head2 image
+
+Internal use.
+
+=head2 new
+
+Internal use.
+
+=head2 textinput
+
+Internal use.
+
+=cut

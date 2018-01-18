@@ -15,6 +15,5 @@ bak$
 .svn
 _build
 .perltidyrc
-Build
-t/generated/
+^Build$
 ^MYMETA.yml$
