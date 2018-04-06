@@ -1675,15 +1675,16 @@ XML::RSS - creates and updates RSS files
 This module provides a basic framework for creating and maintaining
 RDF Site Summary (RSS) files. This distribution also contains many
 examples that allow you to generate HTML from an RSS, convert between
-0.9, 0.91, and 1.0 version, and other nifty things.
+0.9, 0.91, 1.0, and 2.0 version, and other nifty things.
 This might be helpful if you want to include news feeds on your Web
 site from sources like Slashdot and Freshmeat or if you want to syndicate
 your own content.
 
-XML::RSS currently supports 0.9, 0.91, and 1.0 versions of RSS.
-See http://backend.userland.com/rss091 for information on RSS 0.91.
-See http://www.purplepages.ie/RSS/netscape/rss0.90.html for RSS 0.9.
-See http://web.resource.org/rss/1.0/ for RSS 1.0.
+XML::RSS currently supports versions
+L<0.9|http://www.rssboard.org/rss-0-9-0>,
+L<0.91|http://www.rssboard.org/rss-0-9-1>,
+L<1.0|http://web.resource.org/rss/1.0/>, and
+L<2.0|http://www.rssboard.org/rss-2-0> of RSS.
 
 RSS was originally developed by Netscape as the format for
 Netscape Netcenter channels, however, many Web sites have since
