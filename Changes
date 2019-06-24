@@ -1,5 +1,10 @@
 Revision history for Perl module XML::RSS
 
+1.61
+    - Add required 'ref' attribute to channel/link
+        - https://rt.cpan.org/Public/Bug/Display.html?id=29843
+        - Contributed by Mark Overmeer
+
 1.60    2018-04-03
     - Convert to Dist-Zilla.
     - Add Travis-CI support.

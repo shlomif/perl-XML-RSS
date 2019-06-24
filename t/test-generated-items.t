@@ -705,7 +705,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "\n" .
         "<item>\n",
@@ -721,7 +721,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
         "\n" .
@@ -738,7 +738,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
         "\n" .
@@ -752,7 +752,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<items>\n",
         "1.0 - if a channel/dc/language was not specified it isn't there."
@@ -767,7 +767,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:language>0</dc:language>\n" .
         "<items>\n",
@@ -783,7 +783,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:language>0</dc:language>\n" .
         "<items>\n",
@@ -797,7 +797,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "\n" .
@@ -814,7 +814,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -832,7 +832,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<language>0</language>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -850,7 +850,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>0</rating>\n" .
         "\n" .
@@ -867,7 +867,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>0</copyright>\n" .
@@ -886,7 +886,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>0</copyright>\n" .
@@ -904,7 +904,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>0</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -922,7 +922,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>0</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -941,7 +941,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>Martha</copyright>\n" .
@@ -960,7 +960,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -981,7 +981,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>Martha</copyright>\n" .
@@ -1003,7 +1003,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>Martha</copyright>\n" .
@@ -1025,7 +1025,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -1047,7 +1047,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -1068,7 +1068,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>Martha</dc:rights>\n" .
         "<dc:publisher>0</dc:publisher>\n" .
@@ -1090,7 +1090,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>Martha</dc:rights>\n" .
         "<dc:publisher>0</dc:publisher>\n" .
@@ -1109,7 +1109,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>Martha</copyright>\n" .
@@ -1131,7 +1131,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<rating>Hello</rating>\n" .
         "<copyright>Martha</copyright>\n" .
@@ -1152,7 +1152,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>Martha</dc:rights>\n" .
         "<dc:creator>0</dc:creator>\n" .
@@ -1174,7 +1174,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>Martha</dc:rights>\n" .
         "<dc:creator>0</dc:creator>\n" .
@@ -1193,7 +1193,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -1215,7 +1215,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<copyright>Martha</copyright>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
@@ -1310,7 +1310,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<items>\n",
         "1.0 - channel/dc/creator == 0"
@@ -1326,7 +1326,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>0</dc:rights>\n" .
         "<items>\n",
@@ -1343,7 +1343,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>0</dc:rights>\n" .
         "<items>\n",
@@ -1360,7 +1360,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:title>0</dc:title>\n" .
         "<items>\n",
@@ -1377,7 +1377,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<syn:updateBase>0</syn:updateBase>\n" .
         "<items>\n",
@@ -1444,7 +1444,7 @@ sub create_rss_without_item
             # TEST*$num_fields*$num_dc
             contains($rss, "<channel>\n" .
                 "<title>freshmeat.net</title>\n" .
-                "<link>http://freshmeat.net</link>\n" .
+                "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
                 "<description>Linux software</description>\n" .
                 "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
                 "<$field>0</$field>\n" .
@@ -1464,7 +1464,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<pubDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</pubDate>\n" .
         "\n" .
@@ -1481,7 +1481,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</lastBuildDate>\n" .
         "\n" .
@@ -1504,7 +1504,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:date>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</dc:date>\n" .
         "<items>\n",
@@ -1520,7 +1520,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<pubDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</pubDate>\n" .
         "\n" .
@@ -1537,7 +1537,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>&#x3C;/pubDate&#x3E;&#x3C;hello&#x3E;There&#x26;amp;Everywhere&#x3C;/hello&#x3E;</lastBuildDate>\n" .
         "\n" .
@@ -1573,7 +1573,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://xml-rss-hackers.tld/\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<items>\n",
         "1.0 - channel/about overrides the rdf:about attribute."
@@ -1591,7 +1591,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         qq{<taxo:topics>\n  <rdf:Bag>\n} .
         qq{    <rdf:li resource="Foo" />\n} .
@@ -1615,7 +1615,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<admin:foobar>Quod</admin:foobar>\n" .
         "<items>\n",
@@ -1636,7 +1636,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<eloq:grow>There</eloq:grow>\n" .
         "<items>\n",
@@ -1822,7 +1822,7 @@ sub create_rss_without_item
 
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<admin:generatorAgent rdf:resource=\"Spozilla 5.5\" />\n" .
@@ -1845,7 +1845,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<admin:foobar>Quod</admin:foobar>\n" .
@@ -1868,7 +1868,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<lastBuildDate>Sat, 07 Sep 2002 09:42:31 GMT</lastBuildDate>\n" .
         "<eloq:grow>There</eloq:grow>\n" .
@@ -2068,7 +2068,7 @@ sub create_rss_without_item
     # TEST
     contains($rss, "<channel rdf:about=\"http://freshmeat.net\">\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<dc:rights>Martha</dc:rights>\n" .
         "<dc:publisher>0</dc:publisher>\n" .
@@ -2391,7 +2391,7 @@ sub parse_generated_rss
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description></description>
 <language>en-us</language>
 <copyright>Copyright 2002</copyright>
@@ -2456,7 +2456,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -2512,7 +2512,7 @@ EOF
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description></description>
 <language>en-us</language>
 <copyright>Copyright 2002</copyright>
@@ -2578,7 +2578,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -2634,7 +2634,7 @@ EOF
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description></description>
 <language>en-us</language>
 <copyright>Copyright 2002</copyright>
@@ -2707,7 +2707,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -2763,7 +2763,7 @@ EOF
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description></description>
 <language>en-us</language>
 <copyright>Copyright 2002</copyright>
@@ -2836,7 +2836,7 @@ EOF
 
 <channel rdf:about="http://example.com/" xmlns="">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -2897,7 +2897,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -2953,7 +2953,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3010,7 +3010,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3074,7 +3074,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3139,7 +3139,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3197,7 +3197,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3255,7 +3255,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3314,7 +3314,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3371,7 +3371,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3420,7 +3420,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -3482,7 +3482,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -3538,7 +3538,7 @@ my $xml_text = <<'EOF';
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description></description>
 <language>en-us</language>
 <copyright>Copyright 2002</copyright>
@@ -3605,7 +3605,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -3671,7 +3671,7 @@ EOF
 
 <channel rdf:about="http://freshmeat.net">
 <title>freshmeat.net</title>
-<link>http://freshmeat.net</link>
+<link ref="self" type="application/rss+xml">http://freshmeat.net</link>
 <description>Linux software</description>
 <items>
  <rdf:Seq>
@@ -3716,7 +3716,7 @@ my $xml_text = <<'EOF';
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>Lambda</description>
 <anno:reference resource="Aloha" />
 
@@ -3779,7 +3779,7 @@ my $xml_text = <<'EOF';
 
 <channel>
 <title>Test 2.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>Lambda</description>
 
 
@@ -3842,7 +3842,7 @@ EOF
 
 <channel rdf:about="http://example.com/">
 <title>Test 1.0 Feed</title>
-<link>http://example.com/</link>
+<link ref="self" type="application/rss+xml">http://example.com/</link>
 <description>To lead by example</description>
 <dc:date>2007-01-19T14:21:18+0200</dc:date>
 <items>
@@ -4234,7 +4234,7 @@ EOF
     # TEST
     contains($rss, ("<channel>\n" .
         "<title>freshmeat.net</title>\n" .
-        "<link>http://freshmeat.net</link>\n" .
+        "<link ref=\"self\" type=\"application/rss+xml\">http://freshmeat.net</link>\n" .
         "<description>Linux software</description>\n" .
         "<category>OneCat</category>\n" .
         "<category>TooManyCats</category>\n" .

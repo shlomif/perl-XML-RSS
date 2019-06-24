@@ -1189,7 +1189,21 @@ sub _render_complete_rss_output {
 ###
 
 sub channel {
-    return shift->_main->channel(@_);
+    my $self    = shift;
+    my $channel = $self->_main->channel(@_);
+    return $channel
+        if ref $channel ne 'HASH'
+        || ref $channel->{link} eq 'HASH';
+
+    # Constant attribute ref="self" is required.  Don't bother the
+    # user with that.
+    my %channel = %$channel;
+    $channel{link} = +{
+        content => $channel->{link},
+        ref     => 'self',
+        type    => 'application/rss+xml',
+    };
+    return \%channel;
 }
 
 sub image {

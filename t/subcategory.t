@@ -23,7 +23,7 @@ my $simple_xml = <<EOF;
 
 <channel>
 <title></title>
-<link></link>
+<link ref="self" type="application/rss+xml"></link>
 <description></description>
 <itunes:category text="Technology"/>
 
@@ -41,7 +41,7 @@ my $sub_xml = <<EOF;
 
 <channel>
 <title></title>
-<link></link>
+<link ref="self" type="application/rss+xml"></link>
 <description></description>
 <itunes:category text="Technology">
 <itunes:category text="Computers"/>
@@ -61,7 +61,7 @@ my $complex_xml = <<EOF;
 
 <channel>
 <title></title>
-<link></link>
+<link ref="self" type="application/rss+xml"></link>
 <description></description>
 <itunes:category text="Society &#x26; Culture">
 <itunes:category text="History"/>
