@@ -1695,7 +1695,19 @@ including news headlines, threaded messages, products catalogs, etc.
 B<Note:> In order to parse and generate dates (such as C<pubDate>
 and C<dc:date>) it is recommended to use L<DateTime::Format::Mail> and
 L<DateTime::Format::W3CDTF> , which is what L<XML::RSS> uses internally
-and requires.
+and requires. It should also be possible to pass L<DateTime> objects
+which will be formatted accordingly. E.g:
+
+    use DateTime ();
+
+    my $dt = DateTime->from_epoch(epoch => 1_500_000_000);
+
+    $rss->channel(
+        pubDate => $dt,
+        .
+        .
+        .
+    );
 
 =head1 METHODS
 
