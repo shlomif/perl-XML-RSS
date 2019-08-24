@@ -5,24 +5,22 @@ use warnings;
 
 use vars (qw(@ISA));
 
-use XML::RSS::Private::Output::Base;
-use XML::RSS::Private::Output::Roles::ModulesElems;
-use XML::RSS::Private::Output::Roles::ImageDims;
+use XML::RSS::Private::Output::Base                ();
+use XML::RSS::Private::Output::Roles::ModulesElems ();
+use XML::RSS::Private::Output::Roles::ImageDims    ();
 
-@ISA = (qw(
-    XML::RSS::Private::Output::Roles::ImageDims
-    XML::RSS::Private::Output::Roles::ModulesElems
-    XML::RSS::Private::Output::Base
-    )
+@ISA = (
+    qw(
+      XML::RSS::Private::Output::Roles::ImageDims
+      XML::RSS::Private::Output::Roles::ModulesElems
+      XML::RSS::Private::Output::Base
+      )
 );
 
 sub _get_filtered_items {
     my $self = shift;
 
-    return [
-        grep {exists($_->{title}) || exists($_->{description})}
-        @{$self->_get_items()},
-    ];
+    return [grep { exists($_->{title}) || exists($_->{description}) } @{$self->_get_items()},];
 }
 
 sub _out_item_2_0_tags {
