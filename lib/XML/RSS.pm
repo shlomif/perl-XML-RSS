@@ -681,6 +681,27 @@ sub _append_struct {
             return;
         }
     }
+    # Somewhat sympotamtic cure for item/link nested inside
+    # custom tags:
+    #
+    # https://github.com/shlomif/perl-XML-RSS/issues/7
+    #
+    # Thanks to @jkramer .
+    if (length $struct->{$key})
+    {
+        # if ($self->{version} eq "2.0")
+        if (1)
+        {
+            if ($key eq "link")
+            {
+                my @context = $self->_parser->context();
+                if (@context > 4)
+                {
+                    return;
+                }
+            }
+        }
+    }
 
     $struct->{$key} .= $cdata;
     return;
