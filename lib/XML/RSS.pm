@@ -670,8 +670,7 @@ sub _should_skip_item_keys_in_custom_tags
 
     if (length $struct->{$key})
     {
-        # if ($self->{version} eq "2.0")
-        if (1)
+        if ($self->{_internal}->{version} eq "2.0")
         {
             if ($key eq "link")
             {
