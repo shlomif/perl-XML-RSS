@@ -664,6 +664,28 @@ sub _append_text_to_elem_struct {
     return;
 }
 
+sub _should_skip_item_keys_in_custom_tags
+{
+    my ($self, $struct, $key) = @_;
+
+    if (length $struct->{$key})
+    {
+        # if ($self->{version} eq "2.0")
+        if (1)
+        {
+            if ($key eq "link")
+            {
+                my @context = $self->_parser->context();
+                if (@context > 4)
+                {
+                    return 1;
+                }
+            }
+        }
+    }
+    return;
+}
+
 sub _append_struct {
     my ($self, $struct, $key, $can_be_array, $cdata) = @_;
 
@@ -687,20 +709,9 @@ sub _append_struct {
     # https://github.com/shlomif/perl-XML-RSS/issues/7
     #
     # Thanks to @jkramer .
-    if (length $struct->{$key})
+    if ($self->_should_skip_item_keys_in_custom_tags($struct, $key))
     {
-        # if ($self->{version} eq "2.0")
-        if (1)
-        {
-            if ($key eq "link")
-            {
-                my @context = $self->_parser->context();
-                if (@context > 4)
-                {
-                    return;
-                }
-            }
-        }
+        return;
     }
 
     $struct->{$key} .= $cdata;
