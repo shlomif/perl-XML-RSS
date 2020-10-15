@@ -664,26 +664,26 @@ sub _append_text_to_elem_struct {
     return;
 }
 
-sub _should_skip_item_keys_in_custom_tags
 {
-    my ($self, $struct, $key) = @_;
+    my @_ITEM_KEYS_ELEM_STACK = ("rss", "channel", "item", "link");
 
-    if (length $struct->{$key})
-    {
-        if ($self->{_internal}->{version} eq "2.0")
-        {
-            if ($key eq "link")
-            {
-                my @context = $self->_parser->context();
-                if (@context > 4)
-                {
-                    return 1;
+    sub _should_skip_item_keys_in_custom_tags {
+        my ($self, $struct, $key) = @_;
+
+        if (length $struct->{$key}) {
+            if ($self->{_internal}->{version} eq "2.0") {
+                if ($key eq "link") {
+                    my @context = $self->_parser->context();
+                    if (@context > @_ITEM_KEYS_ELEM_STACK) {
+                        return 1;
+                    }
                 }
             }
         }
+        return;
     }
-    return;
 }
+
 
 sub _append_struct {
     my ($self, $struct, $key, $can_be_array, $cdata) = @_;
@@ -702,14 +702,14 @@ sub _append_struct {
             return;
         }
     }
+
     # Somewhat sympotamtic cure for item/link nested inside
     # custom tags:
     #
     # https://github.com/shlomif/perl-XML-RSS/issues/7
     #
     # Thanks to @jkramer .
-    if ($self->_should_skip_item_keys_in_custom_tags($struct, $key))
-    {
+    if ($self->_should_skip_item_keys_in_custom_tags($struct, $key)) {
         return;
     }
 
