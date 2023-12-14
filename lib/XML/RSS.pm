@@ -1834,7 +1834,7 @@ as dc ("Dublin Core").
 
 Takes an array ref of names which indicates which elements are
 allowed to be empty. So, for example, to parse feeds with custom
-fields with the form B<foo bar="1" baz="2" /> which have no content,
+fields with the form <foo bar="1" baz="2" /> which have no content,
 only attributes, add 
 
    $rss->parse($xml, { allow_empty => ['foo'] });
