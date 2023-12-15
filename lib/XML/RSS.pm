@@ -332,6 +332,9 @@ sub _reset {
 
     delete $self->{_allow_multiple};
 
+    # reset empty OK to default
+    %empty_ok_elements = (enclosure => 1);
+
     my $ok_fields = $self->_get_ok_fields();
 
     my $ver_ok_fields =
@@ -1294,6 +1297,11 @@ sub _generic_parse {
 
     $self->_parse_options($options || {});
 
+    # patch to allow a parse-time option for elements to be empty
+    foreach my $el (@{$self->_parse_options()->{'allow_empty'}}) {
+        $empty_ok_elements{$el} = 1;
+    }
+
     # Workaround to make sure that if we were defined with version => "2.0"
     # then we can still parse 1.0 and 0.9.x feeds correctly.
     if ($self->{version} eq "2.0") {
@@ -1823,6 +1831,15 @@ This option when true, will parse the modules key-value-pairs as an arrayref of
 C<<< { el => $key_name, value => $value, } >>> hash-refs to gracefully
 handle duplicate items (see below). It will not affect the known modules such
 as dc ("Dublin Core").
+
+=item * allow_empty
+
+Takes an array ref of names which indicates which elements are
+allowed to be empty. So, for example, to parse feeds with custom
+fields with the form C<<< <foo bar="1" baz="2" /> >>> which have no content,
+only attributes, add:
+
+   $rss->parse($xml, { allow_empty => ['foo'] });
 
 =back
 
