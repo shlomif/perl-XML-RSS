@@ -1841,6 +1841,8 @@ only attributes, add:
 
    $rss->parse($xml, { allow_empty => ['foo'] });
 
+( Added in XML::RSS v 1.63 .)
+
 =back
 
 =item parsefile ($file, \%options)
