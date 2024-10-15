@@ -16,8 +16,6 @@ use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
 require 5.008;
 
-$VERSION = '1.59';
-
 $AUTO_ADD = 0;
 
 sub _get_ok_fields {
