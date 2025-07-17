@@ -243,7 +243,7 @@ sub _rdf_resource_fields {
             'errorReportsTo' => 1
         },
         'http://purl.org/rss/1.0/modules/annotate/' => {'reference' => 1},
-        'http://my.theinfo.org/changed/1.0/rss/'    => {'server'    => 1}
+        'http://my.theinfo.org/changed/1.0/rss/'    => {'server'    => 1},
     };
 }
 
@@ -261,7 +261,9 @@ sub _get_default_modules {
 }
 
 sub _get_default_rss_2_0_modules {
-    return {'http://backend.userland.com/blogChannelModule' => 'blogChannel',};
+    return {'http://backend.userland.com/blogChannelModule' => 'blogChannel',
+#            'http://search.yahoo.com/mrss/'             => 'content',
+        };
 }
 
 sub _get_syn_ok_fields {
@@ -1021,8 +1023,7 @@ sub _handle_start {
         if (keys %attribs) {
             $self->{channel}{cloud} = \%attribs;
         }
-    }
-    elsif ($el eq 'item') {
+    } elsif ($el eq 'item') {
 
         # deal with trouble makers who use mod_content :)
 
