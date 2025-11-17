@@ -16,6 +16,12 @@ use vars qw($VERSION $AUTOLOAD @ISA $AUTO_ADD);
 
 require 5.008;
 
+# Media RSS constants
+use constant {
+    MEDIA_RSS_NAMESPACE => 'http://search.yahoo.com/mrss/',
+    MEDIA_PREFIX => 'media',
+};
+
 $AUTO_ADD = 0;
 
 sub _get_ok_fields {
@@ -247,7 +253,7 @@ sub _rdf_resource_fields {
     };
 }
 
-my %empty_ok_elements   = (enclosure   => 1);
+my %empty_ok_elements   = (enclosure => 1);
 my %hashref_ok_elements = (description => 1);
 
 sub _get_default_modules {
@@ -261,7 +267,9 @@ sub _get_default_modules {
 }
 
 sub _get_default_rss_2_0_modules {
-    return {'http://backend.userland.com/blogChannelModule' => 'blogChannel',};
+    return {
+        'http://backend.userland.com/blogChannelModule' => 'blogChannel',
+    };
 }
 
 sub _get_syn_ok_fields {
@@ -804,6 +812,97 @@ sub _handle_char {
     elsif (defined($self->{_inside_item_elem})) {
         return if $self->_within_topics;
 
+        # Skip insignificant whitespace when directly inside item element
+        my $current_elem = $self->_current_element;
+        if ($current_elem eq 'item' && $cdata =~ /^\s*$/) {
+            return;
+        }
+
+        # Handle character data for media elements with context awareness
+        my ($elem_ns, $elem_verdict) = $self->_get_elem_namespace($current_elem);
+        my $parser = $self->_parser;
+
+        if (!$elem_verdict && $elem_ns eq MEDIA_RSS_NAMESPACE) {
+            # Skip whitespace-only content inside media container elements
+            if (($current_elem eq 'content' || $current_elem eq 'group') && $cdata =~ /^\s*$/) {
+                return;
+            }
+
+            # Check if we're within a media:content element (more specific context first)
+            if ($parser->within_element($parser->generate_ns_name("content", MEDIA_RSS_NAMESPACE))) {
+                # Handle nested media elements within media:content
+                my $item = $self->_last_item;
+                my $content_ref = $item->{$self->_media_prefix}->{content};
+
+                # Handle both single content (hash) and multiple content (array)
+                if (ref($content_ref) eq 'ARRAY') {
+                    # Multiple content elements - append to the last one
+                    my $last_content = $content_ref->[-1];
+                    if ($self->_should_be_hashref($current_elem)) {
+                        if (exists($last_content->{$current_elem}) &&
+                            ref($last_content->{$current_elem}) eq 'HASH') {
+                            $last_content->{$current_elem}->{content} .= $cdata;
+                        }
+                    } else {
+                        $last_content->{$current_elem} .= $cdata;
+                    }
+                } elsif (ref($content_ref) eq 'HASH') {
+                    # Single content element
+                    if ($self->_should_be_hashref($current_elem)) {
+                        if (exists($content_ref->{$current_elem}) &&
+                            ref($content_ref->{$current_elem}) eq 'HASH') {
+                            $content_ref->{$current_elem}->{content} .= $cdata;
+                        }
+                    } else {
+                        $content_ref->{$current_elem} .= $cdata;
+                    }
+                }
+                return;
+            }
+
+            # Check if we're within a media:group element
+            if ($parser->within_element($parser->generate_ns_name("group", MEDIA_RSS_NAMESPACE))) {
+                # Handle nested media elements within media:group (but not within media:content)
+                my $item = $self->_last_item;
+                my $group_ref = $item->{$self->_media_prefix}->{group};
+
+                # Handle both single group (hash) and multiple groups (array)
+                if (ref($group_ref) eq 'ARRAY') {
+                    # Multiple groups - append to the last one
+                    my $last_group = $group_ref->[-1];
+                    if ($self->_should_be_hashref($current_elem)) {
+                        if (exists($last_group->{$current_elem}) &&
+                            ref($last_group->{$current_elem}) eq 'HASH') {
+                            $last_group->{$current_elem}->{content} .= $cdata;
+                        }
+                    } else {
+                        $last_group->{$current_elem} .= $cdata;
+                    }
+                } elsif (ref($group_ref) eq 'HASH') {
+                    # Single group
+                    if ($self->_should_be_hashref($current_elem)) {
+                        if (exists($group_ref->{$current_elem}) &&
+                            ref($group_ref->{$current_elem}) eq 'HASH') {
+                            $group_ref->{$current_elem}->{content} .= $cdata;
+                        }
+                    } else {
+                        $group_ref->{$current_elem} .= $cdata;
+                    }
+                }
+                return;
+            }
+
+            # Handle media elements at item level (not within media:content or media:group)
+            if ($self->_should_be_hashref($current_elem)) {
+                # Store content in the hashref structure directly
+                my $item = $self->_last_item;
+                if (exists($item->{$self->_media_prefix}->{$current_elem}) && ref($item->{$self->_media_prefix}->{$current_elem}) eq 'HASH') {
+                    $item->{$self->_media_prefix}->{$current_elem}->{content} .= $cdata;
+                }
+                return;
+            }
+        }
+
         $self->_append_text_to_item($cdata);
     }
 
@@ -828,6 +927,29 @@ sub _handle_char {
             return;
         }
 
+        # Skip insignificant whitespace when directly inside channel element
+        my $current_elem = $self->_current_element;
+        if ($current_elem eq 'channel' && $cdata =~ /^\s*$/) {
+            return;
+        }
+
+        # Handle media elements at channel level
+        my ($elem_ns, $elem_verdict) = $self->_get_elem_namespace($current_elem);
+        if (!$elem_verdict && $elem_ns eq MEDIA_RSS_NAMESPACE) {
+            # Handle media elements that are hashrefs at channel level
+            if ($self->_should_be_hashref($current_elem)) {
+                # Store content in the hashref structure directly
+                if (exists($self->{channel}->{$self->_media_prefix}->{$current_elem}) &&
+                    ref($self->{channel}->{$self->_media_prefix}->{$current_elem}) eq 'HASH') {
+                    $self->{channel}->{$self->_media_prefix}->{$current_elem}->{content} .= $cdata;
+                }
+                return;
+            }
+            # Handle simple media elements at channel level
+            $self->{channel}->{$self->_media_prefix}->{$current_elem} .= $cdata;
+            return;
+        }
+
         if ($self->_current_element eq "category") {
             $self->_append_to_array_elem("channel", $cdata);
         }
@@ -844,13 +966,30 @@ sub _handle_dec {
     #print "ENCODING: $encoding\n";
 }
 
+sub _media_prefix {
+    my $self = shift;
+    return $self->{modules}->{+MEDIA_RSS_NAMESPACE} || 'media';
+}
+
 sub _should_be_hashref {
     my ($self, $el) = @_;
 
-    return (
+    # Check if element is in the standard lists
+    my $standard_check = (
         $empty_ok_elements{$el} || ($self->_parse_options()->{'hashrefs_instead_of_strings'}
             && $hashref_ok_elements{$el})
     );
+
+    return $standard_check if $standard_check;
+
+    # Special handling for media namespace elements
+    my ($el_ns, $el_verdict) = $self->_get_elem_namespace($el);
+    if (!$el_verdict && $el_ns eq MEDIA_RSS_NAMESPACE) {
+        # Media elements that should be hash references for attributes
+        return 1 if $el =~ /^(content|description|thumbnail|credit|category|text|hash|player|restriction|group)$/;
+    }
+
+    return 0;
 }
 
 sub _start_array_element_in_struct {
@@ -902,6 +1041,27 @@ sub _start_array_element {
     }
 
     $self->_start_array_element_in_struct($self->{$cat}, $el);
+    return 1;
+}
+
+sub _handle_media_array_element {
+    my ($self, $target_ref, $prefix, $el, $attribs) = @_;
+    
+    return unless $self->{modules}->{+MEDIA_RSS_NAMESPACE} eq $prefix && ($el eq 'content' || $el eq 'group');
+    
+    my $old = $target_ref->{$prefix}->{$el};
+    if (!defined $old) {
+        # First element - store as single hash
+        $target_ref->{$prefix}->{$el} = $attribs;
+    }
+    elsif (ref($old) eq 'HASH') {
+        # Second element - convert to array
+        $target_ref->{$prefix}->{$el} = [$old, $attribs];
+    }
+    elsif (ref($old) eq 'ARRAY') {
+        # Additional elements - append to array
+        push @$old, $attribs;
+    }
     return 1;
 }
 
@@ -960,6 +1120,15 @@ sub _handle_start {
         }
         else {
             croak "Malformed RSS: invalid version\n";
+        }
+
+        # Check for media namespace declaration and add module if present
+        my @prefixes = $parser->new_ns_prefixes;
+        foreach my $prefix (@prefixes) {
+            my $uri = $parser->expand_ns_prefix($prefix);
+            if ($uri eq MEDIA_RSS_NAMESPACE) {
+                $self->{modules}->{+MEDIA_RSS_NAMESPACE} = $prefix;
+            }
         }
 
         # handle xml:base
@@ -1055,7 +1224,7 @@ sub _handle_start {
     }
     elsif (
         $self->_current_element eq "item"
-        && (($el eq "category")
+        && (($el eq "category" && $el_verdict)  # Only handle standard RSS category
             || (exists($self->{modules}->{$el_ns})
                 && ($self->{modules}->{$el_ns} eq "dc"))
         )
@@ -1148,20 +1317,156 @@ sub _handle_start {
         if (defined $attribs{base}) {
             $attribs{'xml:base'} = delete $attribs{base};
         }
+        if ($el_verdict) {
+            $self->_last_item->{$el} =
+                    $self->_make_array($el, $self->_last_item->{$el}, \%attribs) if keys(%attribs);
+        } else {
+            $self->_last_item->{$el_ns}->{$el} =
+                    $self->_make_array($el, $self->_last_item->{$el_ns}->{$el}, \%attribs);
+
+            my $prefix = $self->{modules}->{$el_ns};
+            if ($prefix) {
+                # Special handling for media:content and media:group - convert to array only when multiple
+                if ($self->_handle_media_array_element($self->_last_item, $prefix, $el, \%attribs)) {
+                    # Media element handled
+                } else {
+                    $self->_last_item->{$prefix}->{$el} =
+                            $self->_make_array($el, $self->_last_item->{$prefix}->{$el}, \%attribs);
+                }
+            }
+        }
+    }
+   elsif ($self->_should_be_hashref($el) and $self->_current_element eq 'channel') {
+        if (defined $attribs{base}) {
+            $attribs{'xml:base'} = delete $attribs{base};
+        }
         if (keys(%attribs)) {
             if ($el_verdict) {
-                $self->_last_item->{$el} =
-                  $self->_make_array($el, $self->_last_item->{$el}, \%attribs);
+                $self->{channel}->{$el} =
+                  $self->_make_array($el, $self->{channel}->{$el}, \%attribs);
             }
             else {
-                $self->_last_item->{$el_ns}->{$el} =
-                  $self->_make_array($el, $self->_last_item->{$el_ns}->{$el}, \%attribs);
+                $self->{channel}->{$el_ns}->{$el} =
+                  $self->_make_array($el, $self->{channel}->{$el_ns}->{$el}, \%attribs);
 
                 my $prefix = $self->{modules}->{$el_ns};
 
                 if ($prefix) {
-                    $self->_last_item->{$prefix}->{$el} =
-                      $self->_make_array($el, $self->_last_item->{$prefix}->{$el}, \%attribs);
+                    # Special handling for media:content and media:group - convert to array only when multiple
+                    if ($self->_handle_media_array_element($self->{channel}, $prefix, $el, \%attribs)) {
+                        # Media element handled
+                    } else {
+                        $self->{channel}->{$prefix}->{$el} =
+                          $self->_make_array($el, $self->{channel}->{$prefix}->{$el}, \%attribs);
+                    }
+                }
+            }
+        }
+    }
+    elsif ($self->_should_be_hashref($el) and $parser->within_element($parser->generate_ns_name("group", MEDIA_RSS_NAMESPACE))) {
+        # Handle media elements within media:group - store as nested elements
+        if (defined $attribs{base}) {
+            $attribs{'xml:base'} = delete $attribs{base};
+        }
+        if (keys(%attribs)) {
+            my $group_ref = $self->_last_item->{$self->_media_prefix}->{group};
+
+            # Handle both single group (hash) and multiple groups (array)
+            if (ref($group_ref) eq 'ARRAY') {
+                # Multiple groups - add to the last one
+                my $last_group = $group_ref->[-1];
+                if ($el_verdict) {
+                    # Standard element within media:group
+                    $last_group->{$el} = $self->_make_array($el, $last_group->{$el}, \%attribs);
+                } else {
+                    # Namespaced element within media:group
+                    my $prefix = $self->{modules}->{$el_ns};
+                    if ($prefix && $self->{modules}->{+MEDIA_RSS_NAMESPACE} eq $prefix) {
+                        # Special handling for media:content - convert to array only when multiple
+                        if ($el eq 'content') {
+                            my $old = $last_group->{$el};
+                            if (!defined $old) {
+                                # First content element - store as single hash
+                                $last_group->{$el} = \%attribs;
+                            }
+                            elsif (ref($old) eq 'HASH') {
+                                # Second content element - convert to array
+                                $last_group->{$el} = [$old, \%attribs];
+                            }
+                            elsif (ref($old) eq 'ARRAY') {
+                                # Additional content elements - append to array
+                                push @$old, \%attribs;
+                            }
+                        } else {
+                            $last_group->{$el} = $self->_make_array($el, $last_group->{$el}, \%attribs);
+                        }
+                    }
+                }
+            } elsif (ref($group_ref) eq 'HASH') {
+                # Single group
+                if ($el_verdict) {
+                    # Standard element within media:group
+                    $group_ref->{$el} = $self->_make_array($el, $group_ref->{$el}, \%attribs);
+                } else {
+                    # Namespaced element within media:group
+                    my $prefix = $self->{modules}->{$el_ns};
+                    if ($prefix && $self->{modules}->{+MEDIA_RSS_NAMESPACE} eq $prefix) {
+                        # Special handling for media:content - convert to array only when multiple
+                        if ($el eq 'content') {
+                            my $old = $group_ref->{$el};
+                            if (!defined $old) {
+                                # First content element - store as single hash
+                                $group_ref->{$el} = \%attribs;
+                            }
+                            elsif (ref($old) eq 'HASH') {
+                                # Second content element - convert to array
+                                $group_ref->{$el} = [$old, \%attribs];
+                            }
+                            elsif (ref($old) eq 'ARRAY') {
+                                # Additional content elements - append to array
+                                push @$old, \%attribs;
+                            }
+                        } else {
+                            $group_ref->{$el} = $self->_make_array($el, $group_ref->{$el}, \%attribs);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    elsif ($self->_should_be_hashref($el) and $parser->within_element($parser->generate_ns_name("content", MEDIA_RSS_NAMESPACE))) {
+        # Handle media elements within media:content - store as nested elements
+        if (defined $attribs{base}) {
+            $attribs{'xml:base'} = delete $attribs{base};
+        }
+        if (keys(%attribs)) {
+            my $content_ref = $self->_last_item->{$self->_media_prefix}->{content};
+
+            # Handle both single content (hash) and multiple content (array)
+            if (ref($content_ref) eq 'ARRAY') {
+                # Multiple content elements - add to the last one
+                my $last_content = $content_ref->[-1];
+                if ($el_verdict) {
+                    # Standard element within media:content
+                    $last_content->{$el} = $self->_make_array($el, $last_content->{$el}, \%attribs);
+                } else {
+                    # Namespaced element within media:content
+                    my $prefix = $self->{modules}->{$el_ns};
+                    if ($prefix && $self->{modules}->{+MEDIA_RSS_NAMESPACE} eq $prefix) {
+                        $last_content->{$el} = $self->_make_array($el, $last_content->{$el}, \%attribs);
+                    }
+                }
+            } elsif (ref($content_ref) eq 'HASH') {
+                # Single content element
+                if ($el_verdict) {
+                    # Standard element within media:content
+                    $content_ref->{$el} = $self->_make_array($el, $content_ref->{$el}, \%attribs);
+                } else {
+                    # Namespaced element within media:content
+                    my $prefix = $self->{modules}->{$el_ns};
+                    if ($prefix && $self->{modules}->{+MEDIA_RSS_NAMESPACE} eq $prefix) {
+                        $content_ref->{$el} = $self->_make_array($el, $content_ref->{$el}, \%attribs);
+                    }
                 }
             }
         }
@@ -2009,6 +2314,83 @@ prefix; access them via their namespace URL like so:
 
 XML::RSS will continue to provide built-in support for standard RSS 1.0
 modules as they appear.
+
+=head2 RSS MEDIA MODULE
+
+XML::RSS provides native support for Yahoo Media RSS (http://search.yahoo.com/mrss/),
+which allows RSS feeds to include rich media content such as videos, audio files,
+and images. Media elements can appear at the channel level, item level, and nested
+within media:content and media:group elements. When multiple media elements of the
+same type are present, they are automatically stored as array references for easy
+iteration, while single elements remain as hash references.
+
+=head3 Media Content Example
+
+  # Parse RSS with media:content elements
+  $rss->parse($rss_string);
+  
+  # Access single media:content (stored as HASH)
+  my $content = $rss->{items}->[0]->{media}->{content};
+  print $content->{url};     # http://example.com/video.mp4
+  print $content->{type};    # video/mp4
+  print $content->{width};   # 640
+  
+  # Access multiple media:content elements (stored as ARRAY)
+  my $contents = $rss->{items}->[0]->{media}->{content};
+  foreach my $content (@$contents) {
+      print "URL: " . $content->{url} . " Type: " . $content->{type} . "\n";
+  }
+
+=head3 Media Group Example
+
+  # Access single media:group (stored as HASH)
+  my $group = $rss->{items}->[0]->{media}->{group};
+  print $group->{title};                    # "Video Formats"
+  my $group_contents = $group->{content};   # ARRAY of content elements
+  
+  # Access multiple media:group elements (stored as ARRAY)  
+  my $groups = $rss->{items}->[0]->{media}->{group};
+  foreach my $group (@$groups) {
+      print "Group title: " . $group->{title} . "\n";
+      foreach my $content (@{$group->{content}}) {
+          print "  Content URL: " . $content->{url} . "\n";
+      }
+  }
+
+=head3 Custom Media Namespace Prefix Example
+
+XML::RSS supports custom namespace prefixes for Media RSS. When a feed uses a 
+custom prefix (e.g., "mymedia" instead of "media"), the elements are accessible 
+under the actual prefix used in the XML:
+
+  # RSS feed with custom prefix:
+  # <rss version="2.0" xmlns:mymedia="http://search.yahoo.com/mrss/">
+  #   <channel>
+  #     <mymedia:copyright>Copyright 2025 Custom Corp</mymedia:copyright>
+  #     <item>
+  #       <mymedia:content url="http://example.com/video.mp4" type="video/mp4">
+  #         <mymedia:title>Custom Video Title</mymedia:title>
+  #       </mymedia:content>
+  #       <mymedia:keywords>custom, prefix, test</mymedia:keywords>
+  #     </item>
+  #   </channel>
+  # </rss>
+  
+  $rss->parse($custom_prefix_xml);
+  
+  # Access channel-level media elements under the custom prefix
+  print $rss->{channel}->{mymedia}->{copyright};  # "Copyright 2025 Custom Corp"
+  
+  # Access item-level media elements under the custom prefix
+  my $item = $rss->{items}->[0];
+  my $content = $item->{mymedia}->{content};
+  print $content->{url};                           # "http://example.com/video.mp4"
+  print $content->{title};                         # "Custom Video Title"
+  print $item->{mymedia}->{keywords};              # "custom, prefix, test"
+  
+  # Generated XML will preserve the custom prefix:
+  my $output = $rss->as_string();
+  # Output contains: <mymedia:content ...>, <mymedia:title>...</mymedia:title>, etc.
 
 =head1 Non-API Methods
 

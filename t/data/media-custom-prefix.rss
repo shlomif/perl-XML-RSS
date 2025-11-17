@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:mymedia="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Custom Prefix Test Channel</title>
+    <link>http://example.com</link>
+    <description>Test RSS feed with custom media namespace prefix</description>
+    <mymedia:copyright>Copyright 2025 Custom Media Corp</mymedia:copyright>
+
+    <item>
+      <title>Custom Prefix Media Item</title>
+      <link>http://example.com/custom-item</link>
+      <description>Test item with custom media prefix</description>
+
+      <mymedia:content url="http://example.com/custom-video.mp4" type="video/mp4" width="800" height="600">
+        <mymedia:title>Custom Prefix Video Title</mymedia:title>
+        <mymedia:description type="plain">This video uses a custom media prefix</mymedia:description>
+      </mymedia:content>
+
+      <mymedia:thumbnail url="http://example.com/custom-thumb.jpg" width="160" height="120" />
+      <mymedia:keywords>custom, prefix, media, test</mymedia:keywords>
+
+      <mymedia:group>
+        <mymedia:title>Custom Prefix Group</mymedia:title>
+        <mymedia:content url="http://example.com/custom-hd.mp4" type="video/mp4" width="1280" />
+        <mymedia:content url="http://example.com/custom-sd.mp4" type="video/mp4" width="640" />
+      </mymedia:group>
+    </item>
+  </channel>
+</rss>

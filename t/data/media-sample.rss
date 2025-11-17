@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+ <channel>
+  <title>Media RSS Sample Feed</title>
+  <link>http://example.com/</link>
+  <description>Sample RSS feed with media content</description>
+  <language>en-us</language>
+  <lastBuildDate>Wed, 17 Jul 2025 10:00:00 GMT</lastBuildDate>
+  
+  <!-- Media elements at channel level -->
+  <media:copyright>Copyright 2025 Channel Corp</media:copyright>
+  <media:category scheme="urn:channel:category">news media rss</media:category>
+
+  <item>
+   <title>Sample Media Item</title>
+   <link>http://example.com/media-item</link>
+   <description>This item contains media content</description>
+   <pubDate>Wed, 17 Jul 2025 09:30:00 GMT</pubDate>
+   <guid>http://example.com/media-item</guid>
+   
+   <!-- Media elements at item level -->
+   <media:title>Sample Video Title</media:title>
+   <media:description type="html">This is a sample video demonstrating &lt;strong&gt;media RSS&lt;/strong&gt; functionality</media:description>
+   <media:thumbnail url="http://example.com/thumb.jpg" width="120" height="90" />
+   <media:credit role="photographer">John Doe</media:credit>
+   <media:category scheme="urn:flickr:tags">video tutorial rss demo</media:category>
+   <media:keywords>video, tutorial, rss, media, demo, sample</media:keywords>
+   <media:rating>nonadult</media:rating>
+   <media:copyright>Copyright 2025 Example Corp</media:copyright>
+   <media:text type="plain" lang="en">Sample video transcript text</media:text>
+   <media:hash algo="md5">d41d8cd98f00b204e9800998ecf8427e</media:hash>
+   <media:player url="http://example.com/player?video=123" width="640" height="480" />
+   <media:restriction relationship="allow" type="country">US CA UK</media:restriction>
+   
+   <!-- Media content with nested elements -->
+   <media:content url="http://example.com/video.mp4" type="video/mp4" width="640" height="480" duration="120">
+    <media:title>Content-specific Title</media:title>
+    <media:description type="plain">Content-specific description text</media:description>
+    <media:thumbnail url="http://example.com/content-thumb.jpg" width="80" height="60" />
+    <media:credit role="director">Jane Smith</media:credit>
+   </media:content>
+  </item>
+
+ </channel>
+</rss>

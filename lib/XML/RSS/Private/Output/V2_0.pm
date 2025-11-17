@@ -37,6 +37,9 @@ sub _out_item_2_0_tags {
     $self->_out_item_source($item);
 
     $self->_out_item_enclosure($item);
+
+    # Media RSS elements
+    $self->_out_media_elements($item);
 }
 
 sub _get_textinput_tag {
@@ -74,6 +77,9 @@ sub _output_rss_middle {
     $self->_out_channel_self_dc_field("ttl");
 
     $self->_out_modules_elements($self->channel());
+    
+    # Channel-level Media RSS elements
+    $self->_out_channel_media_elements($self->channel());
 
     $self->_out_last_elements;
 }

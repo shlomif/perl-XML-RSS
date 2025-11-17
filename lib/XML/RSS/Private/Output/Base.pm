@@ -11,6 +11,23 @@ use DateTime::Format::W3CDTF ();
 
 use XML::RSS ();
 
+# Media RSS output constants
+use constant {
+    MEDIA_ATTR_ELEMENTS => [qw(height url width)],
+    MEDIA_CONTENT_ATTRS => [qw(bitrate duration height type url width)],
+    MEDIA_ELEMENT_ATTRS => {
+        category => ['scheme'],
+        credit => ['role'], 
+        description => ['type'],
+        hash => ['algo'],
+        restriction => [qw(relationship type)],
+        text => [qw(lang type)]
+    },
+    MEDIA_NESTED_ELEMENTS => [qw(category copyright credit description hash keywords player rating restriction text thumbnail title)],
+    MEDIA_SELF_CLOSING_ELEMENTS => [qw(player thumbnail)],
+    MEDIA_SIMPLE_TEXT_ELEMENTS => [qw(copyright keywords rating title)],
+};
+
 sub new {
     my $class = shift;
 
@@ -683,6 +700,171 @@ sub _out_dc_elements {
     return;
 }
 
+sub _get_media_prefix {
+    my $self = shift;
+    
+    # Look up the actual prefix used for the media RSS namespace
+    my $modules = $self->_modules();
+    return $modules->{XML::RSS::MEDIA_RSS_NAMESPACE()} || 'media';
+}
+
+sub _process_media_collection {
+    my ($self, $collection, $processor_method) = @_;
+    
+    return unless $collection;
+    
+    if (ref($collection) eq 'ARRAY') {
+        foreach my $item (@$collection) {
+            $self->$processor_method($item);
+        }
+    } elsif (ref($collection) eq 'HASH') {
+        $self->$processor_method($collection);
+    }
+}
+
+sub _out_media_elements {
+    my $self = shift;
+    my $elem = shift;
+
+    # Get the actual media prefix used for this namespace
+    my $media_prefix = $self->_get_media_prefix();
+    my $media = $elem->{$media_prefix};
+    return unless $media;
+
+    # Output media:group with nested elements
+    if (exists $media->{group}) {
+        $self->_process_media_collection($media->{group}, '_out_single_media_group');
+    }
+
+    # Output media:content with potential nested elements
+    if (exists $media->{content}) {
+        $self->_process_media_collection($media->{content}, '_out_single_media_content');
+    }
+
+    # Output item-level media elements as siblings (not nested in content)
+    $self->_out_media_elements_collection($media);
+
+    return;
+}
+
+sub _out_single_media_group {
+    my ($self, $group) = @_;
+    
+    return unless ref($group) eq 'HASH';
+    
+    # Output as container with nested elements
+    my $prefix = $self->_get_media_prefix();
+    $self->_out("<${prefix}:group>\n");
+    
+    # Output nested elements using helper method
+    $self->_out_media_elements_collection($group);
+    
+    # Handle multiple media:content elements within group
+    if (exists $group->{content}) {
+        $self->_process_media_collection($group->{content}, '_out_single_media_content');
+    }
+    
+    $self->_out("</${prefix}:group>\n");
+}
+
+sub _out_single_media_content {
+    my ($self, $content) = @_;
+    
+    return unless ref($content) eq 'HASH';
+    
+    my @attrs;
+    foreach my $attr (@{MEDIA_CONTENT_ATTRS()}) {
+        if (defined $content->{$attr}) {
+            push @attrs, qq{$attr="} . $self->_encode($content->{$attr}) . qq{"};
+        }
+    }
+    
+    # Check if there are nested media elements within content
+    my $has_nested = 0;
+    foreach my $media_elem (@{MEDIA_NESTED_ELEMENTS()}) {
+        if (exists $content->{$media_elem}) {
+            $has_nested = 1;
+            last;
+        }
+    }
+    
+    my $prefix = $self->_get_media_prefix();
+    if ($has_nested) {
+        # Output as container with nested elements
+        $self->_out("<${prefix}:content" . (@attrs ? " " . join(" ", @attrs) : "") . ">\n");
+        
+        # Output nested elements using helper method
+        $self->_out_media_elements_collection($content);
+        
+        $self->_out("</${prefix}:content>\n");
+    } else {
+        # Output as self-closing tag
+        $self->_out("<${prefix}:content" . (@attrs ? " " . join(" ", @attrs) : "") . "/>\n");
+    }
+}
+
+sub _out_media_elements_collection {
+    my ($self, $content) = @_;
+    
+    # Output a collection of media elements (works for nested, sibling, or channel-level)
+    my $prefix = $self->_get_media_prefix();
+    for my $elem_name (@{MEDIA_NESTED_ELEMENTS()}) {
+        next unless exists $content->{$elem_name} && defined $content->{$elem_name};
+        
+        my $value = $content->{$elem_name};
+        
+        if (grep { $_ eq $elem_name } @{MEDIA_SIMPLE_TEXT_ELEMENTS()}) {
+            # Simple text elements
+            $self->_out("<${prefix}:${elem_name}>" . $self->_encode($value) . "</${prefix}:${elem_name}>\n");
+        }
+        elsif (grep { $_ eq $elem_name } @{MEDIA_SELF_CLOSING_ELEMENTS()}) {
+            # Self-closing elements with attributes
+            if (ref($value) eq 'HASH') {
+                my @attrs;
+                my @attr_names = @{MEDIA_ATTR_ELEMENTS()};
+                foreach my $attr (@attr_names) {
+                    if (defined $value->{$attr}) {
+                        push @attrs, qq{$attr="} . $self->_encode($value->{$attr}) . qq{"};
+                    }
+                }
+                $self->_out("<${prefix}:${elem_name}" . (@attrs ? " " . join(" ", @attrs) : "") . "/>\n");
+            }
+        }
+        else {
+            # Elements with content and optional attributes
+            my $element_attrs = MEDIA_ELEMENT_ATTRS;
+            
+            if (ref($value) eq 'HASH') {
+                my $attrs = "";
+                my @attr_names = @{$element_attrs->{$elem_name} || []};
+                
+                foreach my $attr (@attr_names) {
+                    if (exists $value->{$attr}) {
+                        $attrs .= qq{ $attr="} . $self->_encode($value->{$attr}) . qq{"};
+                    }
+                }
+                my $element_content = $value->{content} || "";
+                $self->_out("<${prefix}:${elem_name}${attrs}>" . $self->_encode($element_content) . "</${prefix}:${elem_name}>\n");
+            } else {
+                $self->_out("<${prefix}:${elem_name}>" . $self->_encode($value) . "</${prefix}:${elem_name}>\n");
+            }
+        }
+    }
+}
+
+
+sub _out_channel_media_elements {
+    my ($self, $channel) = @_;
+    
+    # Get the actual media prefix used for this namespace
+    my $media_prefix = $self->_get_media_prefix();
+    my $media = $channel->{$media_prefix};
+    return unless $media;
+    
+    # Output channel-level media elements (reuse the same logic)
+    $self->_out_media_elements_collection($media);
+}
+
 sub _out_module_prefix_elements_hash {
     my ($self, $args) = @_;
 
@@ -767,7 +949,8 @@ sub _out_modules_elements {
 
     # Ad-hoc modules
     while (my ($url, $prefix) = each %{$self->_modules}) {
-        next if $prefix =~ /^(dc|syn|taxo)$/;
+        # Skip standard modules and media RSS namespace (regardless of prefix)
+        next if $prefix =~ /^(dc|syn|taxo)$/ || $url eq XML::RSS::MEDIA_RSS_NAMESPACE();
 
         $self->_out_module_prefix_elements(
             {   prefix => $prefix,

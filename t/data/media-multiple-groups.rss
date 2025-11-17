@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+ <channel>
+  <title>Multiple Media Groups RSS Feed</title>
+  <link>http://example.com/</link>
+  <description>Sample RSS feed with multiple media:group elements per item</description>
+  <language>en-us</language>
+  <lastBuildDate>Fri, 19 Jul 2025 11:00:00 GMT</lastBuildDate>
+
+  <item>
+   <title>Multimedia Presentation with Multiple Groups</title>
+   <link>http://example.com/multimedia-presentation</link>
+   <description>A multimedia presentation with video, audio, and image groups</description>
+   <pubDate>Fri, 19 Jul 2025 10:30:00 GMT</pubDate>
+   <guid>http://example.com/multimedia-presentation</guid>
+
+   <!-- Item-level media elements -->
+   <media:title>Corporate Training Presentation</media:title>
+   <media:description type="plain">Comprehensive multimedia training materials</media:description>
+   <media:keywords>presentation, training, multimedia, corporate</media:keywords>
+   <media:copyright>Copyright 2025 Corporate Training Inc</media:copyright>
+
+   <!-- First media:group - Video content in different qualities -->
+   <media:group>
+    <media:title>Training Video Collection</media:title>
+    <media:description type="plain">Video content in multiple formats and quality levels</media:description>
+    <media:keywords>video, training, hd, 4k</media:keywords>
+
+    <media:content url="http://example.com/training-4k.mp4" type="video/mp4" width="3840" height="2160" duration="2400" bitrate="12000">
+     <media:title>4K Training Video</media:title>
+     <media:description type="plain">Ultra high definition training video</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/training-hd.mp4" type="video/mp4" width="1920" height="1080" duration="2400" bitrate="6000">
+     <media:title>HD Training Video</media:title>
+     <media:description type="plain">High definition training video</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/training-mobile.mp4" type="video/mp4" width="720" height="480" duration="2400" bitrate="1500">
+     <media:title>Mobile Training Video</media:title>
+     <media:description type="plain">Mobile-optimized training video</media:description>
+    </media:content>
+   </media:group>
+
+   <!-- Second media:group - Audio content in different formats -->
+   <media:group>
+    <media:title>Audio Commentary Collection</media:title>
+    <media:description type="plain">Audio commentary and narration in multiple formats</media:description>
+    <media:keywords>audio, commentary, narration, podcast</media:keywords>
+
+    <media:content url="http://example.com/commentary-hq.mp3" type="audio/mpeg" duration="2400" bitrate="320">
+     <media:title>High Quality Audio Commentary</media:title>
+     <media:description type="plain">High quality MP3 audio commentary</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/commentary-std.mp3" type="audio/mpeg" duration="2400" bitrate="128">
+     <media:title>Standard Quality Audio Commentary</media:title>
+     <media:description type="plain">Standard quality MP3 audio commentary</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/commentary.ogg" type="audio/ogg" duration="2400" bitrate="192">
+     <media:title>OGG Audio Commentary</media:title>
+     <media:description type="plain">OGG Vorbis audio commentary</media:description>
+    </media:content>
+   </media:group>
+
+   <!-- Third media:group - Image gallery with different sizes -->
+   <media:group>
+    <media:title>Presentation Slides Gallery</media:title>
+    <media:description type="plain">Slide images in various resolutions for different devices</media:description>
+    <media:keywords>slides, images, gallery, presentation</media:keywords>
+
+    <media:content url="http://example.com/slides-full.jpg" type="image/jpeg" width="1920" height="1080">
+     <media:title>Full Resolution Slides</media:title>
+     <media:description type="plain">Full resolution slide images</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/slides-tablet.jpg" type="image/jpeg" width="1024" height="768">
+     <media:title>Tablet Resolution Slides</media:title>
+     <media:description type="plain">Tablet-optimized slide images</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/slides-mobile.jpg" type="image/jpeg" width="480" height="320">
+     <media:title>Mobile Resolution Slides</media:title>
+     <media:description type="plain">Mobile-optimized slide images</media:description>
+    </media:content>
+   </media:group>
+  </item>
+
+  <item>
+   <title>Product Demo with Media Groups</title>
+   <link>http://example.com/product-demo</link>
+   <description>Product demonstration with grouped media content</description>
+   <pubDate>Fri, 19 Jul 2025 09:00:00 GMT</pubDate>
+   <guid>http://example.com/product-demo</guid>
+
+   <!-- Item-level media elements -->
+   <media:title>Software Product Demo</media:title>
+   <media:description type="html">Complete &lt;strong&gt;product demonstration&lt;/strong&gt; with videos and documentation</media:description>
+   <media:category scheme="urn:demo:category">software product demo</media:category>
+
+   <!-- First media:group - Demo videos -->
+   <media:group>
+    <media:title>Product Demo Videos</media:title>
+    <media:description type="plain">Step-by-step product demonstration videos</media:description>
+
+    <media:content url="http://example.com/demo-intro.mp4" type="video/mp4" width="1280" height="720" duration="600" bitrate="3000">
+     <media:title>Introduction Demo</media:title>
+     <media:description type="plain">Product introduction and overview</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/demo-features.mp4" type="video/mp4" width="1280" height="720" duration="900" bitrate="3000">
+     <media:title>Features Demo</media:title>
+     <media:description type="plain">Detailed features demonstration</media:description>
+    </media:content>
+   </media:group>
+
+   <!-- Second media:group - Documentation files -->
+   <media:group>
+    <media:title>Documentation Package</media:title>
+    <media:description type="plain">Complete documentation in multiple formats</media:description>
+
+    <media:content url="http://example.com/manual.pdf" type="application/pdf">
+     <media:title>User Manual PDF</media:title>
+     <media:description type="plain">Complete user manual in PDF format</media:description>
+    </media:content>
+
+    <media:content url="http://example.com/quickstart.html" type="text/plain">
+     <media:title>Quick Start Guide</media:title>
+     <media:description type="plain">HTML quick start guide</media:description>
+    </media:content>
+   </media:group>
+  </item>
+
+ </channel>
+</rss>

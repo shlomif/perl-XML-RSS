@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+ <channel>
+  <title>Media Group RSS Sample Feed</title>
+  <link>http://example.com/</link>
+  <description>Sample RSS feed with media group content</description>
+  <language>en-us</language>
+  <lastBuildDate>Thu, 18 Jul 2025 10:00:00 GMT</lastBuildDate>
+
+  <item>
+   <title>Video with Multiple Formats</title>
+   <link>http://example.com/video-item</link>
+   <description>This item contains a media group with multiple video formats</description>
+   <pubDate>Thu, 18 Jul 2025 09:30:00 GMT</pubDate>
+   <guid>http://example.com/video-item</guid>
+   
+   <!-- Media group with multiple content formats -->
+   <media:group>
+    <media:title>Multi-format Video Title</media:title>
+    <media:description type="plain">This video is available in multiple formats and qualities</media:description>
+    <media:thumbnail url="http://example.com/group-thumb.jpg" width="160" height="120" />
+    <media:credit role="producer">Video Production Team</media:credit>
+    <media:category scheme="urn:video:category">educational tutorial</media:category>
+    <media:keywords>video, formats, quality, streaming, download</media:keywords>
+    <media:rating>general</media:rating>
+    <media:copyright>Copyright 2025 Video Corp</media:copyright>
+    
+    <!-- High quality MP4 version -->
+    <media:content url="http://example.com/video-hd.mp4" type="video/mp4" width="1920" height="1080" duration="300" bitrate="5000">
+     <media:title>HD MP4 Version</media:title>
+     <media:description type="plain">High definition MP4 format</media:description>
+    </media:content>
+    
+    <!-- Standard quality MP4 version -->
+    <media:content url="http://example.com/video-sd.mp4" type="video/mp4" width="720" height="480" duration="300" bitrate="1500">
+     <media:title>SD MP4 Version</media:title>
+     <media:description type="plain">Standard definition MP4 format</media:description>
+    </media:content>
+    
+    <!-- WebM version -->
+    <media:content url="http://example.com/video.webm" type="video/webm" width="1280" height="720" duration="300" bitrate="3000">
+     <media:title>WebM Version</media:title>
+     <media:description type="plain">WebM format for web streaming</media:description>
+    </media:content>
+    
+    <!-- Audio-only version -->
+    <media:content url="http://example.com/audio.mp3" type="audio/mpeg" duration="300" bitrate="128">
+     <media:title>Audio Only Version</media:title>
+     <media:description type="plain">Audio-only MP3 format</media:description>
+    </media:content>
+   </media:group>
+   
+   <!-- Item-level media elements outside the group -->
+   <media:restriction relationship="allow" type="country">US CA UK AU</media:restriction>
+   <media:text type="plain" lang="en">Sample transcript for the multi-format video content</media:text>
+  </item>
+
+  <item>
+   <title>Photo Gallery Group</title>
+   <link>http://example.com/photo-gallery</link>
+   <description>This item contains a media group with photo gallery</description>
+   <pubDate>Thu, 18 Jul 2025 08:00:00 GMT</pubDate>
+   <guid>http://example.com/photo-gallery</guid>
+   
+   <!-- Media group with multiple images -->
+   <media:group>
+    <media:title>Nature Photo Collection</media:title>
+    <media:description type="html">A beautiful collection of &lt;em&gt;nature photographs&lt;/em&gt;</media:description>
+    <media:credit role="photographer">Nature Photo Team</media:credit>
+    <media:category scheme="urn:photo:category">nature landscape</media:category>
+    <media:keywords>nature, landscape, photography, outdoor, scenic</media:keywords>
+    
+    <!-- Large image -->
+    <media:content url="http://example.com/nature-large.jpg" type="image/jpeg" width="2048" height="1536">
+     <media:title>Large Nature Photo</media:title>
+     <media:description type="plain">High resolution nature photograph</media:description>
+    </media:content>
+    
+    <!-- Medium image -->
+    <media:content url="http://example.com/nature-medium.jpg" type="image/jpeg" width="1024" height="768">
+     <media:title>Medium Nature Photo</media:title>
+     <media:description type="plain">Medium resolution nature photograph</media:description>
+    </media:content>
+    
+    <!-- Thumbnail image -->
+    <media:content url="http://example.com/nature-thumb.jpg" type="image/jpeg" width="320" height="240">
+     <media:title>Nature Photo Thumbnail</media:title>
+     <media:description type="plain">Thumbnail version of nature photograph</media:description>
+    </media:content>
+   </media:group>
+  </item>
+
+ </channel>
+</rss>

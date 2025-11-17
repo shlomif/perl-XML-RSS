@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+ <channel>
+  <title>Multiple Media Content RSS Feed</title>
+  <link>http://example.com/</link>
+  <description>Sample RSS feed with multiple media:content elements per item</description>
+  <language>en-us</language>
+  <lastBuildDate>Fri, 19 Jul 2025 10:00:00 GMT</lastBuildDate>
+
+  <item>
+   <title>Multi-Format Video Item</title>
+   <link>http://example.com/multi-format-video</link>
+   <description>This item has multiple media:content elements for different formats</description>
+   <pubDate>Fri, 19 Jul 2025 09:30:00 GMT</pubDate>
+   <guid>http://example.com/multi-format-video</guid>
+   
+   <!-- Item-level media elements -->
+   <media:title>Professional Training Video</media:title>
+   <media:description type="plain">A comprehensive training video available in multiple formats</media:description>
+   <media:keywords>training, education, professional, video, formats</media:keywords>
+   <media:copyright>Copyright 2025 Training Corp</media:copyright>
+   <media:rating>general</media:rating>
+   
+   <!-- Multiple media:content elements at item level -->
+   <media:content url="http://example.com/video-4k.mp4" type="video/mp4" width="3840" height="2160" duration="1800" bitrate="15000">
+    <media:title>4K Ultra HD Version</media:title>
+    <media:description type="plain">Ultra high definition 4K video</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/video-1080p.mp4" type="video/mp4" width="1920" height="1080" duration="1800" bitrate="8000">
+    <media:title>Full HD 1080p Version</media:title>
+    <media:description type="plain">Full high definition 1080p video</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/video-720p.mp4" type="video/mp4" width="1280" height="720" duration="1800" bitrate="4000">
+    <media:title>HD 720p Version</media:title>
+    <media:description type="plain">High definition 720p video</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/video-480p.mp4" type="video/mp4" width="720" height="480" duration="1800" bitrate="2000">
+    <media:title>SD 480p Version</media:title>
+    <media:description type="plain">Standard definition 480p video</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/video.webm" type="video/webm" width="1920" height="1080" duration="1800" bitrate="6000">
+    <media:title>WebM Format Version</media:title>
+    <media:description type="plain">WebM format for web compatibility</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/audio-only.mp3" type="audio/mpeg" duration="1800" bitrate="192">
+    <media:title>Audio Only Version</media:title>
+    <media:description type="plain">Audio-only MP3 format</media:description>
+   </media:content>
+  </item>
+
+  <item>
+   <title>Podcast Episode with Transcripts</title>
+   <link>http://example.com/podcast-episode</link>
+   <description>A podcast episode available in multiple audio formats with text transcript</description>
+   <pubDate>Fri, 19 Jul 2025 08:00:00 GMT</pubDate>
+   <guid>http://example.com/podcast-episode</guid>
+   
+   <!-- Item-level media elements -->
+   <media:title>Tech Talk Podcast - Episode 42</media:title>
+   <media:description type="html">Discussion about &lt;strong&gt;emerging technologies&lt;/strong&gt; and their impact</media:description>
+   <media:keywords>podcast, technology, discussion, audio, transcript</media:keywords>
+   <media:copyright>Copyright 2025 Tech Talk Media</media:copyright>
+   <media:category scheme="urn:podcast:category">technology interview</media:category>
+   
+   <!-- Multiple audio formats -->
+   <media:content url="http://example.com/podcast-hq.mp3" type="audio/mpeg" duration="3600" bitrate="320">
+    <media:title>High Quality MP3</media:title>
+    <media:description type="plain">High quality 320kbps MP3 audio</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/podcast-std.mp3" type="audio/mpeg" duration="3600" bitrate="128">
+    <media:title>Standard Quality MP3</media:title>
+    <media:description type="plain">Standard quality 128kbps MP3 audio</media:description>
+   </media:content>
+   
+   <media:content url="http://example.com/podcast.ogg" type="audio/ogg" duration="3600" bitrate="192">
+    <media:title>OGG Vorbis Format</media:title>
+    <media:description type="plain">OGG Vorbis audio format</media:description>
+   </media:content>
+   
+   <!-- Text transcript as media content -->
+   <media:content url="http://example.com/transcript.txt" type="text/plain" duration="0">
+    <media:title>Full Episode Transcript</media:title>
+    <media:description type="plain">Complete text transcript of the podcast episode</media:description>
+   </media:content>
+   
+   <!-- PDF transcript -->
+   <media:content url="http://example.com/transcript.pdf" type="application/pdf" duration="0">
+    <media:title>PDF Transcript</media:title>
+    <media:description type="plain">Formatted PDF transcript with timestamps</media:description>
+   </media:content>
+  </item>
+
+ </channel>
+</rss>
